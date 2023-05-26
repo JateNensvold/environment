@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# Can be ran with bash or ZSH
+# Exit on errors
+set -e
+
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+sudo apt-get -y install build-essential
+brew install gcc

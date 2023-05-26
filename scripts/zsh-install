@@ -3,3 +3,7 @@
 # Can be ran with bash or ZSH
 # Exit on errors
 set -e
+
+brew install zsh
+command -v zsh | sudo tee -a /etc/shells
+chsh -s "$(which zsh)"

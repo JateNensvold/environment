@@ -40,9 +40,27 @@
         "devcontainers",
         "dotfile",
         "dotfiles",
-        "rhai"
+        "rhai",
+        "ripgrep"
     ],
     "rust-analyzer.linkedProjects": [
         "./dotfiles/dotfile-rs/Cargo.toml"
     ],
+    "vsicons.dontShowNewVersionMessage": true,
+    "workbench.editor.focusRecentEditorAfterClose": false,
+    "terminal.integrated.defaultProfile.linux": "zsh",
+    "terminal.integrated.profiles.linux": {
+        "bash": {
+            "path": "bash",
+            "icon": "terminal-bash"
+        },
+        "zsh": {
+            "path": "zsh"
+        },
+        "pwsh": {
+            "path": "pwsh",
+            "icon": "terminal-powershell",
+            "env": {}
+        }
+    }
 }

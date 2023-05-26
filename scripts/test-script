@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Can be ran with bash or ZSH
+# Exit on errors
+set -e
+
+ps -p "$$"
+echo $SHELL

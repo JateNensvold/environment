@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Can be ran with bash or ZSH
+# Exit on errors
+set -e
+
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"

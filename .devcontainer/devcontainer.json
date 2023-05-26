@@ -38,7 +38,8 @@
 				"eamodio.gitlens",
 				"shardulm94.trailing-spaces",
 				"vscodevim.vim",
-				"vscode-icons-team.vscode-icons"
+				"vscode-icons-team.vscode-icons",
+				"ms-vscode.powershell"
 			]
 		}
 	},
