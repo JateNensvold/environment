@@ -25,8 +25,7 @@
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "rustc --version",
-	"initializeCommand": "touch ~/.gitconfig ~/.zsh_history",
+	"postCreateCommand": "./.devcontainer/container_setup/.ssh.sh",
 	"customizations": {
 		"vscode": {
 			"extensions": [

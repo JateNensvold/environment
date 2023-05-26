@@ -36,6 +36,7 @@
     "trailing-spaces.highlightCurrentLine": false,
     "cSpell.words": [
         "APPDATA",
+        "devcontainer",
         "devcontainers",
         "dotfile",
         "dotfiles",

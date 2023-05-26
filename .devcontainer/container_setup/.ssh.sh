@@ -1,13 +1,13 @@
 #!/bin/sh
 
 if [ -d ~/.ssh ]; then
-    if "$(mountpoint ~/.ssh)" | grep -q "is a mountpoint"; then
+    if mountpoint ~/.ssh | grep -q "is a mountpoint"; then
         # ~/.ssh is a bind mount from the host
         return 0
     fi
-    "$(/bin/ls -a /mnt/ssh 2>/dev/null)" >/tmp/ls_mnt_ssh
-    "$(/bin/ls -a ~/.ssh 2>/dev/null)" >/tmp/ls_ssh
-    "$(/bin/ls -a /tmp/.ssh 2>/dev/null)" >/tmp/ls_tmp_ssh
+    /bin/ls -a /mnt/ssh 2>/dev/null >/tmp/ls_mnt_ssh
+    /bin/ls -a ~/.ssh 2>/dev/null >/tmp/ls_ssh
+    /bin/ls -a /tmp/.ssh 2>/dev/null >/tmp/ls_tmp_ssh
     if [ -d /mnt/ssh ] && [ -z "$(comm -3 /tmp/ls_mnt_ssh /tmp/ls_ssh)" ]; then
         # /mnt/ssh and ~/.ssh are the same in terms of file names.
         rm /tmp/ls_mnt_ssh
