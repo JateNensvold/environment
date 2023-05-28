@@ -8,4 +8,5 @@ brew install \
     fzf \
     fd \
     ripgrep \
-    git-delta
+    git-delta \
+    cheat

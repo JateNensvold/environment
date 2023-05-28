@@ -36,10 +36,12 @@
     "trailing-spaces.highlightCurrentLine": false,
     "cSpell.words": [
         "APPDATA",
+        "conemu",
         "devcontainer",
         "devcontainers",
         "dotfile",
         "dotfiles",
+        "powertoys",
         "rhai",
         "ripgrep"
     ],
@@ -62,5 +64,6 @@
             "icon": "terminal-powershell",
             "env": {}
         }
-    }
+    },
+    "vim.mouseSelectionGoesIntoVisualMode": false,
 }

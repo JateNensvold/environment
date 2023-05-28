@@ -2,11 +2,11 @@
 
 ## Prerequisites
 
-1. Install FireFox using this [link](https://www.mozilla.org/en-US/firefox/new/)
+1 FireFox using this [link](https://www.mozilla.org/en-US/firefox/new/)
 
-1. Install WSL2 by following the instructions [here](https://learn.microsoft.com/en-us/windows/wsl/install)
+1 WSL2 by following the instructions [here](https://learn.microsoft.com/en-us/windows/wsl/install)
 
-1. Install VSCode by following the instructions [here](https://code.visualstudio.com/download)
+1 VSCode by following the instructions [here](https://code.visualstudio.com/download)
 
 1. Open VSCode and install the [WSL extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl)
 
@@ -27,15 +27,15 @@
     git submodule update
     ```
 
-1. Install Docker without Docker Desktop
+1 Docker without Docker Desktop
 ```zsh
 ./scripts/wsl2-docker-install.sh
 ```
 
-1. Install rust toolchain
+1 rust toolchain
 
 
-1. Install Zsh
+1 Zsh
 
 
 1. Run the following script for setting up dotfiles
@@ -57,3 +57,14 @@ Reopen Closed tab
 Close Tab
 `Ctrl + W`
 
+
+### Todo
+
+Install Steam
+ FireFox
+ Spotify
+ Discord
+ VSCode
+  - Extensions
+ conemu
+powertoys
