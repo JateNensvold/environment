@@ -72,5 +72,5 @@ powertoys
 Install steps
 1. Windows Install
 ```ps1
-Invoke-Expression (Invoke-WebRequest https://raw.githubusercontent.com/JateNensvold/environment/master/windows-install.ps1).Content
+iex (iwr https://raw.githubusercontent.com/JateNensvold/environment/master/windows-install.ps1 -Headers @{"Cache-Control" = "no-cache" }).Content
 ```
