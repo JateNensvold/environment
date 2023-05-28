@@ -68,3 +68,9 @@ Install Steam
   - Extensions
  conemu
 powertoys
+
+Install steps
+1. Windows Install
+```ps1
+Invoke-WebRequest https://github.com/JateNensvold/environment/contents/windows-install.ps1 | Invoke-Expression windows-install.ps1
+```
