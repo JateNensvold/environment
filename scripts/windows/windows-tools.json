@@ -1,7 +1,22 @@
 {
     "tools": [
-        "conemu",
-        "powertoys",
-        "vscode"
+        {
+            "choco_name": "conemu"
+        },
+        {
+            "choco_name": "powertoys"
+        },
+        {
+            "choco_name": "spotify"
+        },
+        {
+            "choco_name": "vscode"
+        },
+        {
+            "choco_name": "firefox"
+        },
+        {
+            "choco_name": "discord"
+        }
     ]
 }

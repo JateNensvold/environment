@@ -20,11 +20,11 @@ $WINDOWS_SETUP_SCRIPT_NAME = "windows-setup.ps1"
 $REPOSITORY_URL = "https://github.com/JateNensvold/environment/archive/master.zip"
 
 # Download Environment Git repo as a zip
-Invoke-WebRequest $REPOSITORY_URL -OutFile $REPOSITORY_ZIP_NAME
 Write-Host "Downloading: " -ForegroundColor Green -NoNewline
 Write-Host $REPOSITORY_ZIP_NAME -ForegroundColor Yellow -NoNewline
 Write-Host " from: " -ForegroundColor Gree -NoNewline
 Write-Host $REPOSITORY_URL -ForegroundColor Yellow
+Invoke-WebRequest $REPOSITORY_URL -OutFile $REPOSITORY_ZIP_NAME
 
 
 # Unzip Git repo

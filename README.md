@@ -60,14 +60,10 @@ Close Tab
 
 ### Todo
 
-Install Steam
- FireFox
- Spotify
- Discord
+Wallpaper engine
+
  VSCode
   - Extensions
- conemu
-powertoys
 
 Install steps
 1. Windows Install

@@ -3,4 +3,4 @@
 # PowerShell Verison check
 # $PSVersionTable
 
-choco upgrade powershell -y
+choco upgrade powershell-core -y
