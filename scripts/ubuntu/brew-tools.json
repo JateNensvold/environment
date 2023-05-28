@@ -1,0 +1,9 @@
+{
+    "tools": [
+        "fzf",
+        "fd",
+        "ripgrep",
+        "git-delta",
+        "cheat"
+    ]
+}
