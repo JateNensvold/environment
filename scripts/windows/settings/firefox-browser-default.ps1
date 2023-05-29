@@ -12,7 +12,7 @@ $DEFAULT_BROWSER_XML_PATH = Join-Path $PSScriptRoot "default-browser.xml"
 
 if ($Path -eq $result) {
     New-ItemProperty -Path $registryPath -Name $name -Value $DEFAULT_BROWSER_XML_PATH -PropertyType String `
-        -Force | Out -Null
+        -Force | Out-Null
 }
 else {
     exit

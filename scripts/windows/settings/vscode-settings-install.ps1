@@ -80,7 +80,7 @@ $WINDOWS_EXTENSIONS = $EXTENSION_GROUPS.windows
 #   environment repo are completed
 
 # Link entire project to WSL so it can be edited from within WSL or Windows
-$WSL_HOME_DIRECTORY = (wsl echo `$HOME)
+$WSL_HOME_DIRECTORY = "\\wsl.localhost\Ubuntu\" + (wsl echo `$HOME)
 $WSL_ENVIRONMENT_PATH = Join-Path $WSL_HOME_DIRECTORY "environment"
 $ENVIRONMENT_DIRECTORY_BACKUP = Join-Path (get-item $ENVIRONMENT_DIRECTORY).Parent `
     "backup_environment"
