@@ -18,7 +18,7 @@
     "python.analysis.importFormat": "absolute",
     "editor.autoIndent": "full",
     "[json]": {
-        "editor.defaultFormatter": "oliversturm.fix-json"
+        "editor.defaultFormatter": "vscode.json-language-features"
     },
     "notebook.cellToolbarLocation": {
         "default": "right",
@@ -36,8 +36,35 @@
     "trailing-spaces.highlightCurrentLine": false,
     "cSpell.words": [
         "APPDATA",
+        "choco",
+        "conemu",
+        "devcontainer",
+        "devcontainers",
         "dotfile",
         "dotfiles",
-        "rhai"
-    ]
+        "powertoys",
+        "rhai",
+        "ripgrep"
+    ],
+    "rust-analyzer.linkedProjects": [
+        "./dotfiles/dotfile-rs/Cargo.toml"
+    ],
+    "vsicons.dontShowNewVersionMessage": true,
+    "workbench.editor.focusRecentEditorAfterClose": false,
+    "terminal.integrated.defaultProfile.linux": "zsh",
+    "terminal.integrated.profiles.linux": {
+        "bash": {
+            "path": "bash",
+            "icon": "terminal-bash"
+        },
+        "zsh": {
+            "path": "zsh"
+        },
+        "pwsh": {
+            "path": "pwsh",
+            "icon": "terminal-powershell",
+            "env": {}
+        }
+    },
+    "vim.mouseSelectionGoesIntoVisualMode": false,
 }

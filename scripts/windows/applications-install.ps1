@@ -1,3 +1,6 @@
+#Requires -Version 7.0
+#Requires -RunAsAdministrator
+
 $LIB_FOLDER_NAME = "lib"
 $CONFIRM_COMMAND_FILE = "Confirm-Command.psm1"
 Import-Module (Join-Path $PSScriptRoot (Join-Path $LIB_FOLDER_NAME $CONFIRM_COMMAND_FILE))
@@ -37,15 +40,22 @@ foreach ($tool in $TOOLS_LIST) {
     }
 }
 
-$CHOCO_INSTALL_LIST = $INSTALLED_LIST | Join-String -Property { $_.choco_name } -Separator ";"
+if ($NOT_INSTALLLED_LIST.Count -gt 0) {
+    $CHOCO_INSTALL_LIST = $NOT_INSTALLLED_LIST | `
+        Join-String -Property { $_.choco_name } -Separator ";"
+    Write-Host "------------------------------------" -ForegroundColor Yellow
+    Write-Host "Installing the following programs: " -ForegroundColor Green -NoNewline
+    Write-Host "$CHOCO_INSTALL_LIST" -ForegroundColor Yellow
+    Write-Host "------------------------------------" -ForegroundColor Yellow
+    #Install all programs not yet installed
+    choco install $CHOCO_INSTALL_LIST -y
+}
+else {
+    $INSTALLED_LIST_STRING = $INSTALLED_LIST | `
+        Join-String -Property { $_.choco_name } -Separator ", "
+    Write-Host "------------------------------------" -ForegroundColor Yellow
+    Write-Host "All Applications are already installed" -ForegroundColor Green
+    Write-Host "$INSTALLED_LIST_STRING" -ForegroundColor cyan
+    Write-Host "------------------------------------" -ForegroundColor Yellow
+}
 
-Write-Host $CHOCO_INSTALL_LIST -ForegroundColor Green
-
-
-$INSTALL_COMMAND = "choco install $CHOCO_INSTALL_LIST"
-Write-Output $INSTALL_COMMAND
-
-choco install $CHOCO_INSTALL_LIST
-
-Write-Host -NoNewLine 'Press any key to continue...';
-$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')

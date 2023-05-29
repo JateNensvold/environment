@@ -1,3 +1,6 @@
+#Requires -Version 5.0
+#Requires -RunAsAdministrator
+
 $LIB_FOLDER_NAME = "lib"
 $CONFIRM_COMMAND_FILE = "Confirm-Command.psm1"
 Import-Module (Join-Path $PSScriptRoot (Join-Path $LIB_FOLDER_NAME $CONFIRM_COMMAND_FILE))

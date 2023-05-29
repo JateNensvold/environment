@@ -12,6 +12,10 @@
             "oliversturm.fix-json",
             "foxundermoon.shell-format",
             "timonwong.shellcheck"
+        ],
+        "wsl": [
+            "ms-vscode-remote.remote-containers",
+            "ms-vscode-remote.remote-wsl"
         ]
     }
 }

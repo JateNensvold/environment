@@ -60,10 +60,16 @@ Close Tab
 
 ### Todo
 
-Wallpaper engine
-
- VSCode
-  - Extensions
+    - Wallpaper engine[Not supported without [SteamCMD](https://www.digitalcitizen.life/steam-cmd-windows/)]
+    - VSCode
+        - Extensions
+        - Settings
+    - powertoys
+        - Settings[[Not Support currently]](https://github.com/microsoft/PowerToys/issues/4649)
+            - Manual backup and restores of settings is available, latest settings should be stored in `environment/settings/powertoys/`
+    - Conemu
+        - Settings
+    - Ubuntu Environment Setup
 
 Install steps
 1. Windows Install
