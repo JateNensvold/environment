@@ -80,18 +80,27 @@ $WINDOWS_EXTENSIONS = $EXTENSION_GROUPS.windows
 #   environment repo are completed
 
 # Link entire project to WSL so it can be edited from within WSL or Windows
-$WSL_HOME_DIRECTORY = "\\wsl.localhost\Ubuntu\" + (wsl echo `$HOME)
-$WSL_ENVIRONMENT_PATH = Join-Path $WSL_HOME_DIRECTORY "environment"
-$ENVIRONMENT_DIRECTORY_BACKUP = Join-Path (get-item $ENVIRONMENT_DIRECTORY).Parent `
-    "backup_environment"
+# $WSL_ENVIRONMENT_TARGET_PATH = Join-Path $WSL_HOME_DIRECTORY "environment"
+# $ENVIRONMENT_DIRECTORY_BACKUP = Join-Path (get-item $ENVIRONMENT_DIRECTORY).Parent `
+#     "backup_environment"
+
+$WSL_HOME_DIRECTORY = (wsl echo `$HOME)
+$WSL_ENVIRONMENT_DIRECTORY = (Join-Path $WSL_HOME_DIRECTORY "environment").replace("\", "/")
+$ESCAPED_PATH = (Join-Path (get-item (Resolve-Path ~)).FullName "environment").replace("\", "\\")
+$WINDOWS_ENVIRONMENT_AS_WSL_PATH = (wsl wslpath $ESCAPED_PATH)
+$WSL_ENVIRONMENT_DIRECTORY_BACKUP = (Join-Path $WSL_HOME_DIRECTORY "backup_environment").replace("\", "/")
 
 Write-Host "------------------------------------" -ForegroundColor Yellow
 Write-Host "Linking Environment Directory to WSL" -ForegroundColor Green
 Write-Host "Symlinking Environment from " -NoNewline -ForegroundColor Green
 Write-Host $ENVIRONMENT_DIRECTORY -ForegroundColor Cyan
 Write-Host " to "-NoNewline -ForegroundColor Green
-Write-Host $WSL_ENVIRONMENT_PATH -ForegroundColor Cyan
+Write-Host $WSL_ENVIRONMENT_TARGET_PATH -ForegroundColor Cyan
 Write-Host "------------------------------------" -ForegroundColor Yellow
 
-Export-File $WSL_ENVIRONMENT_PATH $ENVIRONMENT_DIRECTORY_BACKUP -Force
-Initialize-link $WSL_ENVIRONMENT_PATH $ENVIRONMENT_DIRECTORY
+# Export-File $WSL_ENVIRONMENT_PATH $ENVIRONMENT_DIRECTORY_BACKUP -Force
+wsl mv $WSL_ENVIRONMENT_DIRECTORY $WSL_ENVIRONMENT_DIRECTORY_BACKUP
+# Linking from windows is disabled, but from within wsl it is not
+# Initialize-link $WSL_ENVIRONMENT_PATH $ENVIRONMENT_DIRECTORY
+
+wsl ln -s $WINDOWS_ENVIRONMENT_AS_WSL_PATH $WSL_ENVIRONMENT_DIRECTORY

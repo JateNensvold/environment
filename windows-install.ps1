@@ -19,7 +19,7 @@ function Export-File {
     if (Test-FilePath $sourcePath) {
         if ($Force) {
             if (Test-FilePath $targetPath) {
-                rm $targetPath
+                rm -r $targetPath
             }
         }
         else {

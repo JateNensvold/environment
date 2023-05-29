@@ -31,7 +31,6 @@ Invoke-Administrator7 $PSCommandPath
 Invoke-File windows "applications-install.ps1"
 Invoke-File windows "windows-remove-UWP-apps.ps1"
 Invoke-File windows "wsl-install.ps1"
-Invoke-File windows "wsl-install.ps1"
 Invoke-File windows "windows-settings.ps1"
 
 # Invoke-File windows "windows-update.ps1"

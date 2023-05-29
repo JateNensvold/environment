@@ -23,7 +23,7 @@ function Initialize-link ($newLink, $existingFile) {
         New-Item -Path $newLink -ItemType SymbolicLink -Value $existingFile
     }
 }
-
+# New-Item -Path \\wsl.localhost\Ubuntu\\home\tosh\environment -ItemType SymbolicLink -Value C:\Users\Nate\environment
 function Test-FilePath($filePath) {
     $result = Test-Path -Path $filePath
     # Uncomment the line below to display if filePaths are being tested properly
@@ -40,7 +40,7 @@ function Export-File {
     if (Test-FilePath $sourcePath) {
         if ($Force) {
             if (Test-FilePath $targetPath) {
-                rm $targetPath
+                rm -r $targetPath
             }
         }
         else {
