@@ -104,3 +104,9 @@ wsl mv $WSL_ENVIRONMENT_DIRECTORY $WSL_ENVIRONMENT_DIRECTORY_BACKUP
 # Initialize-link $WSL_ENVIRONMENT_PATH $ENVIRONMENT_DIRECTORY
 
 wsl ln -s $WINDOWS_ENVIRONMENT_AS_WSL_PATH $WSL_ENVIRONMENT_DIRECTORY
+
+# Link downloads directory into WSL as well
+$WINDOWS_DOWNLOAD_PATH = (get-item (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path).FullName.Replace("\", "\\")
+$WSL_DOWNLOAD_PATH = (wsl wslpath $WINDOWS_DOWNLOAD_PATH)
+
+wsl ln -s $WSL_DOWNLOAD_PATH "~/downloads"

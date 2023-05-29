@@ -1,0 +1,11 @@
+#!/bin/sh
+# Can be ran with bash or ZSH
+# Exit on errors
+set -e
+# WINDOWS_DOWNLOAD_PATH=$(tr -d "\r" "$WINDOWS_DOWNLOAD_PATH")
+
+WINDOWS_DOWNLOAD_PATH=$(powershell.exe -c "(New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path")
+WINDOWS_DOWNLOAD_PATH=$(sed '1h;1!H;$!d;${g;s/\r\n//g}' "$WINDOWS_DOWNLOAD_PATH")
+WSL_DOWNLOAD_PATH=$(wslpath "$WINDOWS_DOWNLOAD_PATH")
+
+ln "$WSL_DOWNLOAD_PATH" ~/downloads
