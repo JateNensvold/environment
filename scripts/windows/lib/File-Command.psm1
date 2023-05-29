@@ -1,7 +1,4 @@
-# enum ScriptDirectories{
-#     Windows
-#     Ubuntu
-# }
+#Requires -Version 5.0
 
 function Invoke-File {
     param (
@@ -47,7 +44,8 @@ function Export-File {
             }
         }
         else {
-            Write-Host "FileAlreadyExists: Skipping Export-File from $sourcePath to $targetPath" -ForegroundColor Yellow
+            Write-Host "FileAlreadyExists: Skipping Export-File from $sourcePath to $targetPath" `
+                -ForegroundColor Yellow
             return
         }
         mv $sourcePath $targetPath
