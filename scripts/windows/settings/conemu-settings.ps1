@@ -14,9 +14,9 @@ $APPDATA_PATH = Get-ChildItem Env:APPDATA | Select-Object Value -ExpandProperty 
 $ROAMING_PATH = $APPDATA_PATH
 $ENVIRONMENT_DIRECTORY = (get-item $PSScriptRoot).Parent.Parent.Parent.FullName
 
-$OLD_SETTINGS_FILEPATH = Join-Path $ROAMING_PATH "old_settings.xml"
+$OLD_SETTINGS_FILEPATH = Join-Path $ROAMING_PATH "old_ConEmu.xml"
 $SETTINGS_FILEPATH = Join-Path $ENVIRONMENT_DIRECTORY "settings" "conemu" "settings.xml"
-$SETTINGS_TARGET_FILEPATH = Join-Path $ROAMING_PATH "settings.xml"
+$SETTINGS_TARGET_FILEPATH = Join-Path $ROAMING_PATH "ConEmu.xml"
 
 Write-Host "------------------------------------" -ForegroundColor Yellow
 Write-Host "Setting ConEmu Settings" -ForegroundColor Green

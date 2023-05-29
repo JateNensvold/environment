@@ -2,7 +2,6 @@
     "extensions": {
         "base": [
             "eamodio.gitlens",
-            "ms-azuretools.vscode-docker",
             "shardulm94.trailing-spaces",
             "vscodevim.vim",
             "vscode-icons-team.vscode-icons",
@@ -11,9 +10,17 @@
         "terminal": [
             "oliversturm.fix-json",
             "foxundermoon.shell-format",
-            "timonwong.shellcheck",
-            "ms-vscode.PowerShell"
+            "timonwong.shellcheck"
         ],
-        "rust": []
+        "wsl": [
+            "ms-azuretools.vscode-docker",
+            "ms-python.python",
+            "rust-lang.rust-analyzer"
+        ],
+        "windows": [
+            "ms-vscode.powershell",
+            "ms-vscode-remote.remote-containers",
+            "ms-vscode-remote.remote-wsl"
+        ]
     }
 }

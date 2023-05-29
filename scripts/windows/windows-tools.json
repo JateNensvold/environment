@@ -17,6 +17,12 @@
         },
         {
             "choco_name": "discord"
+        },
+        {
+            "choco_name": "steam"
+        },
+        {
+            "choco_name": "googlechrome"
         }
     ]
 }

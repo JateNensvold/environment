@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DefaultAssociations>
+  <Association ApplicationName="FireFox" ProgId="FirefoxURL-308046B0AF4A39CB" Identifier=".html"/>
+  <Association ApplicationName="FireFox" ProgId="FirefoxURL-308046B0AF4A39CB" Identifier=".htm"/>
+  <Association ApplicationName="FireFox" ProgId="FirefoxURL-308046B0AF4A39CB" Identifier="http"/>
+  <Association ApplicationName="FireFox" ProgId="FirefoxURL-308046B0AF4A39CB" Identifier="https"/>
+</DefaultAssociations>

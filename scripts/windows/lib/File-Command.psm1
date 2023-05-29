@@ -19,7 +19,8 @@ function Invoke-File {
 
 function Initialize-link ($newLink, $existingFile) {
     if (Test-FilePath $newLink) {
-        Write-Host "LinkAlreadyExists: Skipping Initialize-Link from $existingFile to $newLink" -ForegroundColor Yellow
+        Write-Host "LinkAlreadyExists: Skipping Initialize-Link from $existingFile to $newLink" `
+            -ForegroundColor Yellow
     }
     else {
         New-Item -Path $newLink -ItemType SymbolicLink -Value $existingFile
@@ -28,7 +29,8 @@ function Initialize-link ($newLink, $existingFile) {
 
 function Test-FilePath($filePath) {
     $result = Test-Path -Path $filePath
-    Write-Host "$filePath is $result" -ForegroundColor Red
+    # Uncomment the line below to display if filePaths are being tested properly
+    # Write-Host "$filePath is $result" -ForegroundColor Red
     return $result
 }
 
@@ -39,10 +41,12 @@ function Export-File {
         [Parameter(Mandatory = $false)][switch]$Force
     )
     if (Test-FilePath $sourcePath) {
-        if ($Force)
-        {
-            rm $targetPath
-        } else {
+        if ($Force) {
+            if (Test-FilePath $targetPath) {
+                rm $targetPath
+            }
+        }
+        else {
             Write-Host "FileAlreadyExists: Skipping Export-File from $sourcePath to $targetPath" -ForegroundColor Yellow
             return
         }

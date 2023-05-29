@@ -16,8 +16,7 @@ Write-Host "------------------------------------" -ForegroundColor Yellow
 $WINDOWS_SETTINGS_PATH = Join-Path windows settings
 
 Invoke-File $WINDOWS_SETTINGS_PATH "stickykeys-disable.ps1"
-
 Invoke-File $WINDOWS_SETTINGS_PATH "conemu-settings.ps1"
 Invoke-File $WINDOWS_SETTINGS_PATH "powertoys-settings.ps1"
-
 Invoke-File $WINDOWS_SETTINGS_PATH "vscode-settings-install.ps1"
+Invoke-File $WINDOWS_SETTINGS_PATH "firefox-browser-default.ps1"
