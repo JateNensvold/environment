@@ -9,6 +9,14 @@ $FILE_COMMAND_MODULE = "File-Command.psm1"
 Import-Module (Join-Path $LIB_ABSOULTE_FOLDER_PATH $FILE_COMMAND_MODULE) -Force
 ###################################################
 
+# Function to install VSCode Extension
+function Install-Extension {
+    param (
+        [string]$extension
+    )
+    code --install-extension $extension
+}
+
 $APPDATA_PATH = Get-ChildItem Env:APPDATA | Select-Object Value -ExpandProperty Value
 $ENVIRONMENT_DIRECTORY = (get-item $PSScriptRoot).Parent.Parent.Parent.FullName
 
@@ -67,46 +75,23 @@ Export-File $VSCODE_KEYBINDS_LOCAL_FILEPATH $VSCODE_KEYBINDS_LOCALBACKUP_FILEPAT
 Initialize-link $VSCODE_SETTINGS_LOCAL_FILEPATH $VSCODE_SETTINGS_SOURCE_FILEPATH
 Initialize-link $VSCODE_KEYBINDS_LOCAL_FILEPATH $VSCODE_KEYBINDS_SOURCE_FILEPATH
 
-$GLOBAL_EXTENSIONS_JSON_PATH = Join-Path $VSCODE_FOLDER_PATH "global-extensions.json"
+# Install VSCode Windows extensions
+$GLOBAL_EXTENSIONS_JSON_PATH = Join-Path $VSCODE_SETTINGS_SOURCE_FOLDER "global-extensions.json"
 $JSON_OBJECT = Get-Content -Raw -Path $GLOBAL_EXTENSIONS_JSON_PATH | ConvertFrom-Json
 $EXTENSION_GROUPS = $JSON_OBJECT.extensions
 
 $BASE_EXTENSIONS = $EXTENSION_GROUPS.base
 $TERMINAL_EXTENSIONS = $EXTENSION_GROUPS.terminal
 $WINDOWS_EXTENSIONS = $EXTENSION_GROUPS.windows
-# Install VSCode Windows extensions
-# TODO: VSCode can only interact with Windows filepaths, i.e. running VSCode in windows fails
-#   due to dev environment using WSL paths. Fixed once commands to unify WSL and Windows
-#   environment repo are completed
 
-# Link entire project to WSL so it can be edited from within WSL or Windows
-# $WSL_ENVIRONMENT_TARGET_PATH = Join-Path $WSL_HOME_DIRECTORY "environment"
-# $ENVIRONMENT_DIRECTORY_BACKUP = Join-Path (get-item $ENVIRONMENT_DIRECTORY).Parent `
-#     "backup_environment"
+foreach ($extension in $BASE_EXTENSIONS) {
+    Install-Extension $extension
+}
 
-$WSL_HOME_DIRECTORY = (wsl echo `$HOME)
-$WSL_ENVIRONMENT_DIRECTORY = (Join-Path $WSL_HOME_DIRECTORY "environment").replace("\", "/")
-$ESCAPED_PATH = (Join-Path (get-item (Resolve-Path ~)).FullName "environment").replace("\", "\\")
-$WINDOWS_ENVIRONMENT_AS_WSL_PATH = (wsl wslpath $ESCAPED_PATH)
-$WSL_ENVIRONMENT_DIRECTORY_BACKUP = (Join-Path $WSL_HOME_DIRECTORY "backup_environment").replace("\", "/")
+foreach ($extension in $TERMINAL_EXTENSIONS) {
+    Install-Extension $extension
+}
 
-Write-Host "------------------------------------" -ForegroundColor Yellow
-Write-Host "Linking Environment Directory to WSL" -ForegroundColor Green
-Write-Host "Symlinking Environment from " -NoNewline -ForegroundColor Green
-Write-Host $ENVIRONMENT_DIRECTORY -ForegroundColor Cyan
-Write-Host " to "-NoNewline -ForegroundColor Green
-Write-Host $WSL_ENVIRONMENT_TARGET_PATH -ForegroundColor Cyan
-Write-Host "------------------------------------" -ForegroundColor Yellow
-
-# Export-File $WSL_ENVIRONMENT_PATH $ENVIRONMENT_DIRECTORY_BACKUP -Force
-wsl mv $WSL_ENVIRONMENT_DIRECTORY $WSL_ENVIRONMENT_DIRECTORY_BACKUP
-# Linking from windows is disabled, but from within wsl it is not
-# Initialize-link $WSL_ENVIRONMENT_PATH $ENVIRONMENT_DIRECTORY
-
-wsl ln -s $WINDOWS_ENVIRONMENT_AS_WSL_PATH $WSL_ENVIRONMENT_DIRECTORY
-
-# Link downloads directory into WSL as well
-$WINDOWS_DOWNLOAD_PATH = (get-item (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path).FullName.Replace("\", "\\")
-$WSL_DOWNLOAD_PATH = (wsl wslpath $WINDOWS_DOWNLOAD_PATH)
-
-wsl ln -s $WSL_DOWNLOAD_PATH "~/downloads"
+foreach ($extension in $WINDOWS_EXTENSIONS) {
+    Install-Extension $extension
+}

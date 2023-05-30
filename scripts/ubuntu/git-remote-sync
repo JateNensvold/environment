@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Can be ran with bash or ZSH
+# Exit on errors
+set -e
+git init
+git remote add origin git@github.com:JateNensvold/environment.git
+git fetch
+git reset --mixed origin/master
