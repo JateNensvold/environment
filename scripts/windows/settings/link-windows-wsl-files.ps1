@@ -2,8 +2,12 @@
 
 $WSL_HOME_DIRECTORY = (wsl echo `$HOME)
 $WSL_ENVIRONMENT_DIRECTORY = (Join-Path $WSL_HOME_DIRECTORY "environment").replace("\", "/")
-$WINDOWS_ENVIRONMENT_PATH_ESCAPED = (Join-Path (get-item (Resolve-Path ~)).FullName "environment_temp").replace("\", "\\")
+$WINDOWS_USER_PATH = (get-item (Resolve-Path ~)).FullName
+$WINDOWS_TEMP_ENVIRONMENT_PATH_ESCAPED = (Join-Path $WINDOWS_USER_PATH "environment_temp").replace("\", "\\")
+$WINDOWS_TEMP_ENVIRONMENT_AS_WSL_PATH = (wsl wslpath $WINDOWS_TEMP_ENVIRONMENT_PATH_ESCAPED)
+$WINDOWS_ENVIRONMENT_PATH_ESCAPED = (Join-Path $WINDOWS_USER_PATH "environment_temp").replace("\", "\\")
 $WINDOWS_ENVIRONMENT_AS_WSL_PATH = (wsl wslpath $WINDOWS_ENVIRONMENT_PATH_ESCAPED)
+
 $WSL_ENVIRONMENT_DIRECTORY_BACKUP = (Join-Path $WSL_HOME_DIRECTORY "backup_environment").replace("\", "/")
 
 Write-Host "------------------------------------" -ForegroundColor Yellow
@@ -11,13 +15,13 @@ Write-Host "Linking Environment Directory from WSL" -ForegroundColor Green
 Write-Host "Symlinking Environment to Windows: " -NoNewline -ForegroundColor Green
 Write-Host $WSL_ENVIRONMENT_DIRECTORY  -ForegroundColor Cyan
 Write-Host " to: "-NoNewline -ForegroundColor Green
-Write-Host $WINDOWS_ENVIRONMENT_PATH -ForegroundColor Cyan
+Write-Host $WINDOWS_ENVIRONMENT_PATH_ESCAPED -ForegroundColor Cyan
 Write-Host "------------------------------------" -ForegroundColor Yellow
 
 # Backup any environment directory that currently exists
 wsl mv $WSL_ENVIRONMENT_DIRECTORY $WSL_ENVIRONMENT_DIRECTORY_BACKUP
 # Move the Windows environment directory into wsl
-wsl mv $WINDOWS_ENVIRONMENT_AS_WSL_PATH $WSL_ENVIRONMENT_DIRECTORY
+wsl mv $WINDOWS_TEMP_ENVIRONMENT_AS_WSL_PATH $WSL_ENVIRONMENT_DIRECTORY
 
 # Linking from windows is disabled, but from within wsl it is not
 # Export-File $WSL_ENVIRONMENT_PATH $ENVIRONMENT_DIRECTORY_BACKUP -Force
