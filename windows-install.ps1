@@ -59,7 +59,7 @@ $REPOSITORY_ABSOLUTE_PATH = Join-Path $EXECUTION_DIRECTORY $REPOSITORY_NAME
 $WINDOWS_SETUP_SCRIPT_ABSOLUTE_PATH = (Join-Path $REPOSITORY_ABSOLUTE_PATH (
         Join-Path $SCRIPTS_FOLDER_NAME $WINDOWS_SETUP_SCRIPT_NAME))
 
-if (!Test-FilePath $REPOSITORY_ABSOLUTE_PATH) {
+if (-Not (Test-FilePath $REPOSITORY_ABSOLUTE_PATH)) {
 
     Write-Host "Repository already exists at: " -NoNewline -ForegroundColor Green
     Write-Host $REPOSITORY_ABSOLUTE_PATH -ForegroundColor Cyan
