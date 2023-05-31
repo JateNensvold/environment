@@ -1,23 +1,15 @@
 #Requires -Version 5.0
 
-$scriptroot = $PSScriptRoot
-
 function Invoke-File {
     param (
         [string]$dirName,
-        [string]$fileName,
-        [Parameter(Mandatory = $false)][string] $newScriptRoot
+        [string]$fileName
+        # [Parameter(Mandatory = $false)][switch] $scriptroot
     )
 
-    # 
-    if ($newScriptRoot) {
-     $scriptroot = $newScriptRoot
-    }
-    Write-Output $scriptroot
-}
     $SCRIPT_RELATIVE_PATH = Join-Path $dirName $fileName
     $SCRIPT_ABSOULTE_PATH = Join-Path (
-        get-item $scriptroot).Parent.Parent.FullName $SCRIPT_RELATIVE_PATH
+        get-item $psscriptroot).Parent.Parent.FullName $SCRIPT_RELATIVE_PATH
     Write-Host "Running script: " -NoNewline -ForegroundColor Green
     Write-Host $SCRIPT_ABSOULTE_PATH -ForegroundColor Cyan
     & $SCRIPT_ABSOULTE_PATH

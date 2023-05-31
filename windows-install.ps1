@@ -40,7 +40,7 @@ function Export-File {
 $REPOSITORY_ZIP_NAME = "environment-master-temp.zip"
 $REPOSITORY_PARENT_FOLDER = "environment-master-temp"
 $REPOSITORY_UNZIPED_NAME = "environment-master"
-$REPOSITORY_NAME = "environment_temp"
+$REPOSITORY_NAME = "environment"
 $REPOSITORY_BACKUP_NAME = "environment_backup"
 $SCRIPTS_FOLDER_NAME = "scripts"
 $WINDOWS_SETUP_SCRIPT_NAME = "windows-setup.ps1"
