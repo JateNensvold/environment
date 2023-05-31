@@ -2,8 +2,11 @@
 
 $WSL_HOME_DIRECTORY = (wsl echo `$HOME)
 $WSL_ENVIRONMENT_DIRECTORY = (Join-Path $WSL_HOME_DIRECTORY "environment").replace("\", "/")
+$WSL_ENVIRONMENT_PATH_AS_WINDOWS_PATH = (wsl wslpath -w $WSL_ENVIRONMENT_DIRECTORY)
+
 $WINDOWS_USER_PATH = (get-item (Resolve-Path ~)).FullName
-$WINDOWS_ENVIRONMENT_PATH_ESCAPED = (Join-Path $WINDOWS_USER_PATH "environment").replace("\", "\\")
+$WINDOWS_ENVIRONMENT_PATH = (Join-Path $WINDOWS_USER_PATH "environment")
+$WINDOWS_ENVIRONMENT_PATH_ESCAPED = $WINDOWS_ENVIRONMENT_PATH.replace("\", "\\")
 $WINDOWS_ENVIRONMENT_AS_WSL_PATH = (wsl wslpath $WINDOWS_ENVIRONMENT_PATH_ESCAPED)
 
 $WSL_ENVIRONMENT_DIRECTORY_BACKUP = (Join-Path $WSL_HOME_DIRECTORY "backup_environment").replace("\", "/")
@@ -16,16 +19,15 @@ Write-Host " to: "-NoNewline -ForegroundColor Green
 Write-Host $WINDOWS_ENVIRONMENT_PATH_ESCAPED -ForegroundColor Cyan
 Write-Host "------------------------------------" -ForegroundColor Yellow
 
-# Backup any environment directory that currently exists
+# Backup any WSL environment directory that currently exists
 wsl mv $WSL_ENVIRONMENT_DIRECTORY $WSL_ENVIRONMENT_DIRECTORY_BACKUP
 # Move the Windows environment directory into wsl
 wsl mv $WINDOWS_ENVIRONMENT_AS_WSL_PATH $WSL_ENVIRONMENT_DIRECTORY
 
-# Linking from windows is disabled, but from within wsl it is not
+# Linking from WSL is disabled, but from within Ubuntu it is not
 # Export-File $WSL_ENVIRONMENT_PATH $ENVIRONMENT_DIRECTORY_BACKUP -Force
 
-# Initialize-link $WINDOWS_ENVIRONMENT_PATH $WSL_ENVIRONMENT_PATH
-wsl ln $WINDOWS_ENVIRONMENT_AS_WSL_PATH $WSL_ENVIRONMENT_DIRECTORY
+Initialize-link $WINDOWS_ENVIRONMENT_PATH $WSL_ENVIRONMENT_PATH_AS_WINDOWS_PATH
 
 # Change from linking directory to link every file in directory to get around wslpath resolving
 #   symlinks for devcontainers https://github.com/microsoft/vscode-remote-release/issues/6605
