@@ -15,9 +15,12 @@ Write-Host "------------------------------------" -ForegroundColor Yellow
 
 $WINDOWS_SETTINGS_PATH = Join-Path windows settings
 
+# The following script will move the environment repo to the wsl filesystem and then link it back 
+#   to its original location
+Invoke-File $WINDOWS_SETTINGS_PATH "link-windows-wsl-files.ps1"
+
 Invoke-File $WINDOWS_SETTINGS_PATH "stickykeys-disable.ps1"
 Invoke-File $WINDOWS_SETTINGS_PATH "conemu-settings.ps1"
 Invoke-File $WINDOWS_SETTINGS_PATH "powertoys-settings.ps1"
 Invoke-File $WINDOWS_SETTINGS_PATH "vscode-settings-install.ps1"
-Invoke-File $WINDOWS_SETTINGS_PATH "link-windows-wsl-files.ps1"
 Invoke-File $WINDOWS_SETTINGS_PATH "firefox-browser-default.ps1"

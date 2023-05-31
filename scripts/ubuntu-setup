@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# Can be ran with bash or ZSH
+# Exit on errors
+set -e
+
+./ubuntu/brew-install
+./ubuntu/zsh-install
+# brew install
+# zsh install
+# oh my zsh
+# powerlevel 10k
+# brew tools
+# sync repo
+# wsl settings
+# vscode extensions

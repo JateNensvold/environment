@@ -26,6 +26,8 @@ if ($PS_VERSION -eq 5) {
 
     Invoke-File windows "powershell-upgrade.ps1"
 }
+
+
 # Elevate to powershell 7 for running the rest of the upgrade commands
 Invoke-Administrator7 $PSCommandPath
 Invoke-File windows "applications-install.ps1"
