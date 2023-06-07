@@ -33,6 +33,14 @@
     ```
 
 ## Settings & Keybindings
+
+- Media Keys
+    - Resume/Pause Music `fn + \`
+    - Previous song `fn [`
+    - Next song `fn ]`
+    - Volume up `fn PgUp`
+    - Volume down `fn PgDn`
+
 ### VScode
 #### Custom VSCode Keybindings
 - Reopen Closed tab
