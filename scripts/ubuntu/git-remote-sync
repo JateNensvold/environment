@@ -6,4 +6,5 @@ set -e
 git init
 git remote add origin git@github.com:JateNensvold/environment.git
 git fetch
+git branch -u origin/master
 git reset --mixed origin/master
