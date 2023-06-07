@@ -3,5 +3,11 @@
 # Can be ran with bash or ZSH
 # Exit on errors
 set -e
-
+# Power level 10k Source
+# https://github.com/romkatv/powerlevel10k#getting-started
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+
+# Set the following command in for oh-my-zsh install
+# Set ZSH_THEME="powerlevel10k/powerlevel10k" in ~/.zshrc.
+
+# This will be already set in the ZSH file that gets symlinked into the user directory

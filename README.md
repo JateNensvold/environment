@@ -10,7 +10,7 @@
 
 <!-- 1. Open VSCode and install the [WSL extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl)
 
-    - Open a WSL2 terminal in vscode by hitting the keys `"Ctrl" + "Shift" + "P"` or by opening `View -> Command Pallete` and running the command
+    - Open a WSL2 terminal in vscode by hitting the keys `"Ctrl" + "Shift" + "P"` or by opening `View -> Command Palette` and running the command
         - `WSL: Connect to WSL` -->
 - Create a new SSH key
     - Follow the instructions [here](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent?platform=linux#generating-a-new-ssh-key) for generating a key
@@ -32,28 +32,45 @@
     git clone git@github.com:JateNensvold/dotfiles.git
     ```
 
-## VSCode Settings & Keybindings
-1. VSCode Global Configuration
-
+## Settings & Keybindings
+### VScode
+#### Custom VSCode Keybindings
 - Reopen Closed tab
     `Ctrl + Shift + W`
 - Close Tab
     `Ctrl + W`
-### VSCode Default Keybindings
+
+#### VSCode Default Keybindings
 https://github.com/codebling/vs-code-default-keybindings/tree/master
 
-### VSCode Default Settings
+#### VSCode Default Settings
 These are the default settings filepaths on Linux, macOS, and Windows
 ```
 Windows %APPDATA%\Code\User\settings.json
 macOS $HOME/Library/Application\ Support/Code/User/settings.json
 Linux $HOME/.config/Code/User/settings.json
 ```
-### Todo
+
+### Windows PowerToys
+
+
+- Run program
+    `Win + Space`
+- Focus Cursor
+    `L-Ctrl` x2
+
+### Conemu
+- Focus window
+    `L-Ctrl + 1`
+- Open Settings
+    `Win + Alt + P`
+
+## Todo
 
     - Wallpaper engine[Not supported without [SteamCMD](https://www.digitalcitizen.life/steam-cmd-windows/)]
+    - Pin programs to windows Taskbar
     - VSCode
-        - Extensions
+        - WSL Extensions
     - powertoys
         - Settings[[Not Support currently]](https://github.com/microsoft/PowerToys/issues/4649)
             - Manual backup and restores of settings is available, latest settings should be stored in `environment/settings/powertoys/`
@@ -64,8 +81,9 @@ Linux $HOME/.config/Code/User/settings.json
         ```
         - rust toolchain
         - Zsh
+        - Python?
 
-### Current Functionality
+## Current Functionality
 - Windows
     - Enable WSL2
     - Remove Windows Default Programs
@@ -97,7 +115,7 @@ Linux $HOME/.config/Code/User/settings.json
         - PowerLevel10k
         - Docker(No Docker Desktop)
         - ...
-
+## Install
 Install steps
 1. Windows Install
 ```ps1

@@ -5,11 +5,17 @@
 set -e
 
 ./ubuntu/brew-install
+eval "$(/hiome/linuxbrew/.linuxbrew/bin/brew shellenv)"
 ./ubuntu/zsh-install
+./ubuntu/oh-my-zsh-install
+./ubunut/powerlevel10k-install
 # brew install
 # zsh install
 # oh my zsh
 # powerlevel 10k
+
+# ./ubuntu/wsl2-docker-install.sh
+
 # brew tools
 # sync repo
 # wsl settings

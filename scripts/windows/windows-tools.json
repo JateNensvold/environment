@@ -13,6 +13,9 @@
             "choco_name": "vscode"
         },
         {
+            "choco_name": "vscode-insiders"
+        },
+        {
             "choco_name": "firefox"
         },
         {
@@ -23,6 +26,9 @@
         },
         {
             "choco_name": "googlechrome"
+        },
+        {
+            "choco_name": "f.lux"
         }
     ]
 }

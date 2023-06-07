@@ -4,6 +4,8 @@
         "fd",
         "ripgrep",
         "git-delta",
-        "cheat"
+        "cheat",
+        "tldr",
+        "xxh"
     ]
 }

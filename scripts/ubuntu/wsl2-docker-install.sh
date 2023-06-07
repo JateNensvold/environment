@@ -21,6 +21,9 @@ docker compose version
 
 # Using Ubuntu 22.04 or Debian 10 / 11? You need to do 1 extra step for iptables
 # compatibility, you'll want to choose option (1) from the prompt to use iptables-legacy.
+
+echo "Choose Option 1 on WSL"
+
 sudo update-alternatives --config iptables
 
 # Update socket permissions to run docker withou sudo
