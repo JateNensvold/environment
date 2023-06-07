@@ -68,4 +68,8 @@
     },
     "vim.mouseSelectionGoesIntoVisualMode": false,
     "git.ignoreMissingGitWarning": true,
+    "security.allowedUNCHosts": [
+        "wsl.localhost",
+        "$wsl"
+    ]
 }

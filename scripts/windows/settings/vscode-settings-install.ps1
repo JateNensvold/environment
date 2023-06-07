@@ -12,9 +12,10 @@ Import-Module (Join-Path $LIB_ABSOULTE_FOLDER_PATH $FILE_COMMAND_MODULE) -Force
 # Function to install VSCode Extension
 function Install-Extension {
     param (
+        [string]$vscodeVersion,
         [string]$extension
     )
-    code --install-extension $extension
+    Invoke-Expression "$vscodeVersion --install-extension $extension"
 }
 
 $APPDATA_PATH = Get-ChildItem Env:APPDATA | Select-Object Value -ExpandProperty Value
@@ -58,6 +59,7 @@ Write-Host $VSCODE_KEYBINDS_BACKUP_FILEPATH -ForegroundColor Cyan
 Export-File $VSCODE_SETTINGS_TARGET_FILEPATH $VSCODE_SETTINGS_BACKUP_FILEPATH -Force
 Export-File $VSCODE_KEYBINDS_TARGET_FILEPATH $VSCODE_KEYBINDS_BACKUP_FILEPATH -Force
 
+Write-Host "------------------------------------" -ForegroundColor Yellow
 Write-Host "Symlinking new settings for VSCode, from " -NoNewline -ForegroundColor Green
 Write-Host $VSCODE_SETTINGS_SOURCE_FILEPATH -ForegroundColor Cyan
 Write-Host " to "-NoNewline -ForegroundColor Green
@@ -110,15 +112,17 @@ Write-Host "------------------------------------" -ForegroundColor Yellow
 Write-Host "Installing VSCode Extensions" -ForegroundColor Green
 
 foreach ($extension in $BASE_EXTENSIONS) {
-    Install-Extension $extension
+    Install-Extension code $extension
+    Install-Extension code-insiders $extension
+
 }
 
 foreach ($extension in $TERMINAL_EXTENSIONS) {
-    Install-Extension $extension
-}
+    Install-Extension code $extension
+    Install-Extension code-insiders $extension}
 
 foreach ($extension in $WINDOWS_EXTENSIONS) {
-    Install-Extension $extension
-}
+    Install-Extension code $extension
+    Install-Extension code-insiders $extension}
 
 Write-Host "------------------------------------" -ForegroundColor Yellow
