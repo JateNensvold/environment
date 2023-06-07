@@ -21,8 +21,12 @@ $APPDATA_PATH = Get-ChildItem Env:APPDATA | Select-Object Value -ExpandProperty 
 $ENVIRONMENT_DIRECTORY = (get-item $PSScriptRoot).Parent.Parent.Parent.FullName
 
 $VSCODE_FOLDER_PATH = Join-Path $APPDATA_PATH "Code" "User"
+$VSCODE_INSIDER_FOLDER_PATH = Join-Path $APPDATA_PATH "Code - Insiders" "User"
+
 $VSCODE_SETTINGS_TARGET_FILEPATH = Join-Path $VSCODE_FOLDER_PATH "settings.json"
 $VSCODE_KEYBINDS_TARGET_FILEPATH = Join-Path $VSCODE_FOLDER_PATH "keybindings.json"
+$VSCODE_INSIDER_SETTINGS_TARGET_FILEPATH = Join-Path $VSCODE_INSIDER_FOLDER_PATH "settings.json"
+$VSCODE_INSIDER_KEYBINDS_TARGET_FILEPATH = Join-Path $VSCODE_INSIDER_FOLDER_PATH "keybindings.json"
 $VSCODE_SETTINGS_BACKUP_FILEPATH = join-path $VSCODE_FOLDER_PATH "backup_settings.json"
 $VSCODE_KEYBINDS_BACKUP_FILEPATH = join-path $VSCODE_FOLDER_PATH "backup_keybindings.json"
 
@@ -50,7 +54,11 @@ Write-Host $VSCODE_KEYBINDS_TARGET_FILEPATH -ForegroundColor Cyan
 Write-Host " to "-NoNewline -ForegroundColor Green
 Write-Host $VSCODE_KEYBINDS_BACKUP_FILEPATH -ForegroundColor Cyan
 
-Write-Host "Symlinking new settings from " -NoNewline -ForegroundColor Green
+# Export existing VSCode Settings and Keybinds to backup to ensure a temporary backup
+Export-File $VSCODE_SETTINGS_TARGET_FILEPATH $VSCODE_SETTINGS_BACKUP_FILEPATH -Force
+Export-File $VSCODE_KEYBINDS_TARGET_FILEPATH $VSCODE_KEYBINDS_BACKUP_FILEPATH -Force
+
+Write-Host "Symlinking new settings for VSCode, from " -NoNewline -ForegroundColor Green
 Write-Host $VSCODE_SETTINGS_SOURCE_FILEPATH -ForegroundColor Cyan
 Write-Host " to "-NoNewline -ForegroundColor Green
 Write-Host $VSCODE_SETTINGS_TARGET_FILEPATH -ForegroundColor Cyan
@@ -61,12 +69,24 @@ Write-Host " to "-NoNewline -ForegroundColor Green
 Write-Host $VSCODE_KEYBINDS_TARGET_FILEPATH -ForegroundColor Cyan
 Write-Host "------------------------------------" -ForegroundColor Yellow
 
-# Export existing VSCode Settings and Keybinds to backup to ensure a temporary backup
-Export-File $VSCODE_SETTINGS_TARGET_FILEPATH $VSCODE_SETTINGS_BACKUP_FILEPATH -Force
-Export-File $VSCODE_KEYBINDS_TARGET_FILEPATH $VSCODE_KEYBINDS_BACKUP_FILEPATH -Force
 # Link Settings and Keybinds from environment project to new VSCode user location
 Initialize-link $VSCODE_SETTINGS_TARGET_FILEPATH $VSCODE_SETTINGS_SOURCE_FILEPATH
 Initialize-link $VSCODE_KEYBINDS_TARGET_FILEPATH $VSCODE_KEYBINDS_SOURCE_FILEPATH
+
+Write-Host "Symlinking new settings for VSCode Insiders, from " -NoNewline -ForegroundColor Green
+Write-Host $VSCODE_SETTINGS_SOURCE_FILEPATH -ForegroundColor Cyan
+Write-Host " to "-NoNewline -ForegroundColor Green
+Write-Host $VSCODE_INSIDER_SETTINGS_TARGET_FILEPATH -ForegroundColor Cyan
+
+Write-Host "Symlinking new keybindings from " -NoNewline -ForegroundColor Green
+Write-Host $VSCODE_KEYBINDS_SOURCE_FILEPATH -ForegroundColor Cyan
+Write-Host " to "-NoNewline -ForegroundColor Green
+Write-Host $VSCODE_INSIDER_KEYBINDS_TARGET_FILEPATH -ForegroundColor Cyan
+Write-Host "------------------------------------" -ForegroundColor Yellow
+
+# Link Settings and Keybinds from environment project to new VSCode Insider user location
+Initialize-link $VSCODE_INSIDER_SETTINGS_TARGET_FILEPATH $VSCODE_SETTINGS_SOURCE_FILEPATH
+Initialize-link $VSCODE_INSIDER_KEYBINDS_TARGET_FILEPATH $VSCODE_KEYBINDS_SOURCE_FILEPATH
 
 # Link Settings and Keybinds from environment project to devcontainer to enable testing of
 #   settings in devcontainer
@@ -86,6 +106,9 @@ $BASE_EXTENSIONS = $EXTENSION_GROUPS.base
 $TERMINAL_EXTENSIONS = $EXTENSION_GROUPS.terminal
 $WINDOWS_EXTENSIONS = $EXTENSION_GROUPS.windows
 
+Write-Host "------------------------------------" -ForegroundColor Yellow
+Write-Host "Installing VSCode Extensions" -ForegroundColor Green
+
 foreach ($extension in $BASE_EXTENSIONS) {
     Install-Extension $extension
 }
@@ -97,3 +120,5 @@ foreach ($extension in $TERMINAL_EXTENSIONS) {
 foreach ($extension in $WINDOWS_EXTENSIONS) {
     Install-Extension $extension
 }
+
+Write-Host "------------------------------------" -ForegroundColor Yellow

@@ -71,6 +71,7 @@ Linux $HOME/.config/Code/User/settings.json
     - Pin programs to windows Taskbar
     - VSCode
         - WSL Extensions
+        - Link settings into Environment devcontainer to experiment with changes locally
     - powertoys
         - Settings[[Not Support currently]](https://github.com/microsoft/PowerToys/issues/4649)
             - Manual backup and restores of settings is available, latest settings should be stored in `environment/settings/powertoys/`

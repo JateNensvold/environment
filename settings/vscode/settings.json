@@ -67,4 +67,5 @@
         }
     },
     "vim.mouseSelectionGoesIntoVisualMode": false,
+    "git.ignoreMissingGitWarning": true,
 }
