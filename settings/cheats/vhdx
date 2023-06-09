@@ -1,0 +1,57 @@
+Create disk
+https://www.tenforums.com/tutorials/61391-mount-unmount-vhd-vhdx-file-windows-10-a.html
+Add new disk
+
+https://joeferguson.me/adding-another-disk-to-wsl2/
+
+Resize disk
+https://docs.microsoft.com/en-us/windows/wsl/vhd-size
+
+1.
+Attach VHD in Disk Management
+(To resise a VHDX file use the following command)
+```
+Convert-VHD F:\ext4.vhdx -DestinationPath F:\dynamic-ext4.vhdx -VHDType Dynamic
+```
+(Manuall Resize disk)
+```
+Resize-VHD -Path F:\dynamic-ext4.vhdx -SizeBytes 512GB
+```
+
+
+2. Powershell
+List Hard Drives
+```
+GET-CimInstance -query "SELECT * from Win32_DiskDrive"
+```
+
+Dismount partition
+```
+Dismount-DiskImage -DevicePath \\.\PHYSICALDRIVE3
+```
+
+Unmount hard drive vrom windows
+```
+wsl --mount \\.\PHYSICALDRIVE3
+```
+Mount Hard Drive from windows
+```
+wsl --mount \\.\PHYSICALDRIVE3
+```
+Mount Hard drive from Linux
+```
+guestmount -a /mnt/f/dynamic-ext4.vhdx --ro -m /dev/sda /mnt/wsl/PHYSICALDISK4/
+```
+
+
+The services expect to find a directory at /mnt/data
+so the first time you setup the container run the following command
+
+3.
+```
+sudo ln -s /mnt/wsl/PHYSICALDRIVE3/ /mnt/data
+```
+
+4.
+cd ~/plex
+docker-compose up -d --build 

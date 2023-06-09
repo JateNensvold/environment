@@ -1,0 +1,7 @@
+fzf
+fd
+ripgrep
+git-delta
+cheat
+tldr
+xxh

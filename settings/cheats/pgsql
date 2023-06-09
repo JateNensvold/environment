@@ -1,0 +1,11 @@
+# Start service
+sudo service posgresql start
+
+# Create DB
+sudo -u postgres createdb -O postgres 'dbname'
+
+# Connect to DB
+psql -U postgres
+
+# Delete DB
+sudo -u postgres dropdb 'database name'

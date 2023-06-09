@@ -13,8 +13,9 @@ cd "$repo_root"
 
 git init
 git remote add origin git@github.com:JateNensvold/environment.git
-git fetch
-git branch -u origin/master
+git fetch origin master
+# git checkout master
+# git branch --set-upstream-to=origin/master master
 git reset --mixed origin/master
 
 # Change back to original directory

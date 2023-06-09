@@ -1,0 +1,9 @@
+# To reclaim memory
+su - root
+echo 1 > /proc/sys/vm/drop_caches
+
+Docker
+----------------
+# Set docker Socket
+sudo ln -s /mnt/wsl/shared-docker/docker.sock /var/run/docker.sock
+

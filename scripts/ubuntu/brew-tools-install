@@ -1,5 +1,8 @@
 #!/bin/sh
+set -e
 
-programs=$(jq -r ".tools | @sh" ./scripts/ubuntu/brew-tools.json | tr -d \'^C)
+script_path=$(realpath "$0")
+script_dir=$(dirname "$script_path")
 
-brew install "$programs"
+# shellcheck disable=SC2046
+brew install $(cat "$script_dir/brew-tools.txt")

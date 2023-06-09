@@ -1,0 +1,16 @@
+"""
+- Listen: Read the problem carefully and find all details.  Restate question?  
+- Write question, test cases, edge cases, notes in a multiline comment.  
+- Identify which algorithms you can possibly apply to the problem.  Identify similar problems.
+- Identify predict runtime (average case assuming no hash table collisions)
+- DRAW THE DATA STRUCTURE ON PAPER, DRAW THE DATA STRUCTURE ON PAPER
+- Example: always use a middle example first, then do start/end after getting it working for middle example.  Similar problem?
+- Don't write the code yet!  Stick to pseudo code.  
+- Brute force if no clue, try to stick to pseudo code.
+- Optimise - see if there is a way to improve the runtime.  Check the big O for space and big O for time.
+- Walkthrough - Code the solution out in pseudo code line by line!  No actual time.
+- Implement the code
+- Test.  At least 2 middle cases 2 edge cases.  
+
+Write and define test cases in the leetcode test case section as you think of them.
+"""
