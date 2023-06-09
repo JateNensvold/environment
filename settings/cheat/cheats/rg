@@ -1,0 +1,7 @@
+
+---
+syntax: markdown
+---
+
+# Search specific files with ripgrep
+rg pattern file1 file2 ...

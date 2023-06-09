@@ -8,11 +8,21 @@ fi
 # Set display for x-11 display server
 export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
 
+# Add brew paths to environment
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:$PATH
-
+# Enable cheat autocompletion with fzf
+export CHEAT_USE_FZF=true
+# Set default terminal editors
+export VISUAL=$(which code)
+export EDITOR="$VISUAL"
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
+
+fpath=("$HOME/completion" $fpath)
+
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -83,27 +93,25 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-	git
+	autojump
+	cheat
 	copypath
 	copyfile
 	command-not-found
-	dirhistory
-	docker
-	docker-compose
+	# dirhistory
 	fd
+	docker
+	# docker-compose
     fzf
+	fzf-tab
+	git
 	jsontools
-	sudo
-	web-search
-	tmux
-	systemadmin
-	rust
-	ripgrep
-	redis-cli
-	python
-	autojump
-	zsh-autosuggestions
     ssh-agent
+	sudo
+	systemadmin
+	web-search
+	ripgrep
+	zsh-autosuggestions
 	)
 
 source $ZSH/oh-my-zsh.sh

@@ -33,7 +33,6 @@
 				"rust-lang.rust-analyzer",
 				"ms-azuretools.vscode-docker",
 				"oliversturm.fix-json",
-				"foxundermoon.shell-format",
 				"timonwong.shellcheck",
 				"eamodio.gitlens",
 				"shardulm94.trailing-spaces",

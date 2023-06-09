@@ -9,7 +9,6 @@
         ],
         "terminal": [
             "oliversturm.fix-json",
-            "foxundermoon.shell-format",
             "timonwong.shellcheck"
         ],
         "wsl": [

@@ -14,6 +14,8 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 "$script_root"/ubuntu/brew-tools-install
 "$script_root"/ubuntu/wsl2-docker-install.sh
 "$script_root"/ubuntu/git-remote-sync
+"$script_root"/ubuntu/ubuntu-settings
+"$script_root"/ubuntu/cheat-settings
 
 # brew install
 # zsh install
@@ -21,7 +23,7 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 # powerlevel 10k
 # brew tools
 # sync repo
+# ubuntu settings
 
-# wsl settings
 # vscode extensions
-# cheats
+# cheat autocomplete https://github.com/cheat/cheat/tree/master/scripts

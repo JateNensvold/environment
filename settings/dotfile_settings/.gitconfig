@@ -16,5 +16,19 @@ diffFilter = delta --color-only
 navigate = true # use n and N to move between diff sections
 light = false   # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
 
+[mergetool "vscode"]
+cmd = code --wait --merge $REMOTE $LOCAL $BASE $MERGED
+
 [merge]
 conflictstyle = diff3
+tool = vscode
+
+[user]
+email = jensvoldnate@gmail.com
+name = Nate Jensvold
+
+[init]
+defaultBranch = master
+
+[pull]
+rebase = true

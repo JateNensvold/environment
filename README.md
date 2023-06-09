@@ -138,7 +138,19 @@ Linux $HOME/.config/Code/User/settings.json
         - ...
 ## Install
 Install steps
+
+### Windows
+
+Prerequisites
+1. Powershell 5
+
+
 1. Windows Install
 ```ps1
 Set-ExecutionPolicy Bypass -Scope Process -Force; iex (iwr https://raw.githubusercontent.com/JateNensvold/environment/master/windows-install.ps1 -Headers @{"Cache-Control" = "no-cache" }).Content
 ```
+
+### Ubuntu/WSL
+1. Git
+2. vscode
+3. bash
