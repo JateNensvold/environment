@@ -47,7 +47,16 @@
     `Ctrl + Shift + W`
 - Close Tab
     `Ctrl + W`
-
+- New Terminal
+    `Ctrl + Shift + T`
+- Cycle Terminal
+    `Ctrl + Shift <Up/Down>`
+- Open/Close Terminal
+    `Ctrl + Shift + . `
+- Focus Terminal
+    `Ctrl + j`
+- Focus Editor
+    `Ctrl + k`
 #### VSCode Default Keybindings
 https://github.com/codebling/vs-code-default-keybindings/tree/master
 
@@ -72,7 +81,10 @@ Linux $HOME/.config/Code/User/settings.json
     `L-Ctrl + 1`
 - Open Settings
     `Win + Alt + P`
-
+- New Terminal
+    `Ctrl + T`
+- Cycle Terminal
+    `Ctrl + Tab`
 ## Todo
 
     - Wallpaper engine[Not supported without [SteamCMD](https://www.digitalcitizen.life/steam-cmd-windows/)]

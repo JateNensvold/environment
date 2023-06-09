@@ -1,0 +1,5 @@
+#!/bin/sh
+
+programs=$(jq -r ".tools | @sh" ./scripts/ubuntu/brew-tools.json | tr -d \'^C)
+
+brew install "$programs"

@@ -2,7 +2,18 @@
     "workbench.colorTheme": "Default Dark+",
     "workbench.iconTheme": "vscode-icons",
     "cSpell.userWords": [
+        "APPDATA",
+        "choco",
+        "conemu",
+        "devcontainer",
+        "devcontainers",
+        "dotfile",
+        "dotfiles",
+        "powertoys",
         "pyenv",
+        "rhai",
+        "ripgrep",
+        "tldr",
         "vsintellicode"
     ],
     "files.autoSave": "onFocusChange",
@@ -34,18 +45,6 @@
     "editor.formatOnSave": true,
     "editor.cursorSmoothCaretAnimation": "on",
     "trailing-spaces.highlightCurrentLine": false,
-    "cSpell.words": [
-        "APPDATA",
-        "choco",
-        "conemu",
-        "devcontainer",
-        "devcontainers",
-        "dotfile",
-        "dotfiles",
-        "powertoys",
-        "rhai",
-        "ripgrep"
-    ],
     "rust-analyzer.linkedProjects": [
         "./dotfiles/dotfile-rs/Cargo.toml"
     ],
@@ -71,5 +70,6 @@
     "security.allowedUNCHosts": [
         "wsl.localhost",
         "$wsl"
-    ]
+    ],
+    "git.openRepositoryInParentFolders": "never"
 }

@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# Can be ran with bash or ZSH
+# Exit on errors
+set -e
+
+# echo "The script you are running has basename $(basename -- "$0"), dirname $(dirname -- "$0")"
+# echo "The present working directory is $(pwd)"
+# rm -r /home/vscode/.oh-my-zsh
+script_root=$(dirname -- "$0")
+"$script_root"/ubuntu/brew-install
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+"$script_root"/ubuntu/zsh-install
+"$script_root"/ubuntu/oh-my-zsh-install
+"$script_root"/ubuntu/powerlevel10k-install
+"$script_root"/ubuntu/brew-tools-install
+"$script_root"/ubuntu/wsl2-docker-install.sh
+"$script_root"/ubuntu/git-remote-sync
+
+# brew install
+# zsh install
+# oh my zsh
+# powerlevel 10k
+# brew tools
+
+# sync repo
+
+# wsl settings
+# vscode extensions
