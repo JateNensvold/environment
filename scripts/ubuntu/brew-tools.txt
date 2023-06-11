@@ -1,7 +1,10 @@
+cheat
+erdtree
+exa
 fzf
 fd
-ripgrep
 git-delta
-cheat
+jq
+ripgrep
 tldr
 xxh

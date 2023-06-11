@@ -2,4 +2,7 @@
 # Can be ran with bash or ZSH
 # Exit on errors
 set -e
-code --install-extension
+
+jq '.extensions.base'
+
+code --install-extension $extension

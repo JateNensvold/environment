@@ -9,6 +9,8 @@
         "devcontainers",
         "dotfile",
         "dotfiles",
+        "erdtree",
+        "Keychain",
         "powertoys",
         "pyenv",
         "rhai",
@@ -71,5 +73,6 @@
         "wsl.localhost",
         "$wsl"
     ],
-    "git.openRepositoryInParentFolders": "never"
+    "git.openRepositoryInParentFolders": "never",
+    "editor.accessibilitySupport": "off"
 }

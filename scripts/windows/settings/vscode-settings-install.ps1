@@ -90,15 +90,6 @@ Write-Host "------------------------------------" -ForegroundColor Yellow
 Initialize-link $VSCODE_INSIDER_SETTINGS_TARGET_FILEPATH $VSCODE_SETTINGS_SOURCE_FILEPATH
 Initialize-link $VSCODE_INSIDER_KEYBINDS_TARGET_FILEPATH $VSCODE_KEYBINDS_SOURCE_FILEPATH
 
-# Link Settings and Keybinds from environment project to devcontainer to enable testing of
-#   settings in devcontainer
-#
-#  - This should be done in WSL
-# Export-File $VSCODE_SETTINGS_LOCAL_FILEPATH $VSCODE_SETTINGS_LOCALBACKUP_FILEPATH -Force
-# Export-File $VSCODE_KEYBINDS_LOCAL_FILEPATH $VSCODE_KEYBINDS_LOCALBACKUP_FILEPATH -Force
-# Initialize-link $VSCODE_SETTINGS_LOCAL_FILEPATH $VSCODE_SETTINGS_SOURCE_FILEPATH
-# Initialize-link $VSCODE_KEYBINDS_LOCAL_FILEPATH $VSCODE_KEYBINDS_SOURCE_FILEPATH
-
 # Install VSCode Windows extensions
 $GLOBAL_EXTENSIONS_JSON_PATH = Join-Path $VSCODE_SETTINGS_SOURCE_FOLDER "global-extensions.json"
 $JSON_OBJECT = Get-Content -Raw -Path $GLOBAL_EXTENSIONS_JSON_PATH | ConvertFrom-Json
@@ -114,15 +105,16 @@ Write-Host "Installing VSCode Extensions" -ForegroundColor Green
 foreach ($extension in $BASE_EXTENSIONS) {
     Install-Extension code $extension
     Install-Extension code-insiders $extension
-
 }
 
 foreach ($extension in $TERMINAL_EXTENSIONS) {
     Install-Extension code $extension
-    Install-Extension code-insiders $extension}
+    Install-Extension code-insiders $extension
+}
 
 foreach ($extension in $WINDOWS_EXTENSIONS) {
     Install-Extension code $extension
-    Install-Extension code-insiders $extension}
+    Install-Extension code-insiders $extension
+}
 
 Write-Host "------------------------------------" -ForegroundColor Yellow
