@@ -7,8 +7,7 @@ set -e
 script_root=$(dirname -- "$0")
 "$script_root"/ubuntu/brew-install
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-# "$script_root"/ubuntu/zsh-install
-# rm -r /home/vscode/.oh-my-zsh
+"$script_root"/ubuntu/zsh-install
 "$script_root"/ubuntu/oh-my-zsh-install
 "$script_root"/ubuntu/powerlevel10k-install
 "$script_root"/ubuntu/brew-tools-install

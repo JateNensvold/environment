@@ -105,7 +105,7 @@ fi
 #   List all files
   alias xa="exa --group-directories-first -la --time-style=long-iso"
 #   List files grouped by directory first
-  alis  xl="exa --group-directories-first -l"
+  alias  xl="exa --group-directories-first -l"
 #   List Tree of files
   alias xt="exa -T"
 #   List all files in current directory and pipe to fzf

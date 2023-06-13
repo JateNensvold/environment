@@ -18,5 +18,7 @@ if [ ! $CODE_IS_AVAILABLE -eq 0 ]; then
     exit 1
 fi
 
+cd "$HOME" || exit 1
+
 git clone git@github.com:JateNensvold/environment.git
 ./environment/scripts/wsl2-ubuntu-setup
