@@ -29,6 +29,7 @@ fpath=(
 	"$HOME/completion"
 	$fpath
 	)
+autoload -Uz bcp bip bup fp kp ks utils
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -79,6 +80,7 @@ if [[ -n $SSH_CONNECTION ]]; then
 	# Set vscode as default terminal editor when editing locally
 	export EDITOR='vim'
 else
+# Be sure to quote $EDITOR path when using as default location of vscode is a path with space in it
 	export VISUAL=$(which code)
 	export EDITOR="$VISUAL"
 fi
@@ -103,7 +105,7 @@ fi
   alias gl="git ls-files ${1} | xargs wc -l"
 
 #   List all files
-  alias xa="exa --group-directories-first -la --time-style=long-iso"
+  alias xa="exa --group-directories-first -laa --time-style=long-iso"
 #   List files grouped by directory first
   alias  xl="exa --group-directories-first -l"
 #   List Tree of files
@@ -116,9 +118,11 @@ fi
   alias sf="rg -g '!.git' --hidden"
 
   alias u="utils"
-  alias c="$EDITOR ."
+  alias c="\"$EDITOR\" ."
   alias zx="source ~/.zshrc"
-  alias zz="$EDITOR ~/.zshrc"
+  alias zz="\"$EDITOR\" ~/.zshrc"
+
+setopt appendhistory
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

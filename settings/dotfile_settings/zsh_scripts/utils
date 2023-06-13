@@ -28,7 +28,7 @@ xa     [alias]              exa --group-directories-first -la --time-style=long-
 xf     [alias]              exa --group-directories-first -l | fzf \${FZF_DEFAULT_OPTS} -m --header='[exa:files]'
 xt     [alias]              exa -T
 ff     [alias]              erd -d logical -Hi --hidden --no-git --layout flat | fzf \${FZF_DEFAULT_OPTS} -m --header='[erd:files]'
-sf     [alias]              rg -g '!.git' --hidden"
+sf     [alias]              rg -g '!.git' --hidden
 
 u      [alias]              utils
 c      [alias]              \$EDITOR .
