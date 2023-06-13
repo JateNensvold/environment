@@ -1,8 +1,30 @@
-#!/bin/sh
+#!/bin/bash
+
 # Can be ran with bash or ZSH
 # Exit on errors
 set -e
 
-jq '.extensions.base'
+script_path=$(realpath "$0")
+script_dir=$(dirname "$script_path")
+repo_root="$script_dir/../.."
 
-code --install-extension $extension
+VSCODE_EXTENSIONS_JSON_PATH="$repo_root/settings/vscode/global-extensions.json"
+
+BASE_EXTENSIONS=$(jq -r '.extensions.base | @sh' "$VSCODE_EXTENSIONS_JSON_PATH" | tr -d \')
+TERMINAL_EXTENSIONS=$(jq -r '.extensions.terminal | @sh' "$VSCODE_EXTENSIONS_JSON_PATH" | tr -d \')
+WSL_EXTENSIONS=$(jq -r '.extensions.wsl | @sh' "$VSCODE_EXTENSIONS_JSON_PATH" | tr -d \')
+
+for extension in "${BASE_EXTENSIONS[@]}"
+do
+    code --install-extension "$extension"
+done
+
+for extension in "${TERMINAL_EXTENSIONS[@]}"
+do
+    code --install-extension "$extension"
+done
+
+for extension in "${WSL_EXTENSIONS[@]}"
+do
+    code --install-extension "$extension"
+done

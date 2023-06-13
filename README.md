@@ -1,25 +1,32 @@
-## Prerequisites
-
-
+# Environment
+This is the repo that contains my environment setup scripts and dotfiles.
+[There are many others but this one is mine](https://github.com/andremedeiros/dotfiles/tree/20779ba9cb5c88a21e98a7a49ac9cb0d3e5868c6)
 
 ## Install
+Follow the below instructions on your desired operating system to run the environment
+setup scripts
 
-### Windows
+**P** = Preinstalled prerequisite  
+**WS** = Installed as part of the windows setup script
+
+### Windows Setup
 Prerequisites
-1. Powershell 5
 
-1. Windows Install
+
+1. Windows 11
+1. Powershell 5(**P**)
+
+Copy and run the following command in Powershell 5 to setup windows 11
 ```ps1
 Set-ExecutionPolicy Bypass -Scope Process -Force; iex (iwr https://raw.githubusercontent.com/JateNensvold/environment/master/windows-install.ps1 -Headers @{"Cache-Control" = "no-cache" }).Content
 ```
 
 ### Ubuntu/WSL
 
-Prerequisites - Note, most of these prerequisites come preinstalled or will be added by the
-    windows setup script
-1. Git
-2. vscode
-3. bash
+1. Git(**P**)
+2. vscode(**WS**)
+3. bash(**P**)
+4. curl(**P**)
 4. Create a new SSH key
     - Follow the instructions [here](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent?platform=linux#generating-a-new-ssh-key) for generating a key
     - Add the key to your SSH Keychain using the [instructions here](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent?platform=linux#adding-your-ssh-key-to-the-ssh-agent)
@@ -27,16 +34,16 @@ Prerequisites - Note, most of these prerequisites come preinstalled or will be a
 
 #### WSL setup
 
-Copy and run the following command to automate the setup of an WSL environment
-```
-https://raw.githubusercontent.com/JateNensvold/environment/master/windows-install.ps1
+Copy and run the following command to automate the setup of WSL(Windows Subsystem For Linuxs)
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JateNensvold/environment/master/windows-install.ps1)"
 ```
 
 #### Ubuntu Setup
 
-Copy and run the following command to automate the setup of an ubuntu environment
+Copy and run the following command to automate the setup of ubuntu(Tested on 22.04)
 ```bash
-https://raw.githubusercontent.com/JateNensvold/environment/master/scripts/linux-setup
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JateNensvold/environment/master/scripts/linux-setup.sh)"
 ```
 
 #### Mac Setup

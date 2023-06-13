@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/bash
+
 # Can be ran with bash or ZSH
 # Exit on errors
 set -e
