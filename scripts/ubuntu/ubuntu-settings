@@ -46,9 +46,9 @@ if [ ! -d "$HOME/.config/cheat/cheatsheets/community" ]; then
 fi
 
 # Add autocompletion for cheat command
-mkdir -p ~/.oh-my-zsh/custom/plugins/cheat/
+mkdir -p "$HOME/.oh-my-zsh/custom/plugins/cheat/"
 wget https://raw.githubusercontent.com/cheat/cheat/master/scripts/cheat.zsh -O \
-    ~/.oh-my-zsh/custom/plugins/cheat/cheat.plugin.zsh
+    "$HOME/.oh-my-zsh/custom/plugins/cheat/cheat.plugin.zsh"
 
 # Link zsh functions from environment/settings/dofile_settings/zsh_scripts
 if [ -e "$HOME/.zfuncs" ]; then
