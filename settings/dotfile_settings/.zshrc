@@ -122,7 +122,10 @@ fi
   alias zx="source ~/.zshrc"
   alias zz="\"$EDITOR\" ~/.zshrc"
 
+# Persist zsh command history between sessions
 setopt appendhistory
+# Disable annoying beep sound in terminal
+unsetopt beep
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
