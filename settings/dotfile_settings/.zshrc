@@ -81,7 +81,7 @@ if [[ -n $SSH_CONNECTION ]]; then
 	export EDITOR='vim'
 else
 # Be sure to quote $EDITOR path when using as default location of vscode is a path with space in it
-	export VISUAL=$(which code)
+	export VISUAL=$(which code | sed 's/ /\\ /g')
 	export EDITOR="$VISUAL"
 fi
 

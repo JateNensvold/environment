@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 git --version  >/dev/null 2>&1
 GIT_IS_AVAILABLE=$?

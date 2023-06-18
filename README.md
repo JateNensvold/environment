@@ -43,7 +43,7 @@ Copy and run the following command to automate the setup of WSL(Windows Subsyste
 
 Copy and run the following command to automate the setup of ubuntu(Tested on 22.04)
 ```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JateNensvold/environment/master/scripts/linux-setup.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JateNensvold/environment/master/linux-install.sh)"
 ```
 
 #### Mac Setup
