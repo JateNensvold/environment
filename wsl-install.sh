@@ -20,5 +20,5 @@ fi
 
 cd "$HOME" || exit 1
 
-git clone git@github.com:JateNensvold/environment.git
+git https://github.com/JateNensvold/environment.git
 ./environment/scripts/wsl2-ubuntu-setup
