@@ -12,5 +12,5 @@ fi
 
 cd "$HOME" || exit 1
 
-git https://github.com/JateNensvold/environment.git
+git clone https://github.com/JateNensvold/environment.git
 ./environment/scripts/linux-setup
