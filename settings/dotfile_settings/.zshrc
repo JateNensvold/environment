@@ -52,17 +52,16 @@ plugins=(
 	autojump
 	cheat
 	copypath
-	copyfile
 	command-not-found
 	fd
 	docker
+	direnv
     fzf
 	fzf-tab
-	git
 	jsontools
+  nix-shell
     ssh-agent
 	sudo
-	systemadmin
 	web-search
 	ripgrep
 	zsh-autosuggestions
@@ -118,9 +117,9 @@ fi
   alias sf="rg -g '!.git' --hidden"
 
   alias u="utils"
-  alias c="\"$EDITOR\" ."
+  alias c="$EDITOR ."
   alias zx="source ~/.zshrc"
-  alias zz="\"$EDITOR\" ~/.zshrc"
+  alias zz="$EDITOR ~/.zshrc"
 
 # Persist zsh command history between sessions
 setopt appendhistory
@@ -129,3 +128,5 @@ unsetopt beep
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+if [ -e /home/tosh/.nix-profile/etc/profile.d/nix.sh ]; then . /home/tosh/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer

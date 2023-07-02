@@ -1,4 +1,5 @@
 cheat
+direnv
 erdtree
 exa
 fzf

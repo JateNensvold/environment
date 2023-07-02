@@ -351,5 +351,15 @@
         "key": "tab",
         "command": "-editor.action.inlineSuggest.commit",
         "when": "inlineSuggestionVisible && tabnine.tab-override && !editorTabMovesFocus"
+    },
+    // {
+    //     "key": "tab",
+    //     "command": "editor.action.page",
+    //     "when": "editorTextFocus && vim.active && !inDebugRepl"
+    // },
+    {
+        "key": "ctrl+n",
+        "command": "extension.vim_escape",
+        "when": "vim.mode == 'EasyMotionMode' | vim.mode == 'Insert'"
     }
 ]

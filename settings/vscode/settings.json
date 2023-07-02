@@ -7,23 +7,32 @@
         "conemu",
         "devcontainer",
         "devcontainers",
+        "direnv",
         "dotfile",
         "dotfiles",
+        "envrc",
         "erdtree",
+        "Homelab",
+        "Jate",
         "Keychain",
+        "Nensvold",
+        "netselect",
+        "podinfo",
         "powertoys",
+        "prereq",
         "pyenv",
+        "raspberrypi",
         "rhai",
         "ripgrep",
         "tldr",
+        "traefik",
+        "truenas",
+        "Ventoy",
         "vsintellicode"
     ],
     "files.autoSave": "onFocusChange",
     "explorer.confirmDragAndDrop": false,
     "editor.suggestSelection": "first",
-    "editor.rulers": [
-        100
-    ],
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
     "workbench.editorAssociations": {
         "*.ipynb": "jupyter-notebook"
@@ -38,7 +47,6 @@
         "jupyter-notebook": "left"
     },
     "window.zoomLevel": 1,
-    "tabnine.experimentalAutoImports": true,
     "redhat.telemetry.enabled": false,
     "aws.telemetry": false,
     "[python]": {
@@ -47,9 +55,6 @@
     "editor.formatOnSave": true,
     "editor.cursorSmoothCaretAnimation": "on",
     "trailing-spaces.highlightCurrentLine": false,
-    "rust-analyzer.linkedProjects": [
-        "./dotfiles/dotfile-rs/Cargo.toml"
-    ],
     "vsicons.dontShowNewVersionMessage": true,
     "workbench.editor.focusRecentEditorAfterClose": false,
     "terminal.integrated.defaultProfile.linux": "zsh",
@@ -67,12 +72,103 @@
             "env": {}
         }
     },
+    "vim.easymotion": true,
     "vim.mouseSelectionGoesIntoVisualMode": false,
+    "vim.useSystemClipboard": true,
+    "vim.leader": "/",
+    "vim.insertModeKeyBindings": [
+        {
+            "before": [
+                "j",
+                "j"
+            ],
+            "after": [
+                "<Left>"
+            ]
+        },
+        {
+            "before": [
+                "j",
+                "k"
+            ],
+            "after": [
+                "<Down>"
+            ]
+        },
+        {
+            "before": [
+                "k",
+                "l"
+            ],
+            "after": [
+                "<Up>"
+            ]
+        },
+        {
+            "before": [
+                "l",
+                ";"
+            ],
+            "after": [
+                "<Right>"
+            ]
+        },
+    ],
+    "vim.normalModeKeyBindingsNonRecursive": [
+        {
+            "before": [
+                "<leader>",
+                "d"
+            ],
+            "after": [
+                "d",
+                "d"
+            ]
+        },
+        {
+            "before": [
+                "K"
+            ],
+            "commands": [
+                "lineBreakInsert"
+            ],
+            "silent": true
+        },
+        {
+            "before": [
+                ";"
+            ],
+            "after": [
+                "leader",
+                "leader",
+            ],
+        },
+        {
+            "before": [
+                "<C-a>"
+            ]
+        }
+    ],
+    "vim.handleKeys": {
+        "<C-a>": true,
+        "<C-f>": false
+    },
+    "editor.acceptSuggestionOnEnter": "off",
     "git.ignoreMissingGitWarning": true,
     "security.allowedUNCHosts": [
         "wsl.localhost",
         "$wsl"
     ],
     "git.openRepositoryInParentFolders": "never",
-    "editor.accessibilitySupport": "off"
+    "editor.accessibilitySupport": "off",
+    "telemetry.telemetryLevel": "off",
+    "[nix]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "jnoortheen.nix-ide"
+    },
+    "nix.enableLanguageServer": true,
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "gitlens.plusFeatures.enabled": false,
 }

@@ -1,0 +1,4 @@
+# Search package 
+nix-env --query --available --attr-path
+# Load shell.nix or default.nix
+nix-shell
