@@ -361,5 +361,10 @@
         "key": "ctrl+n",
         "command": "extension.vim_escape",
         "when": "vim.mode == 'EasyMotionMode' | vim.mode == 'Insert'"
-    }
+    },
+    // {
+    //     "key": "shift+v",
+    //     "command": "extension.vim_cmd+v",
+    //     "when": "vim.mode == 'Normal'"
+    // }
 ]

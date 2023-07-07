@@ -1,0 +1,14 @@
+{
+    "recommendations": [
+        "mkhl.direnv",
+        "streetsidesoftware.code-spell-checker",
+        "ms-azuretools.vscode-docker",
+        "oliversturm.fix-json",
+        "timonwong.shellcheck",
+        "eamodio.gitlens",
+        "shardulm94.trailing-spaces",
+        "ms-vscode.powershell",
+        "jnoortheen.nix-ide",
+        "davidanson.vscode-markdownlint"
+    ]
+}

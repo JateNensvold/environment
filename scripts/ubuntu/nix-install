@@ -1,0 +1,13 @@
+#!/bin/bash
+set -e
+
+curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux-multi --no-confirm
+
+#  Install Home manager
+[ ! -f "$HOME/.config/home-manager" ] || mv "$HOME/.config/home-manager" "$HOME/.config/backup-home-manager"
+ln -s ~/environment/settings/nix/ ~/.config/home-manager
+
+nix-channel --add https://github.com/nix-community/home-manager/archive/release-23.05.tar.gz home-manager
+nix-channel --update
+
+nix-shell '<home-manager>' -A install

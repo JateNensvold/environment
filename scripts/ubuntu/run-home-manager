@@ -1,0 +1,5 @@
+#!/bin/bash
+set -e
+
+# home-manager build --flake ../../settings/nix/#tosh
+home-manager switch --flake ../../settings/nix/#tosh

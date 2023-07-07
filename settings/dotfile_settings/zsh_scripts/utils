@@ -11,29 +11,32 @@ fp     [find:path]
 kp     [kill:path]
 ks     [kill:tcp]
 
-ga     [alias]              git add .
-gc     [alias]              git commit -m \${1}
-gd     [alias]              git diff
-gdt    [alias]              git difftool
-gmt    [alias]              git mergetool
-gp     [alias]              git push \${1} \${2}
-gco    [alias]              git checkout \${1} \${2}
-gpl    [alias]              git pull \${1} \${2}
-grb    [alias]              git rebase \${1} \${2} -i
-gs     [alias]              git status
-gl     [alias]              git ls-files \${1} | xargs wc -l
+ga     [alias]                       git add .
+gc     [alias]                       git commit -m \${1}
+gd     [alias]                       git diff
+gdt    [alias]                       git difftool
+gmt    [alias]                       git mergetool
+gp     [alias]                       git push \${1} \${2}
+gco    [alias]                       git checkout \${1} \${2}
+gpl    [alias]                       git pull \${1} \${2}
+grb    [alias]                       git rebase \${1} \${2} -i
+gs     [alias]                       git status
+gl     [alias]                       git ls-files \${1} | xargs wc -l
 
-xl     [alias]              exa --group-directories-first -l
-xa     [alias]              exa --group-directories-first -la --time-style=long-iso
-xf     [alias]              exa --group-directories-first -l | fzf \${FZF_DEFAULT_OPTS} -m --header='[exa:files]'
-xt     [alias]              exa -T
-ff     [alias]              erd -d logical -Hi --hidden --no-git --layout flat | fzf \${FZF_DEFAULT_OPTS} -m --header='[erd:files]'
-sf     [alias]              rg -g '!.git' --hidden
+xl     [alias] view-files            exa --group-directories-first -l
+xa     [alias] view-files-all        exa --group-directories-first -la --time-style=long-iso
+xf     [alias] view-files-fzf        exa --group-directories-first -l | fzf \${FZF_DEFAULT_OPTS} -m --header='[exa:files]'
+xt     [alias] view-files-recursive  exa -T
+ff     [alias] find-file             erd -d logical -Hi --hidden --no-git --layout flat | fzf \${FZF_DEFAULT_OPTS} -m --header='[erd:files]'
+sf     [alias] search-file           rg -g '!.git' --hidden
 
-u      [alias]              utils
-c      [alias]              \$EDITOR .
-zx     [alias]              source ~/.zshrc
-zz     [alias]              \$EDITOR ~/.zshrc"
+ns     [alias] nix-search            nix-env --query --available --attr-path
+nv     [alias] nix-verison           nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'
+
+u      [alias]                       utils
+c      [alias]                       \$EDITOR .
+zx     [alias]                       source ~/.zshrc
+zz     [alias]                       \$EDITOR ~/.zshrc"
 
 local cmd=$(echo $helptxt | eval "fzf ${FZF_DEFAULT_OPTS} --header='[utils:show]'" | awk '{print $1}')
 

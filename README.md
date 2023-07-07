@@ -1,22 +1,25 @@
 # Environment
+
 This is the repo that contains my environment setup scripts and dotfiles.
 [There are many others but this one is mine](https://github.com/andremedeiros/dotfiles/tree/20779ba9cb5c88a21e98a7a49ac9cb0d3e5868c6)
 
 ## Install
+
 Follow the below instructions on your desired operating system to run the environment
 setup scripts
 
-**P** = Preinstalled prerequisite  
+**P** = Preinstalled prerequisite
 **WS** = Installed as part of the windows setup script
 
 ### Windows Setup
-Prerequisites
 
+Prerequisites
 
 1. Windows 11
 1. Powershell 5(**P**)
 
 Copy and run the following command in Powershell 5 to setup windows 11
+
 ```ps1
 Set-ExecutionPolicy Bypass -Scope Process -Force; iex (iwr https://raw.githubusercontent.com/JateNensvold/environment/master/windows-install.ps1 -Headers @{"Cache-Control" = "no-cache" }).Content
 ```
@@ -24,10 +27,10 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; iex (iwr https://raw.githubuse
 ### Ubuntu/WSL
 
 1. Git(**P**)
-2. vscode(**WS**)
-3. bash(**P**)
-4. curl(**P**)
-4. Create a new SSH key
+1. vscode(**WS**)
+1. bash(**P**)
+1. curl(**P**)
+1. Create a new SSH key
     - Follow the instructions [here](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent?platform=linux#generating-a-new-ssh-key) for generating a key
     - Add the key to your SSH Keychain using the [instructions here](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent?platform=linux#adding-your-ssh-key-to-the-ssh-agent)
     - Add the key to your [github account](https://github.com/settings/keys) using the instructions [here](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account#adding-a-new-ssh-key-to-your-account)
@@ -35,6 +38,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; iex (iwr https://raw.githubuse
 #### WSL setup
 
 Copy and run the following command to automate the setup of WSL(Windows Subsystem For Linuxs)
+
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JateNensvold/environment/master/windows-install.ps1)"
 ```
@@ -42,57 +46,62 @@ Copy and run the following command to automate the setup of WSL(Windows Subsyste
 #### Ubuntu Setup
 
 Copy and run the following command to automate the setup of ubuntu(Tested on 22.04)
+
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JateNensvold/environment/master/linux-install.sh)"
 ```
 
 #### Mac Setup
+
 WIP, check todo section
 
 ## Current Functionality
+
 - Windows
-    - Enable WSL2
-    - Remove Windows Default Programs
-    - Disable Windows Settings
-        - StickyKeys
-    - Update Windows(WIP)
-    - Install Program list [[Full List Found Here]](scripts/windows/windows-tools.json)
-        - FireFox
-        - VSCode
-        - Spotify
-        - Discord
-        - ...
-    - Automatic update of setting/program configuration to defaults in this Repo
-        - [PowerToys](settings/powertoys/settings.ptb)
-        - VSCode
-            - [Keybindings](settings/vscode/keybindings.json)
-            - [Settings](settings/vscode/settings.json)
-            - [Extensions](settings/vscode/global-extensions.json)
-- WSL2
-    - Program Configs
-        - [Git](settings/dotfile_settings/.gitconfig)
-        - [ZSH](settings/dotfile_settings/.zhrc)
+  - Enable WSL2
+  - Remove Windows Default Programs
+  - Disable Windows Settings
+    - StickyKeys
+  - Update Windows(WIP)
+  - Install Program list [[Full List Found Here]](scripts/windows/windows-tools.json)
+    - FireFox
     - VSCode
-        - WSL and Windows Settings and Keybindings sync with same Global Settings
-        - Extensions
-    - Install Program List
-        - ZSH
-        - Brew
-        - PowerLevel10k
-        - Docker(No Docker Desktop)
-        - ...
+    - Spotify
+    - Discord
+    - ...
+  - Automatic update of setting/program configuration to defaults in this Repo
+    - [PowerToys](settings/powertoys/settings.ptb)
+    - VSCode
+      - [Keybindings](settings/vscode/keybindings.json)
+      - [Settings](settings/vscode/settings.json)
+      - [Extensions](settings/vscode/global-extensions.json)
+- WSL2
+  - Program Configs
+    - [Git](settings/dotfile_settings/.gitconfig)
+    - [ZSH](settings/dotfile_settings/.zhrc)
+  - VSCode
+    - WSL and Windows Settings and Keybindings sync with same Global Settings
+    - Extensions
+  - Install Program List
+    - ZSH
+    - Brew
+    - PowerLevel10k
+    - Docker(No Docker Desktop)
+    - ...
 
 ## Settings & Keybindings
 
 - Media Keys
-    - Resume/Pause Music `fn + \`
-    - Previous song `fn [`
-    - Next song `fn ]`
-    - Volume up `fn PgUp`
-    - Volume down `fn PgDn`
+  - Resume/Pause Music `fn + \`
+  - Previous song `fn [`
+  - Next song `fn ]`
+  - Volume up `fn PgUp`
+  - Volume down `fn PgDn`
 
 ### VScode
+
 #### Custom VSCode Keybindings
+
 - Reopen Closed tab
     `Ctrl + Shift + W`
 - Close Tab
@@ -102,21 +111,23 @@ WIP, check todo section
 - Cycle Terminal
     `Ctrl + Shift <Up/Down>`
 - Open/Close Terminal
-    `Ctrl + Shift + . `
+    `Ctrl + Shift + .`
 - Focus Terminal
     `Ctrl + j`
 - Focus Editor
     `Ctrl + k`
+
 #### VSCode Default Keybindings
-https://github.com/codebling/vs-code-default-keybindings/tree/master
+
+<https://github.com/codebling/vs-code-default-keybindings/tree/master>
 
 #### VSCode Default Settings
+
 These are the default settings filepaths on Linux, macOS, and Windows
-```
-Windows %APPDATA%\Code\User\settings.json
-macOS $HOME/Library/Application\ Support/Code/User/settings.json
-Linux $HOME/.config/Code/User/settings.json
-```
+
+- Windows: `%APPDATA%\Code\User\settings.json`
+- macOS: `$HOME/Library/Application\ Support/Code/User/settings.json`
+- Linux: `$HOME/.config/Code/User/settings.json`
 
 ### Windows PowerToys
 
@@ -126,6 +137,7 @@ Linux $HOME/.config/Code/User/settings.json
     `L-Ctrl` x2
 
 ### Conemu
+
 - Focus window
     `L-Ctrl + 1`
 - Open Settings
@@ -138,6 +150,7 @@ Linux $HOME/.config/Code/User/settings.json
 ## Setup Development Environment
 
 1. Run the following commands to clone this repo
+
     ```bash
     git clone git@github.com:JateNensvold/environment.git
 
@@ -150,18 +163,19 @@ To test new settings in the devcontainer edit the settings config at
 environment/.vscode/settings.json
 
 ## Todo
+
 - Remove dotfiles submodule
-    - Dotfiles repo may be out of place when bash files are more portable
+  - Dotfiles repo may be out of place when bash files are more portable
 - Mac setup Script
 - Windows
-    - Wallpaper engine[Not supported without [SteamCMD](https://www.digitalcitizen.life/steam-cmd-windows/)]
-    - Pin programs to windows Taskbar
-    - powertoys
-        - Settings[[Not Support currently]](https://github.com/microsoft/PowerToys/issues/4649)
-            - Manual backup and restores of settings is available, latest settings should be
+  - Wallpaper engine[Not supported without [SteamCMD](https://www.digitalcitizen.life/steam-cmd-windows/)]
+  - Pin programs to windows Taskbar
+  - powertoys
+    - Settings[[Not Support currently]](https://github.com/microsoft/PowerToys/issues/4649)
+      - Manual backup and restores of settings is available, latest settings should be
             stored in `environment/settings/powertoys/`, currently settings will be linked to the
             powertoys install directory but the user has to manually load them
 - Linux
-    - Install script for VSCode for non WSL environments
-    - rust toolchain?
-    - Python?
+  - Install script for VSCode for non WSL environments
+  - rust toolchain?
+  - Python?

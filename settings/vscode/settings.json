@@ -80,51 +80,38 @@
         {
             "before": [
                 "j",
-                "j"
+                "k"
             ],
             "after": [
-                "<Left>"
+                "<Esc>"
             ]
-        },
+        }
+    ],
+    // [-] map jk to esc in visual mode
+    "vim.visualModeKeyBindings": [
         {
             "before": [
                 "j",
                 "k"
             ],
             "after": [
-                "<Down>"
+                "<Esc>"
             ]
-        },
+        }
+    ],
+    // [-] map jk to esc in command mode
+    "vim.commandLineModeKeyBindings": [
         {
             "before": [
-                "k",
-                "l"
+                "j",
+                "k"
             ],
             "after": [
-                "<Up>"
+                "<Esc>"
             ]
-        },
-        {
-            "before": [
-                "l",
-                ";"
-            ],
-            "after": [
-                "<Right>"
-            ]
-        },
+        }
     ],
     "vim.normalModeKeyBindingsNonRecursive": [
-        {
-            "before": [
-                "<leader>",
-                "d"
-            ],
-            "after": [
-                "d",
-                "d"
-            ]
-        },
         {
             "before": [
                 "K"
@@ -140,18 +127,23 @@
             ],
             "after": [
                 "leader",
-                "leader",
-            ],
+                "leader"
+            ]
         },
+        // Visual Block mode
         {
             "before": [
-                "<C-a>"
+                "V"
+            ],
+            "after": [
+                "<C-v>"
             ]
         }
     ],
     "vim.handleKeys": {
-        "<C-a>": true,
-        "<C-f>": false
+        "<C-a>": false,
+        "<C-f>": false,
+        "<C-v>": true
     },
     "editor.acceptSuggestionOnEnter": "off",
     "git.ignoreMissingGitWarning": true,
@@ -171,4 +163,13 @@
         "editor.defaultFormatter": "vscode.json-language-features"
     },
     "gitlens.plusFeatures.enabled": false,
+    "nix.serverPath": "rnix-lsp",
+    "search.exclude": {
+        "**/.git": true,
+        // "**/target": true,
+        "**/.direnv": true,
+        "**/dist": true,
+        "**/Cargo.lock": true
+    },
+    "direnv.restart.automatic": true
 }
