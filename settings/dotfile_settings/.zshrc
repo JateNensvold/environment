@@ -98,6 +98,7 @@ fi
   alias nv="nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'"
 
   alias u="utils"
+  alias reload="reload-home-manager-config"
   alias c="$EDITOR ."
   alias zx="source ~/.extra_zshrc"
   alias zz="$EDITOR ~/.extra_zshrc"

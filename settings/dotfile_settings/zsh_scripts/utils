@@ -4,10 +4,7 @@
 ### UTILS
 # show utils commands and custom aliasses
 
-local helptxt="bcp    [brew:clean]
-bip    [brew:install]
-bup    [brew:update]
-fp     [find:path]
+local helptxt="fp     [find:path]
 kp     [kill:path]
 ks     [kill:tcp]
 
@@ -34,6 +31,7 @@ ns     [alias] nix-search            nix-env --query --available --attr-path
 nv     [alias] nix-verison           nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'
 
 u      [alias]                       utils
+reload [alias] reload home-manager   home-manager switch --flake /nix/.../settings/nix/flakes'
 c      [alias]                       \$EDITOR .
 zx     [alias]                       source ~/.zshrc
 zz     [alias]                       \$EDITOR ~/.zshrc"
