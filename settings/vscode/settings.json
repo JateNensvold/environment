@@ -2,6 +2,7 @@
     "workbench.colorTheme": "Default Dark+",
     "workbench.iconTheme": "vscode-icons",
     "cSpell.userWords": [
+        "aarch64",
         "APPDATA",
         "choco",
         "conemu",
@@ -17,6 +18,8 @@
         "Keychain",
         "Nensvold",
         "netselect",
+        "nixpkgs",
+        "pkgs",
         "podinfo",
         "powertoys",
         "prereq",
@@ -24,6 +27,7 @@
         "raspberrypi",
         "rhai",
         "ripgrep",
+        "stdenv",
         "tldr",
         "traefik",
         "truenas",
@@ -171,5 +175,12 @@
         "**/dist": true,
         "**/Cargo.lock": true
     },
-    "direnv.restart.automatic": true
+    "direnv.restart.automatic": true,
+    "cSpell.enableFiletypes": [
+        "nix",
+        "shellscript"
+    ],
+    "cSpell.caseSensitive": false,
+    "cSpell.useGitignore": true,
+    "cSpell.showAutocompleteSuggestions": true
 }

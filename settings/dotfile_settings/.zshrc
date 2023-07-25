@@ -1,3 +1,5 @@
+#!/etc/zshrc
+# shellcheck disable=all
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -66,7 +68,7 @@ else
 fi
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. 
+# plugins, and themes.
 
   alias ga="git add ."
   alias gc="git commit -m ${1}"
@@ -103,7 +105,8 @@ fi
   alias zx="source ~/.extra_zshrc"
   alias zz="$EDITOR ~/.extra_zshrc"
 
-# Steam locamotive
+
+# Steam locomotive
  alias sl="sl -ea"
 
 # Persist zsh command history between sessions
@@ -120,3 +123,4 @@ if [ -e /home/tosh/.nix-profile/etc/profile.d/nix.sh ]; then . /home/tosh/.nix-p
 
 # Added by Home manager https://rycee.gitlab.io/home-manager/index.html
 . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+

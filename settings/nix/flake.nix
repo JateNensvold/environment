@@ -26,7 +26,7 @@
       };
 
       homeDirPrefix = if pkgs.stdenv.hostPlatform.isDarwin then "/Users" else "/home";
-      homeDirectory = "/${homeDirPrefix}/${username}";
+      homeDirectory = "${homeDirPrefix}/${username}";
 
     in
     {

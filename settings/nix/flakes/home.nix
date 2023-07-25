@@ -2,13 +2,13 @@
 let
   packages = import ./packages.nix { inherit pkgs; };
   link = config.lib.file.mkOutOfStoreSymlink;
-  settings_dir = "${config.home.homeDirectory}/environment/settings";
+  settings_dir = "${homeDirectory}/environment/settings";
 in
 {
   home = {
     inherit homeDirectory packages username stateVersion;
     shellAliases = {
-      reload-home-manager-config = "home-manager switch --flake ${builtins.toString ./.}";
+      reload-home-manager-config = "home-manager switch --flake ${settings_dir}/nix/#tosh";
     };
   };
 
