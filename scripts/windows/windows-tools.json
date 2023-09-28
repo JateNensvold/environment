@@ -29,6 +29,9 @@
         },
         {
             "choco_name": "f.lux"
+        },
+        {
+            "choco_name": "geforce-experience"
         }
     ]
 }
