@@ -2,6 +2,7 @@
 
 let
   nixTools = with pkgs; [
+    ansible
     autojump
     cheat
     exa
