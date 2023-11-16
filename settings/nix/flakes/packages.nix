@@ -7,6 +7,7 @@ let
     cheat
     exa
     delta
+    dogdns
     erdtree
     fzf
     fd

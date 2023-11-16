@@ -24,5 +24,10 @@ git fetch origin master
 git reset --mixed origin/master
 git branch --set-upstream-to=origin/master master
 
+# Reset file permissions
+# git diff -p -R --no-ext-diff --no-color --diff-filter=M \
+#     | grep -E "^(diff|(old|new) mode)" --color=never  \
+#     | git apply
+
 # Change back to original directory
 cd "$start_dir"
