@@ -5,6 +5,7 @@ script_path=$(realpath "$0")
 ubuntu_dir=$(dirname "$script_path")
 
 home-manager switch --flake "$ubuntu_dir/../settings/nix/#tosh"
+# home-manager switch --flake ./settings/nix/#jensvold
 # CURRENT_DIR=$(pwd)
 # SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 

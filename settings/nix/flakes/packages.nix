@@ -1,6 +1,8 @@
-{ pkgs }:
+{ pkgs, username, importType}:
 
 let
+  userPackagesPath = ./users +"/${username}/${importType}.nix";
+
   nixTools = with pkgs; [
     ansible
     autojump
@@ -23,6 +25,6 @@ let
     zsh
     oh-my-zsh
     zsh-powerlevel10k
-  ];
+  ] ++ (if builtins.pathExists (userPackagesPath) then import userPackagesPath { inherit pkgs; } else []);
 in
 nixTools
