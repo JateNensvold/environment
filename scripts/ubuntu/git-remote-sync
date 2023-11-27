@@ -15,8 +15,6 @@ cd "$repo_root"
 git init
 
 if ! git remote -v | grep -q 'origin' ; then
-#     pass
-# else
     git remote add origin git@github.com:JateNensvold/environment.git
 fi
 

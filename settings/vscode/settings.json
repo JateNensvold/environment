@@ -3,7 +3,9 @@
     "workbench.iconTheme": "vscode-icons",
     "cSpell.userWords": [
         "aarch64",
+        "appconfig",
         "APPDATA",
+        "argsv",
         "bitwarden",
         "choco",
         "conemu",
@@ -17,6 +19,7 @@
         "Homelab",
         "Jate",
         "Jensvold",
+        "jensvold",
         "Keychain",
         "Matplotlib",
         "Nensvold",
@@ -186,5 +189,6 @@
     ],
     "cSpell.caseSensitive": false,
     "cSpell.useGitignore": true,
-    "cSpell.showAutocompleteSuggestions": true
+    "cSpell.showAutocompleteSuggestions": true,
+    "java.format.settings.url": "file:///home/jensvold/.vscode-server/data/Machine/java_settings.xml",
 }
