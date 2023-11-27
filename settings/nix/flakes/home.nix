@@ -1,6 +1,7 @@
-{ config, pkgs, homeDirectory, username, stateVersion, ... }: #, lib, ... }:
+{ config, pkgs, homeDirectory, username, stateVersion, ... }:
 let
-  packages = import ./packages.nix { inherit pkgs; };
+	importType = "packages";
+  packages = import ./packages.nix { inherit pkgs username importType; };
   link = config.lib.file.mkOutOfStoreSymlink;
   settings_dir = "${homeDirectory}/environment/settings";
 in
@@ -8,7 +9,7 @@ in
   home = {
     inherit homeDirectory packages username stateVersion;
     shellAliases = {
-      reload-home-manager-config = "home-manager switch --flake ${settings_dir}/nix/#tosh";
+      reload-home-manager-config = "home-manager switch --flake ${settings_dir}/nix/#${username}";
     };
   };
 
