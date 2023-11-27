@@ -1,17 +1,25 @@
 #!/bin/bash
 set -e
 
-# linux-multi is not supported on wsl2
-# curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux-multi --no-confirm
-curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --no-confirm
+if [ ! -e "/nix" ]
+then
+    # linux-multi is not supported on wsl2
+    # curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux --no-confirm
+    curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --no-confirm
+else
+    echo "Nix is already installed... Skipping install"
+fi;
+
+# Add Nix path to current shell
+PATH="$PATH:/nix/var/nix/profiles/default/bin/nix"
 
 /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
 nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
 nix-channel --update
 
-nix-shell '<home-manager>' -A install
-
 #  Install Home manager
 [ ! -e "$HOME/.config/home-manager" ] || echo "Moving existing file" && mv "$HOME/.config/home-manager" "$HOME/.config/backup-home-manager"
 ln -s ~/environment/settings/nix/ ~/.config/home-manager
+
+nix-shell '<home-manager>' -A install

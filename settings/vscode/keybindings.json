@@ -196,23 +196,7 @@
     },
     {
         "key": "ctrl+shift+.",
-        "command": "-editor.action.inPlaceReplace.down",
-        "when": "editorTextFocus && !editorReadonly"
-    },
-    {
-        "key": "ctrl+shift+.",
-        "command": "-breadcrumbs.focusAndSelect",
-        "when": "breadcrumbsPossible && breadcrumbsVisible"
-    },
-    {
-        "key": "ctrl+shift+.",
-        "command": "-breadcrumbs.toggleToOn",
-        "when": "!config.breadcrumbs.enabled"
-    },
-    {
-        "key": "ctrl+shift+.",
-        "command": "workbench.action.terminal.toggleTerminal",
-        "when": "terminal.active"
+        "command": "workbench.action.togglePanel"
     },
     {
         "key": "ctrl+`",
@@ -361,7 +345,8 @@
         "key": "ctrl+n",
         "command": "extension.vim_escape",
         "when": "vim.mode == 'EasyMotionMode' | vim.mode == 'Insert'"
-    },
+    }
+    // ,
     // {
     //     "key": "shift+v",
     //     "command": "extension.vim_cmd+v",

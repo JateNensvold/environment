@@ -8,7 +8,7 @@ This is the repo that contains my environment setup scripts and dotfiles.
 Follow the below instructions on your desired operating system to run the environment
 setup scripts
 
-**P** = Preinstalled prerequisite
+**P** = Preinstalled prerequisite\
 **WS** = Installed as part of the windows setup script
 
 ### Windows Setup

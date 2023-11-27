@@ -1,7 +1,29 @@
 #!/bin/bash
 set -e
 
-ubuntu_path=$(realpath "$0")
+script_path=$(realpath "$0")
 ubuntu_dir=$(dirname "$script_path")
 
-home-manager switch --flake $ubuntu_dir/../settings/nix/#tosh
+home-manager switch --flake "$ubuntu_dir/../settings/nix/#tosh"
+# CURRENT_DIR=$(pwd)
+# SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+# echo "Current Dir: $CURRENT_DIR"
+# echo "Script Dir $SCRIPT_DIR"
+
+# cd "$SCRIPT_DIR"
+
+# if [ -e "$HOME/.config/home-manager" ]
+# then
+#     echo "File exists... moving to backup $HOME/.config/backup-home-manager"
+#     rm -rf "$HOME/.config/backup-home-manager"
+#     mv "$HOME/.config/home-manager" "$HOME/.config/backup-home-manager"
+# fi;
+
+# echo "Linking home-manger flakes... "
+# ln -s "$HOME/environment/settings/nix" "$HOME/.config/home-manager"
+
+# # Install profile
+# home-manager switch --flake ../../settings/nix/#jensvold
+
+# cd "$CURRENT_DIR"

@@ -5,8 +5,8 @@
 # show utils commands and custom aliases
 
 local helptxt="fp     [find:path]
-kp     [kill:path]
-ks     [kill:tcp]
+kp     [kill:process]
+ks     [kill:server]
 
 ga     [alias]                       git add .
 gc     [alias]                       git commit -m \${1}
@@ -31,6 +31,7 @@ ns     [alias] nix-search            nix-env --query --available --attr-path
 nv     [alias] nix-version           nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'
 
 u      [alias]                       utils
+fe     [alias] find-env              env | fzf \${FZF_DEFAULT_OPTS} -m --header='[find:env]'
 reload [alias] reload-home-manager-config home-manager switch --flake ${settings_dir}/nix/#tosh
 c      [alias]                       \$EDITOR .
 zx     [alias]                       source ~/.zshrc
@@ -39,5 +40,5 @@ zz     [alias]                       \$EDITOR ~/.zshrc"
 local cmd=$(echo $helptxt | eval "fzf ${FZF_DEFAULT_OPTS} --header='[utils:show]'" | awk '{print $1}')
 
 if [[ -n $cmd ]]; then
-  eval ${cmd}
+    eval ${cmd}
 fi
