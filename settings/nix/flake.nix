@@ -12,7 +12,7 @@
 
   outputs = { nixpkgs, home-manager, ... }:
     let
-      username = "jensvold"; # $USER
+      username = "tosh"; # $USER
       system = "x86_64-linux";  # x86_64-linux, aarch64-multiplatform, etc.
       stateVersion = "23.05";     # See https://nixos.org/manual/nixpkgs/stable for most recent
 
@@ -34,7 +34,7 @@
       # Available through 'home-manager build --flake .#your-username'
       homeConfigurations = {
         # FIXME replace with your username@hostname
-        "jensvold" = home-manager.lib.homeManagerConfiguration {
+        "${username}" = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
 
           extraSpecialArgs = { inherit homeDirectory username stateVersion; }; # Pass flake inputs to our config

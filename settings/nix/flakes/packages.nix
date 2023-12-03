@@ -1,7 +1,7 @@
-{ pkgs, username, importType}:
+{ pkgs, username, importType }:
 
 let
-  userPackagesPath = ./users +"/${username}/${importType}.nix";
+  userPackagesPath = ./users + "/${username}/${importType}.nix";
 
   nixTools = with pkgs; [
     ansible
@@ -19,6 +19,7 @@ let
     jq
     nix-prefetch-github
     ripgrep
+    rustscan
     shellcheck
     sl
     tealdeer
@@ -26,6 +27,6 @@ let
     zsh
     oh-my-zsh
     zsh-powerlevel10k
-  ] ++ (if builtins.pathExists (userPackagesPath) then import userPackagesPath { inherit pkgs; } else []);
+  ] ++ (if builtins.pathExists (userPackagesPath) then import userPackagesPath { inherit pkgs; } else [ ]);
 in
 nixTools

@@ -118,26 +118,16 @@
         "when": "editorTextFocus && !findInputFocussed && !jupyter.ownsSelection && !notebookEditorFocused && !replaceInputFocussed && editorLangId == 'python'"
     },
     {
-        "key": "ctrl+shift+w",
+        "key": "ctrl+shift+t",
         "command": "-workbench.action.closeWindow"
     },
     {
-        "key": "ctrl+shift+w",
+        "key": "ctrl+shift+t",
         "command": "workbench.action.reopenClosedEditor"
     },
     {
-        "key": "ctrl+shift+t",
-        "command": "-workbench.action.reopenClosedEditor"
-    },
-    {
-        "key": "ctrl+shift+t",
+        "key": "ctrl+,",
         "command": "workbench.action.terminal.new",
-        "when": "terminalProcessSupported || terminalWebExtensionContributedProfile"
-    },
-    {
-        "key": "ctrl+shift+`",
-        "command": "-workbench.action.terminal.new",
-        "when": "terminalProcessSupported || terminalWebExtensionContributedProfile"
     },
     {
         "key": "ctrl+tab",

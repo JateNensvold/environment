@@ -4,7 +4,8 @@ set -e
 if [ ! -e "/nix" ]
 then
     # linux-multi is not supported on wsl2
-    # curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux --no-confirm
+    # curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux-multi
+    # curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux-multi --no-confirm
     curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --no-confirm
 else
     echo "Nix is already installed... Skipping install"
