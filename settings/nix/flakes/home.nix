@@ -1,6 +1,6 @@
 { config, pkgs, homeDirectory, username, stateVersion, ... }:
 let
-	importType = "packages";
+  importType = "packages";
   packages = import ./packages.nix { inherit pkgs username importType; };
   link = config.lib.file.mkOutOfStoreSymlink;
   settings_dir = "${homeDirectory}/environment/settings";
@@ -29,13 +29,13 @@ in
   home.file.".config/cheat/cheatsheets/personal".source = link "${settings_dir}/cheat/cheats";
 
   # File downloads
-  home.file.".config/cheat/cheatsheets/community".source = pkgs.fetchFromGitHub
-    {
-      owner = "cheat";
-      repo = "cheatsheet";
-      rev = "36bdb99dcfadde210503d8c2dcf94b34ee950e1d";
-      sha256 = "sha256-Afv0rPlYTCsyWvYx8UObKs6Me8IOH5Cv5u4fO38J8ns";
-    };
+  # home.file.".config/cheat/cheatsheets/community".source = pkgs.fetchFromGitHub
+  #   {
+  #     owner = "cheat";
+  #     repo = "cheatsheet";
+  #     rev = "36bdb99dcfadde210503d8c2dcf94b34ee950e1d";
+  #     sha256 = "sha256-Afv0rPlYTCsyWvYx8UObKs6Me8IOH5Cv5u4fO38J8ns";
+  #   };
 
   # Oh-my-zsh themes and plugins
   home.file."/.oh-my-zsh/custom/themes/powerlevel10k".source = pkgs.fetchFromGitHub {

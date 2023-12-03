@@ -2,6 +2,10 @@
     "cSpell.words": [
         "autojump",
         "builtins",
+        "cheatpath",
+        "Cheatpaths",
+        "cheatsheet",
+        "cheatsheets",
         "difftool",
         "direnv",
         "dogdns",
@@ -11,8 +15,11 @@
         "httpie",
         "mergetool",
         "powerlevel",
+        "proto",
         "realpath",
+        "rustscan",
         "shellcheck",
-        "tealdeer"
+        "tealdeer",
+        "tlsv"
     ],
 }
