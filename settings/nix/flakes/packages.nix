@@ -15,6 +15,7 @@ let
     fd
     git
     git-crypt
+    httpie
     jq
     nix-prefetch-github
     ripgrep

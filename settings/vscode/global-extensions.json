@@ -5,7 +5,8 @@
             "shardulm94.trailing-spaces",
             "vscodevim.vim",
             "vscode-icons-team.vscode-icons",
-            "streetsidesoftware.code-spell-checker"
+            "streetsidesoftware.code-spell-checker",
+            "tamasfe.even-better-toml"
         ],
         "terminal": [
             "oliversturm.fix-json",
