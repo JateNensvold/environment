@@ -6,7 +6,7 @@
 
   zsh = {
     enable = true;
-    # Adds $ZSH environement variable
+    # Adds $ZSH environment variable
     oh-my-zsh = {
       enable = true;
     };
