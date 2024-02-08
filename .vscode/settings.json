@@ -1,8 +1,14 @@
 {
     "cSpell.words": [
         "Aloxaf",
+        "appendhistory",
         "autojump",
         "autoload",
+        "builtins",
+        "cheatpath",
+        "Cheatpaths",
+        "cheatsheet",
+        "cheatsheets",
         "compinit",
         "conflictstyle",
         "copypath",
@@ -26,13 +32,17 @@
         "powerlevel",
         "proto",
         "Pwni",
+        "rnix",
         "rocess",
         "rustscan",
+        "setopt",
+        "shellcheck",
         "shellenv",
         "tealdeer",
         "tlsv",
         "uninst",
         "unsetopt",
+        "usermod",
         "zfuncs"
     ],
     "powershell.powerShellAdditionalExePaths": {
