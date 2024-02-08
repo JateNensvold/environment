@@ -1,0 +1,52 @@
+#!/bin/bash
+set -e
+stty -tostop
+
+INSTALLER_PATH="/nix/nix-installer"
+
+if [ ! -e "${INSTALLER_PATH}" ]
+then
+    echo "Unable to find ${INSTALLER_PATH} skipping uninstall"
+else
+    ${INSTALLER_PATH} uninstall --no-confirm
+fi;
+
+# Files/Directories to remove from home directory
+home_cleanup=(".zfuncs" ".zshenv" ".zshrc" ".zcompdump*" ".p10k.zsh" ".oh-my-zsh" ".nix-*" ".inputrc" ".extra_zshrc" ".local")
+
+echo "Removing files from ${HOME}" - "${home_cleanup[@]}"
+for i in "${home_cleanup[@]}"
+do
+    file_path="$HOME/$i"
+    if [ ! -e "$file_path" ]
+    then
+        echo "Unable to find ${file_path}, skipping removal"
+    else
+        echo "Removing ${file_path}"
+        rm -rf "$file_path"
+        if [ $? ]
+        then
+            echo "Successfully removed ${file_path}"
+        fi;
+    fi;
+done
+
+config_cleanup=("home-manager" "git" "environment.d" "direnv" "cheat")
+CONFIG="$HOME/.config"
+
+echo "Removing files from ${CONFIG}" - "${config_cleanup[@]}"
+for i in "${config_cleanup[@]}"
+do
+    file_path="$CONFIG/$i"
+    if [ ! -e "$file_path" ]
+    then
+        echo "Unable to find ${file_path}, skipping removal"
+    else
+        echo "Removing ${file_path}"
+        rm -rf "$file_path"
+        if [ $? ]
+        then
+            echo "Successfully removed ${file_path}"
+        fi;
+    fi;
+done

@@ -13,7 +13,6 @@
       {
         # The default shell
         devShells.default = pkgs.mkShell {
-          PWSH_PATH = "${pkgs.powershell}/bin/pwsh";
           packages = with pkgs; [
             # Nix development packages
             nixpkgs-fmt
