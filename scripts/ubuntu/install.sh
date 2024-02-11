@@ -67,8 +67,9 @@ setup_home_manager() {
   }
   mkdir -p ~/.config
 
-  if [ ! -e "$HOME/.config/home-manager" ];
+  if [ -e "$HOME/.config/home-manager" ];
   then
+    info "Backing up $HOME/.config/home-manager to $HOME/.config/home-manager-backup"
     mv --backup=numbered "$HOME/.config/home-manager" "$HOME/.config/home-manager-backup"
   fi
   ln -s ~/environment/settings/nix/ ~/.config/home-manager
@@ -85,6 +86,7 @@ install_homebrew() {
   command -v brew >/dev/null || {
     warn "'Homebrew' is not installed. Installing..."
     NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
   }
   info "'Homebrew' is installed! Here is what we have:"
   if command -v brew
