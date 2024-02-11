@@ -99,16 +99,15 @@ clone_repository() {
   echo
   local repository="JateNensvold/environment"
   local clone_target="${HOME}/environment"
-  local clone_parent="${HOME}"
   header "Setting up the configuration from github.com:${repository}..."
 
   if [[ ! $( cat "${clone_target}/.git/config" | grep "github.com" | grep "${repository}" ) ]]; then
     if [ -d "${clone_target}" ]; then
       warn "Looks like '${clone_target}' exists and it is not what we want. Backing up as '${clone_target}.backup-before-clone'..."
-      mv "${clone_target}" "${clone_parent}.backup-before-clone"
+      mv  --backup=numbered "${clone_target}" "${clone_target}.backup-before-clone"
     fi
     warn "Cloning 'github.com:${repository}' into '${clone_target}'..."
-    git clone "https://github.com/${repository}.git" "${clone_parent}"
+    git clone "https://github.com/${repository}.git" "${clone_target}"
   fi
 
   info "'${clone_target}' is sourced from github.com:'${repository}'."
