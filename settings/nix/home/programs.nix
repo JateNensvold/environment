@@ -9,7 +9,7 @@
     git = {
       enable = true;
 
-      username = "Nate Jensvold";
+      userName = "Nate Jensvold";
       userEmail = "jensvoldnate@gmail.com";
 
       extraConfig = {
