@@ -13,5 +13,5 @@ nix-shell '<home-manager>' -A install
 # Ensure the ~/.config directory exists
 mkdir -p ~/.config
 # Link home-manager settings from environment repo
-# This command msyut run after the home-manager installation so the file is not overwritten
+# This command must run after the home-manager installation so the file is not overwritten
 ln -s ~/environment/settings/nix/ ~/.config/home-manager

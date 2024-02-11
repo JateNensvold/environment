@@ -3,9 +3,8 @@ set -e
 
 if [ ! -e "/nix" ]
 then
-    # linux-multi is not supported on wsl2
-    # curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux-multi
-    # curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux-multi --no-confirm
+
+    # https://github.com/AlexeyRaga/home.nix/blob/10f40ab7fa7df887ebd72a02209f520dda16f9c5/install.sh
     curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --no-confirm
 else
     echo "Nix is already installed... Skipping install"
@@ -16,7 +15,7 @@ PATH="$PATH:/nix/var/nix/profiles/default/bin/nix"
 
 /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
-nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
+nix-channel --add https://github.com/nix-community/home-manager/archive/release-23.11.tar.gz home-manager
 nix-channel --update
 
 #  Install Home manager
