@@ -9,3 +9,11 @@ nix profile install nixpkgs#git-crypt
 
 # Build derive
 nix build .#<derive name>
+
+# List packages
+nix-env -qaP 
+# List home-manager packages
+home-manager packages
+
+#Clear cache
+nix-collect-garbage -d

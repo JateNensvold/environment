@@ -20,10 +20,10 @@ grb    [alias]                       git rebase \${1} \${2} -i
 gs     [alias]                       git status
 gl     [alias]                       git ls-files \${1} | xargs wc -l
 
-xl     [alias] view-files            exa --group-directories-first -l
-xa     [alias] view-files-all        exa --group-directories-first -la --time-style=long-iso
-xf     [alias] view-files-fzf        exa --group-directories-first -l | fzf \${FZF_DEFAULT_OPTS} -m --header='[exa:files]'
-xt     [alias] view-files-recursive  exa -T
+xl     [alias] view-files            eza --group-directories-first -l
+xa     [alias] view-files-all        eza --group-directories-first -la --time-style=long-iso
+xf     [alias] view-files-fzf        eza --group-directories-first -l | fzf \${FZF_DEFAULT_OPTS} -m --header='[eza:files]'
+xt     [alias] view-files-recursive  eza -T
 ff     [alias] find-file             erd -d logical -Hi --hidden --no-git --layout flat | fzf \${FZF_DEFAULT_OPTS} -m --header='[erd:files]'
 sf     [alias] search-file           rg -g '!.git' --hidden
 
