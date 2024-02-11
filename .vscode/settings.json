@@ -1,10 +1,26 @@
 {
     "cSpell.words": [
+        "Aloxaf",
+        "autojump",
+        "autoload",
+        "conflictstyle",
+        "copypath",
+        "difftool",
+        "dogdns",
+        "fpath",
+        "httpie",
+        "jsontools",
         "linuxbrew",
+        "mergetool",
         "NOCOLOR",
         "NONINTERACTIVE",
+        "powerlevel",
         "proto",
+        "rustscan",
         "shellenv",
-        "tlsv"
+        "tealdeer",
+        "tlsv",
+        "unsetopt",
+        "zfuncs"
     ],
 }

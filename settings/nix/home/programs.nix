@@ -95,9 +95,9 @@
         u = "utils";
         fe = "env | fzf -m --header='[find:env]'";
         reload = "reload-home-manager-config";
-        c = "$EDITOR .";
+        c = ''"$EDITOR" .'';
         zx = "source ~/.extra_zshrc";
-        zz = "$EDITOR ~/.zshrc";
+        zz = ''"$EDITOR" ~/.zshrc'';
       };
 
       plugins = [
@@ -141,20 +141,15 @@
           "docker"
           "direnv"
           "fzf"
-          # fzf-tab
           "jsontools"
           "ssh-agent"
           "sudo"
           "web-search"
           "ripgrep"
-          # "zsh-autosuggestions"
         ];
-        # theme = "powerlevel10k/powerlevel10k";
       };
 
       initExtra = ''
-        # Source 'real' zshrc file that is symlinked to the below location
-        # source "$HOME/.extra_zshrc"
         # Updates to ZSH function paths
         fpath=(
             # For custom ZSH functions
@@ -164,7 +159,6 @@
 
         # ZSH functions
         autoload -Uz fp kp ks utils
-
 
         # Disable annoying beep sound in terminal
         unsetopt beep
