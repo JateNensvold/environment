@@ -21,6 +21,7 @@
         "jsontools",
         "mergetool",
         "NOCOLOR",
+        "NONINTERACTIVE",
         "powerlevel",
         "proto",
         "realpath",

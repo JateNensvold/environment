@@ -84,10 +84,15 @@ install_homebrew() {
   header "Installing Homebrew"
   command -v brew >/dev/null || {
     warn "'Homebrew' is not installed. Installing..."
-    printf "\n" | /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   }
   info "'Homebrew' is installed! Here is what we have:"
-  brew --version
+  if command -v brew
+  then
+    brew --version
+  else
+    error "Unable to find brew in path..."
+  fi
 }
 
 clone_repository() {
