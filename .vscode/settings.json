@@ -1,7 +1,10 @@
 {
     "cSpell.words": [
         "linuxbrew",
+        "NOCOLOR",
         "NONINTERACTIVE",
-        "shellenv"
+        "proto",
+        "shellenv",
+        "tlsv"
     ],
 }
