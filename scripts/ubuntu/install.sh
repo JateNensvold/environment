@@ -97,7 +97,7 @@ install_homebrew() {
 
 clone_repository() {
   echo
-  local repository="JateNensvold/environment"
+  local repository="git@github.com:JateNensvold/environment.git"
   local clone_target="${HOME}/environment"
   header "Setting up the configuration from github.com:${repository}..."
 
@@ -106,8 +106,8 @@ clone_repository() {
       warn "Looks like '${clone_target}' exists and it is not what we want. Backing up as '${clone_target}.backup-before-clone'..."
       mv  --backup=numbered "${clone_target}" "${clone_target}.backup-before-clone"
     fi
-    warn "Cloning 'github.com:${repository}' into '${clone_target}'..."
-    git clone "https://github.com/${repository}.git" "${clone_target}"
+    warn "Cloning '${repository}' into '${clone_target}'..."
+    git clone "${repository}" "${clone_target}"
   fi
 
   info "'${clone_target}' is sourced from github.com:'${repository}'."
