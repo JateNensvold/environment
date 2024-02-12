@@ -21,27 +21,23 @@ Copy and run the following command in Powershell 5 to setup windows 11
 Set-ExecutionPolicy Bypass -Scope Process -Force; iex (iwr https://raw.githubusercontent.com/JateNensvold/environment/master/windows-install.ps1 -Headers @{"Cache-Control" = "no-cache" }).Content
 ```
 
-### Linux
+### Linux Setup
+
+#### Dependencies
+
+Linux Dependencies
 
 1. Git
 1. bash
 1. curl
 
-#### WSL Specific
+WSL Specific Dependencies
 
 1. vscode
 
-#### WSL setup
+#### Setup
 
-Copy and run the following command in powershell to automate the setup of WSL(Windows Subsystem For Linux)
-
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JateNensvold/environment/master/windows-install.ps1)"
-```
-
-#### Ubuntu Setup
-
-Copy and run the following command to automate the setup of ubuntu(Tested on 22.04)
+Copy and run the following command to automate environment setup(Tested on ubuntu 22.04 and AL2)
 
 ```bash
 bash -i <(curl -fsSL https://raw.githubusercontent.com/JateNensvold/environment/master/scripts/ubuntu/install.sh)

@@ -149,7 +149,11 @@
         )
 
         # ZSH functions
-        autoload -Uz fp kp ks utils
+        autoload -Uz ~/.zfuncs/*(:t)
+        # autoload -Uz fp kp ks utils bcp bip bup
+
+        # Source brew path, should be present if system was setup by bash https://raw.githubusercontent.com/JateNensvold/environment/master/scripts/ubuntu/install.sh
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
         # fzf-tab does not work without this
         enable-fzf-tab

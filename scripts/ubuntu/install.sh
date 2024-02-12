@@ -99,13 +99,7 @@ install_homebrew() {
 }
 
 clone_repository() {
-  local repository="https://github.com/JateNensvold/environment.git";
-
-  if ssh -T -p 443 git@ssh.github.com 2>&1 | grep -q "successfully authenticated";
-  then
-    repository="git@github.com:JateNensvold/environment.git"
-    info "SSH Enabled... setting repository remote to ${repository} ";
-  fi;
+  local repository="git@github.com:JateNensvold/environment.git"
 
   local clone_target="${HOME}/environment"
   header "Setting up the configuration from github.com:${repository}..."
@@ -125,7 +119,10 @@ clone_repository() {
   cd - >/dev/null
 }
 
+
 git_SSH_convert(){
+
+  # local repository="https://github.com/JateNensvold/environment.git";
 
   if ssh -T -p 443 git@ssh.github.com 2>&1 | grep -q "successfully authenticated";
   then
