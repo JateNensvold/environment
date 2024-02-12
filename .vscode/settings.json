@@ -3,6 +3,7 @@
         "Aloxaf",
         "autojump",
         "autoload",
+        "compinit",
         "conflictstyle",
         "copypath",
         "difftool",
@@ -23,4 +24,7 @@
         "unsetopt",
         "zfuncs"
     ],
+    "powershell.powerShellAdditionalExePaths": {
+        "pwsh": "/nix/store/kl1qiq5h3q96d8vf35x7xb55xd938yqk-powershell-7.4.1/bin/pwsh"
+    }
 }

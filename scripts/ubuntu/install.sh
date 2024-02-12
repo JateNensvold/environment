@@ -100,6 +100,13 @@ install_homebrew() {
 clone_repository() {
   echo
   local repository="git@github.com:JateNensvold/environment.git"
+
+  if [[ ! $( ssh -T -p 443 git@ssh.github.com 2>&1 | grep -q "successfully authenticated" ) ]];
+  then
+    repository="https://github.com/JateNensvold/environment.git";
+    echo "SSH Enabled... setting repository remote to ${repository} ";
+  fi;
+
   local clone_target="${HOME}/environment"
   header "Setting up the configuration from github.com:${repository}..."
 
@@ -118,6 +125,16 @@ clone_repository() {
   cd - >/dev/null
 }
 
+# git_SSH_convert(){
+
+#   if ! git remote -v | grep -q 'origin' ; then
+#       git remote add origin git@github.com:JateNensvold/environment.git
+
+#   git fetch origin master
+#   git reset --mixed origin/master
+#   git branch --set-upstream-to=origin/master master
+#   fi
+# }
 sudo_prompt
 install_nix
 install_home_manager

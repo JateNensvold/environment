@@ -8,15 +8,12 @@ This is the repo that contains my environment setup scripts and dotfiles.
 Follow the below instructions on your desired operating system to run the environment
 setup scripts
 
-**P** = Preinstalled prerequisite\
-**WS** = Installed as part of the windows setup script
-
 ### Windows Setup
 
 Prerequisites
 
 1. Windows 11
-1. Powershell 5(**P**)
+1. Powershell 5+
 
 Copy and run the following command in Powershell 5 to setup windows 11
 
@@ -24,20 +21,19 @@ Copy and run the following command in Powershell 5 to setup windows 11
 Set-ExecutionPolicy Bypass -Scope Process -Force; iex (iwr https://raw.githubusercontent.com/JateNensvold/environment/master/windows-install.ps1 -Headers @{"Cache-Control" = "no-cache" }).Content
 ```
 
-### Ubuntu/WSL
+### Linux
 
-1. Git(**P**)
-1. vscode(**WS**)
-1. bash(**P**)
-1. curl(**P**)
-1. Create a new SSH key
-    - Follow the instructions [here](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent?platform=linux#generating-a-new-ssh-key) for generating a key
-    - Add the key to your SSH Keychain using the [instructions here](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent?platform=linux#adding-your-ssh-key-to-the-ssh-agent)
-    - Add the key to your [github account](https://github.com/settings/keys) using the instructions [here](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account#adding-a-new-ssh-key-to-your-account)
+1. Git
+1. bash
+1. curl
+
+#### WSL Specific
+
+1. vscode
 
 #### WSL setup
 
-Copy and run the following command to automate the setup of WSL(Windows Subsystem For Linuxs)
+Copy and run the following command in powershell to automate the setup of WSL(Windows Subsystem For Linux)
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JateNensvold/environment/master/windows-install.ps1)"
@@ -48,7 +44,7 @@ Copy and run the following command to automate the setup of WSL(Windows Subsyste
 Copy and run the following command to automate the setup of ubuntu(Tested on 22.04)
 
 ```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JateNensvold/environment/master/linux-install.sh)"
+bash -i <(curl -fsSL https://raw.githubusercontent.com/JateNensvold/environment/master/scripts/ubuntu/install.sh)
 ```
 
 #### Mac Setup
