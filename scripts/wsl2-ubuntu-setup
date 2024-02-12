@@ -7,7 +7,5 @@ set -e
 script_root=$(dirname -- "$0")
 
 # linux base setup script
-"$script_root"/linux-setup
+"$script_root"/install.sh
 "$script_root"/ubuntu/vscode-extensions-install
-# Install WSL2 compatible version of docker that runs without docker desktop
-"$script_root"/ubuntu/wsl2-docker-install.sh
