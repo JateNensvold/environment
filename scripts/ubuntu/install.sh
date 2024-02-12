@@ -49,11 +49,12 @@ install_nix() {
 install_home_manager() {
   echo
   header "Installing Home Manager"
-  if [[ ! $( nix-channel --list | grep -q home-manager ) ]]; then
-    warn "Adding 'home-manager' Nix channel..."
+  if ! nix-channel --list | grep -q home-manager;
+  then
+    warn "Adding 'home-manager' Nix channel...";
     nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
     nix-channel --update
-  fi
+  fi;
   info "Home Manager channel is installed. Here are available channels:"
   nix-channel --list
 }
@@ -98,19 +99,18 @@ install_homebrew() {
 }
 
 clone_repository() {
-  echo
-  local repository="git@github.com:JateNensvold/environment.git"
+  local repository="https://github.com/JateNensvold/environment.git";
 
-  if [[ ! $( ssh -T -p 443 git@ssh.github.com 2>&1 | grep -q "successfully authenticated" ) ]];
+  if ssh -T -p 443 git@ssh.github.com 2>&1 | grep -q "successfully authenticated";
   then
-    repository="https://github.com/JateNensvold/environment.git";
-    echo "SSH Enabled... setting repository remote to ${repository} ";
+    repository="git@github.com:JateNensvold/environment.git"
+    info "SSH Enabled... setting repository remote to ${repository} ";
   fi;
 
   local clone_target="${HOME}/environment"
   header "Setting up the configuration from github.com:${repository}..."
 
-  if [[ ! $( cat "${clone_target}/.git/config" | grep "github.com" | grep "${repository}" ) ]]; then
+  if grep "github.com" "${clone_target}/.git/config" | grep "${repository}"; then
     if [ -d "${clone_target}" ]; then
       warn "Looks like '${clone_target}' exists and it is not what we want. Backing up as '${clone_target}.backup-before-clone'..."
       mv  --backup=numbered "${clone_target}" "${clone_target}.backup-before-clone"
@@ -125,21 +125,26 @@ clone_repository() {
   cd - >/dev/null
 }
 
-# git_SSH_convert(){
+git_SSH_convert(){
 
-#   if ! git remote -v | grep -q 'origin' ; then
-#       git remote add origin git@github.com:JateNensvold/environment.git
+  if ssh -T -p 443 git@ssh.github.com 2>&1 | grep -q "successfully authenticated";
+  then
+      git remote set-url origin git@github.com:JateNensvold/environment.git
+  fi
+}
 
-#   git fetch origin master
-#   git reset --mixed origin/master
-#   git branch --set-upstream-to=origin/master master
-#   fi
-# }
-sudo_prompt
-install_nix
-install_home_manager
-install_homebrew
-clone_repository
-setup_home_manager
+restart_ssh(){
+  killall ssh-agent; eval "$(ssh-agent)"
+}
+
+setup(){
+  sudo_prompt
+  install_nix
+  install_home_manager
+  install_homebrew
+  clone_repository
+  setup_home_manager
+}
+
 
 } # Prevent script running if partially downloaded
