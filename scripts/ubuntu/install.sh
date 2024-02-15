@@ -119,12 +119,25 @@ clone_repository() {
   cd - >/dev/null
 }
 
+ssh_support(){
+  # Piped commands output status of first command, split across two lines to get grep status
+  ssh_output=$(ssh -T -p 443 git@ssh.github.com 2>&1)
+  echo "${ssh_output}" | grep -q success
+  exit_code=$?
+  if [[ $exit_code -eq 0 ]];
+  then
+    # Supported
+    return 0;
+  fi
+  # Not Supported
+  return 1;
+}
 
 git_SSH_convert(){
 
-  # local repository="https://github.com/JateNensvold/environment.git";
-
-  if ssh -T -p 443 git@ssh.github.com 2>&1 | grep -q "successfully authenticated";
+  ssh_support
+  exit_code=$?
+  if [[ $exit_code -eq 0 ]];
   then
       git remote set-url origin git@github.com:JateNensvold/environment.git
   fi
@@ -142,6 +155,17 @@ setup(){
   clone_repository
   setup_home_manager
 }
-
+set +e
 
 } # Prevent script running if partially downloaded
+
+
+# EXIT STATUS
+#        If  ripgrep finds a match, then the exit status of the program is 0.  If no match could be found, then the exit status is 1. If an error occurred, then the exit status is always 2 un‐
+#        less ripgrep was run with the -q/--quiet flag and a match was found. In summary:
+
+#        •  0 exit status occurs only when at least one match was found, and if no error occurred, unless -q/--quiet was given.
+
+#        •  1 exit status occurs only when no match was found and no error occurred.
+
+#        •  2 exit status occurs when an error occurred. This is true for both catastrophic errors (e.g., a regex syntax error) and for soft errors (e.g., unable to read a file).
