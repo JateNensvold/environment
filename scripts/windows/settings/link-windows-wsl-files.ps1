@@ -41,3 +41,6 @@ $WINDOWS_DOWNLOAD_PATH = (get-item (New-Object -ComObject `
 $WSL_DOWNLOAD_PATH = (wsl wslpath $WINDOWS_DOWNLOAD_PATH)
 
 wsl ln -s $WSL_DOWNLOAD_PATH "~/downloads"
+
+# Setup WSL environment
+wsl bash -i <(curl -fsSL https://raw.githubusercontent.com/JateNensvold/environment/master/scripts/ubuntu/install.sh)
