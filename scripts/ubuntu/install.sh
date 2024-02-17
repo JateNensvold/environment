@@ -102,9 +102,10 @@ clone_repository() {
   local repository="git@github.com:JateNensvold/environment.git"
 
   local clone_target="${HOME}/environment"
-  header "Setting up the configuration from github.com:${repository}..."
+  header "Setting up the configuration from ${repository}..."
 
-  if grep "github.com" "${clone_target}/.git/config" | grep "${repository}"; then
+  # Reset environment repo if it already exists
+  if [ -e "${clone_target}/" ]; then
     if [ -d "${clone_target}" ]; then
       warn "Looks like '${clone_target}' exists and it is not what we want. Backing up as '${clone_target}.backup-before-clone'..."
       mv  --backup=numbered "${clone_target}" "${clone_target}.backup-before-clone"
