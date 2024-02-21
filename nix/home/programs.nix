@@ -127,7 +127,6 @@
           "copypath"
           "command-not-found"
           "fd"
-          "docker"
           "direnv"
           "fzf"
           "jsontools"

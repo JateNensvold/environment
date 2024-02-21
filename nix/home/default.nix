@@ -45,11 +45,11 @@ in
   imports = [
     # Programs to install
     ./packages.nix
-    (import ./files/default.nix { inherit config lib pkgs dotfiles; })
-    (import ./programs.nix { inherit config lib pkgs dotfiles; })
+    (import ./files/default.nix { inherit config lib pkgs settings_dir; })
+    (import ./programs.nix { inherit config lib pkgs settings_dir; })
+    (import ./users/default.nix { inherit config lib pkgs; })
+    (import ./hostname/default.nix { inherit config lib; })
 
-    # everything for work
-    # ./work
   ];
   #  ++ (modules.importAllModules ./modules);
 }
