@@ -26,5 +26,4 @@
     sl
     tealdeer
   ];
-  #  ++ (if builtins.pathExists (userPackagesPath) then import userPackagesPath { inherit pkgs; } else [ ]);
 }
