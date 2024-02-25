@@ -73,7 +73,7 @@ setup_home_manager() {
     info "Backing up $HOME/.config/home-manager to $HOME/.config/home-manager-backup"
     mv --backup=numbered "$HOME/.config/home-manager" "$HOME/.config/home-manager-backup"
   fi
-  ln -s ~/environment/settings/nix/ ~/.config/home-manager
+  ln -s ~/environment/nix/dotfiles/ ~/.config/home-manager
 
   home-manager switch
 

@@ -2,5 +2,5 @@
 result
 
 # home-manager
-home.nix
+./home.nix
 home-manager
