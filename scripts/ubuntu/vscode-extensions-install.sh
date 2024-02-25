@@ -7,7 +7,7 @@ script_path=$(realpath "$0")
 script_dir=$(dirname "$script_path")
 repo_root="$script_dir/../.."
 
-VSCODE_EXTENSIONS_JSON_PATH="$repo_root/settings/vscode/global-extensions.json"
+VSCODE_EXTENSIONS_JSON_PATH="$repo_root/nix/dotfiles/vscode/global-extensions.json"
 
 BASE_EXTENSIONS_STRING=$(jq -r '.extensions.base | @sh' "$VSCODE_EXTENSIONS_JSON_PATH" | tr -d \')
 TERMINAL_EXTENSIONS_STRING=$(jq -r '.extensions.terminal | @sh' "$VSCODE_EXTENSIONS_JSON_PATH" | tr -d \')

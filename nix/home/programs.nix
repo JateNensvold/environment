@@ -1,7 +1,5 @@
-{ config, lib, pkgs, settings_dir, ... }:
+{ config, lib, pkgs, dotfiles, ... }:
 {
-
-
   programs = {
     # Let Home Manager install and manage itself.
     home-manager.enable = true;
@@ -108,7 +106,7 @@
         }
         {
           name = "powerlevel10k-config";
-          src = lib.cleanSource "${settings_dir}/dotfile_settings";
+          src = "${dotfiles}/dotfile_settings";
           file = ".p10k.zsh";
         }
         {

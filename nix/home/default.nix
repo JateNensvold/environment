@@ -1,16 +1,15 @@
 /* Main user-level configuration */
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, dotfiles, ... }:
 
 let
-  settings_dir = "${config.user.home}/environment/settings";
-  dotfile_dir = "${settings_dir}/dotfile_settings";
 in
 {
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home = {
-    username = config.user.name;
-    homeDirectory = config.user.home;
+    username = "tosh";
+    # homeDirectory = config.user.home;
+    homeDirectory = "/home/tosh";
 
     # This value determines the Home Manager release that your
     # configuration is compatible with. This helps avoid breakage
@@ -46,8 +45,8 @@ in
   imports = [
     # Programs to install
     ./packages.nix
-    (import ./files/default.nix { inherit config lib pkgs settings_dir; })
-    (import ./programs.nix { inherit config lib pkgs settings_dir; })
+    (import ./files/default.nix { inherit config lib pkgs dotfiles; })
+    (import ./programs.nix { inherit config lib pkgs dotfiles; })
 
     # everything for work
     # ./work
