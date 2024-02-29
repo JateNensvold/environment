@@ -22,7 +22,7 @@ let
         extraSpecialArgs = extraArgs;
         modules = [
           ../home/default.nix
-          # ./${ host }/home.nix
+          ./${ host }/home.nix
         ];
       };
 
