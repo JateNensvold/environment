@@ -42,7 +42,7 @@
         pull = {
           rebase = "true";
         };
-        url."git@github.com" = {
+        url."git@github.com:" = {
           insteadOf = "https://github.com/";
         };
         credential = {
@@ -182,6 +182,16 @@
 
       defaultCommand = "rg --files --no-ignore-vcs --hidden";
       defaultOptions = [ "--height=50%" "--min-height=15" "--reverse" ];
+    };
+
+    tmux = {
+      enable = true;
+    };
+
+    neovim = {
+      enable = true;
+      viAlias = true;
+      vimAlias = true;
     };
 
     eza = {

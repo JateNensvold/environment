@@ -32,6 +32,9 @@
         },
         {
             "choco_name": "geforce-experience"
+        },
+        {
+            "choco_name": "nerd-fonts-hack"
         }
     ]
 }

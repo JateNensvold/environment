@@ -1,14 +1,16 @@
 { config, lib, ... }:
 
 let
-  hostnamePath = "./${config.user.hostname}.nix";
+  # hostnamePath = "./${config.user.hostname}.nix";
+  hostnamePath = ./amazon.nix;
 in
 {
   home.sessionVariables = {
     HOST_NAME = "${config.user.hostname}";
-    EDITOR_1 = "VIM";
   };
+
+
   # imports = [
-  # ] ++ lib.optional (builtins.pathExists hostnamePath) import hostnamePath
-  # ;
+  # ] ++ lib.optional (builtins.pathExists hostnamePath) import hostnamePath;
+
 }
