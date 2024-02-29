@@ -8,7 +8,6 @@ with lib; {
       let
         name = builtins.getEnv "USER";
         home = builtins.getEnv "HOME";
-        hostname = builtins.getEnv "HOST_NAME";
       in
       {
         inherit name;
