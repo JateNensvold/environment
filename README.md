@@ -43,6 +43,20 @@ Copy and run the following command to automate environment setup(Tested on ubunt
 bash -i <(curl -fsSL https://raw.githubusercontent.com/JateNensvold/environment/master/scripts/ubuntu/install.sh)
 ```
 
+##### Home-manager configuration
+
+Modify the below values and rerun the home-manager switch command from `~/environment/nix` to change to the desire home-manager configuration. See [flake.nix](./nix/flake.nix) for supported values
+
+```bash
+# Example nix home-manager setup
+export NIX_HOST=home
+export HARDWARE=default
+export ARCH=x86_64-linux
+
+cd ~/environment/nix
+home-manager switch --flake .#$USER-$NIX_HOST-$HARDWARE-$ARCH
+```
+
 #### Mac Setup
 
 WIP, check todo section

@@ -10,7 +10,6 @@ in
   home.file.".inputrc".source = "${dotfiles}/dotfile_settings/.inputrc";
 
   # Dynamic File (needs to link to a full path to remain pure https://github.com/nix-community/home-manager/issues/2085)
-  # home.file.".config/git/config".source = link "${settings_dir}/dotfile_settings/.gitconfig";
 
   # Dynamic folder
   home.file.".config/cheat/cheatsheets/personal".source = link "${dotfiles}/cheat/cheats";

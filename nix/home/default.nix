@@ -1,19 +1,14 @@
 /* Main user-level configuration */
-{ config, lib, pkgs, dotfiles, ... }:
+{ config, lib, pkgs, user, host, hardware, system, dotfiles, ... }:
 
 let
-  imports = [
-      # Programs to install
-      ./users.nix
-    ];
 in
 {
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home = {
-    username = config.user.name;
-    homeDirectory = config.user.home;
-    # homeDirectory = "/home/tosh";
+    username = user;
+    homeDirectory = "/home/${user}";
 
     # This value determines the Home Manager release that your
     # configuration is compatible with. This helps avoid breakage
@@ -25,8 +20,14 @@ in
     # changes in each release.
     stateVersion = "23.11";
 
+    sessionVariables = {
+      NIX_HOST = host;
+      HARDWARE = hardware;
+      ARCH = system;
+    };
+
     shellAliases = {
-      reload-home-manager-config = "home-manager switch";
+      reload-home-manager-config = "home-manager switch --flake .#$USER-$NIX_HOST-$HARDWARE-$ARCH";
     };
   };
 
@@ -44,7 +45,6 @@ in
   xdg.configFile." nix/nix.conf ".text = ''
     experimental-features = nix-command flakes
   '';
-
 
   imports = [
     # Programs to install

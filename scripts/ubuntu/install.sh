@@ -75,7 +75,12 @@ setup_home_manager() {
   fi
   ln -s ~/environment/nix/dotfiles/ ~/.config/home-manager
 
-  home-manager switch
+  # Setup default nix home-manager profile
+  NIX_HOST=home
+  HARDWARE=default
+  ARCH=x86_64-linux
+
+  home-manager switch --flake ".#$USER-$NIX_HOST-$HARDWARE-$ARCH"
 
   info "home-manger is configured! Here is what we have:"
   home-manager --version

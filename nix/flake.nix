@@ -32,8 +32,19 @@
       name = builtins.getEnv "USER";
       home = builtins.getEnv "HOME";
 
+      users = [
+        # Desktop
+        { user = "tosh"; }
+        # Laptop
+        { user = "nate"; }
+        # Work profile
+        { user = "jensvold"; }
+      ];
+
       hosts = [
         { host = "home"; extraOverlays = [ ]; extraModules = [ ]; }
+        # Work profile
+        { host = "amazon"; extraOverlays = [ ]; extraModules = [ ]; }
       ];
 
       hardwares = [
@@ -51,7 +62,7 @@
       commonInherits = {
         inherit (nixpkgs) lib;
         inherit inputs nixpkgs home-manager nix-darwin;
-        inherit hosts dotfiles hardwares systems;
+        inherit users hosts dotfiles hardwares systems;
       };
 
     in

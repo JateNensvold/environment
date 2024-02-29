@@ -1,6 +1,6 @@
-{ lib, inputs, dotfiles, hosts, hardwares, systems, isNixOS, isMacOS, isIso, isHardware, nixpkgs, home-manager, nix-darwin, ... }:
+{ lib, inputs, dotfiles, users, hosts, hardwares, systems, isNixOS, isMacOS, isIso, isHardware, nixpkgs, home-manager, nix-darwin, ... }:
 let
-  mkHost = { host, hardware, stateVersion, system, extraOverlays, extraModules }: isNixOS: isMacOS: isIso: isHardware:
+  mkHost = { user, host, hardware, stateVersion, system, extraOverlays, extraModules }: isNixOS: isMacOS: isIso: isHardware:
     let
 
       pkgs = import nixpkgs {
@@ -13,7 +13,7 @@ let
         overlays = [
         ] ++ extraOverlays;
       };
-      extraArgs = { inherit pkgs inputs isIso isHardware dotfiles hardware system stateVersion; hostname = host + "-" + hardware; };
+      extraArgs = { inherit pkgs inputs isIso isHardware dotfiles user hardware host system stateVersion; hostname = host + "-" + hardware; };
     in
 
     home-manager.lib.homeManagerConfiguration
@@ -26,7 +26,8 @@ let
         ];
       };
 
-  hardwarePermutedHosts = lib.concatMap (hardware: map (host: host // hardware) hosts) hardwares;
+  userPermutedHosts = lib.concatMap (user: map (host: host // user) hosts) users;
+  hardwarePermutedHosts = lib.concatMap (hardware: map (host: host // hardware) userPermutedHosts) hardwares;
   systemsPermutedHosts = lib.concatMap (system: map (host: host // system) hardwarePermutedHosts) systems;
   permutedHosts = systemsPermutedHosts;
 
@@ -38,8 +39,8 @@ in
     builtins.listToAttrs on the result
   */
 builtins.listToAttrs (map
-  (mInput@{ host, hardware, system, ... }: {
-    name = host + "-" + hardware + "-" + system;
+  (mInput@{ user, host, hardware, system, ... }: {
+    name = user + "-" + host + "-" + hardware + "-" + system;
     value = mkHost mInput isNixOS isMacOS isIso isHardware;
   })
   permutedHosts)
