@@ -12,5 +12,9 @@ in
   # Dynamic File (needs to link to a full path to remain pure https://github.com/nix-community/home-manager/issues/2085)
 
   # Dynamic folder
-  home.file.".config/cheat/cheatsheets/personal".source = link "${dotfiles}/cheat/cheats";
+  # home.file.".config/cheat/cheatsheets/personal".source = link "${dotfiles}/cheat/cheats";
+  home.file.".config/cheat/cheatsheets/community".source = builtins.fetchGit {
+    url = "https://github.com/cheat/cheatsheets";
+    rev = "36bdb99dcfadde210503d8c2dcf94b34ee950e1d";
+  };
 }
