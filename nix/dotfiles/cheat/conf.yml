@@ -66,8 +66,13 @@ cheatpaths:
 
   # If you have personalized cheatsheets, list them last. They will take
   # precedence over the more global cheatsheets.
+  # - name: personal
+  #   path: ~/.config/cheat/cheatsheets/personal/
+  #   tags: [personal]
+  #   readonly: false
+
   - name: personal
-    path: ~/.config/cheat/cheatsheets/personal/
+    path: ~/environment/nix/dotfiles/cheat/cheats/
     tags: [personal]
     readonly: false
 
