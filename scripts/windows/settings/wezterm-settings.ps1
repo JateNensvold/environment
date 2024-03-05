@@ -31,3 +31,10 @@ Write-Host "------------------------------------" -ForegroundColor Yellow
 
 Export-File $SETTINGS_TARGET_FILEPATH $OLD_SETTINGS_FILEPATH -Force
 Initialize-link $SETTINGS_TARGET_FILEPATH $SETTINGS_FILEPATH
+
+$OLD_BACKGROUND_FILEPATH = Join-Path $USER_DIR "wez_backgrounds_old"
+$BACKGROUND_FILEPATH = Join-Path $ENVIRONMENT_DIRECTORY "settings" "wezterm" "backgrounds"
+$BACKGROUND_TARGET_FILEPATH = Join-Path $USER_DIR "wez_backgrounds"
+
+Export-File $BACKGROUND_TARGET_FILEPATH $OLD_BACKGROUND_FILEPATH -Force
+Initialize-link $BACKGROUND_TARGET_FILEPATH $BACKGROUND_FILEPATH
