@@ -27,7 +27,7 @@ in
     };
 
     shellAliases = {
-      reload-home-manager-config = "home-manager switch --flake .#$USER-$NIX_HOST-$HARDWARE-$ARCH";
+      reload-home-manager-config = "home-manager switch --flake ~/environment/nix#$USER-$NIX_HOST-$HARDWARE-$ARCH";
     };
   };
 
