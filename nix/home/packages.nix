@@ -13,6 +13,7 @@
     fd
     git
     git-crypt
+    gnumake
     httpie
     jq
     # Install lld
