@@ -26,6 +26,8 @@ docker compose version
 echo "Choose Option 1 on WSL"
 
 sudo update-alternatives --config iptables
+# After updating the iptables restart the docker daemon(or restart wsl)
 
+# Most likely do not need the below lines anymore now that wsl has daemon support
 # Update socket permissions to run docker without sudo
-sudo chmod 666 /var/run/docker.sock
+# sudo chmod 666 /var/run/docker.sock
