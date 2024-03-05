@@ -46,6 +46,7 @@
         "uninst",
         "unsetopt",
         "usermod",
+        "wezterm",
         "zfuncs"
     ],
     "powershell.powerShellAdditionalExePaths": {

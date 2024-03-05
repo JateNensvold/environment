@@ -19,6 +19,7 @@
     # Install lld
     llvmPackages.bintools
     nix-prefetch-github
+    nodejs_21
     ripgrep
     # Needed by brew
     ruby

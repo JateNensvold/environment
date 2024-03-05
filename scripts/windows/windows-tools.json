@@ -34,7 +34,7 @@
             "choco_name": "geforce-experience"
         },
         {
-            "choco_name": "nerd-fonts-hack"
+            "choco_name": "wezterm"
         }
     ]
 }

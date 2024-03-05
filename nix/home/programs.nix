@@ -60,6 +60,10 @@
         share = true;
       };
 
+      sessionVariables = {
+        EDITOR = "vim";
+      };
+
       shellAliases = {
         ga = "git add .";
         gc = "git commit -m \${1}";
@@ -94,7 +98,6 @@
         fe = "env | fzf -m --header='[find:env]'";
         reload = "reload-home-manager-config";
         c = ''"$EDITOR" .'';
-        zx = "source ~/.extra_zshrc";
         zz = ''"$EDITOR" ~/.zshrc'';
       };
 
@@ -157,15 +160,6 @@
 
         # Disable annoying beep sound in terminal
         unsetopt beep
-
-        if [[ -n $SSH_CONNECTION ]]; then
-            # Set vscode as default terminal editor when editing locally
-            export EDITOR='vim'
-        else
-            # Be sure to quote $EDITOR path when using as default location of vscode is a path with space in it
-            export VISUAL=$(which code | sed 's/ /\\ /g')
-            export EDITOR="$VISUAL"
-        fi
       '';
     };
 
