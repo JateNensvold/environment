@@ -1,40 +1,43 @@
 {
-    "tools": [
-        {
-            "choco_name": "conemu"
-        },
-        {
-            "choco_name": "powertoys"
-        },
-        {
-            "choco_name": "spotify"
-        },
-        {
-            "choco_name": "vscode"
-        },
-        {
-            "choco_name": "vscode-insiders"
-        },
-        {
-            "choco_name": "firefox"
-        },
-        {
-            "choco_name": "discord"
-        },
-        {
-            "choco_name": "steam"
-        },
-        {
-            "choco_name": "googlechrome"
-        },
-        {
-            "choco_name": "f.lux"
-        },
-        {
-            "choco_name": "geforce-experience"
-        },
-        {
-            "choco_name": "wezterm"
-        }
-    ]
+  "tools": [
+    {
+      "choco_name": "conemu"
+    },
+    {
+      "choco_name": "powertoys"
+    },
+    {
+      "choco_name": "spotify"
+    },
+    {
+      "choco_name": "vscode"
+    },
+    {
+      "choco_name": "vscode-insiders"
+    },
+    {
+      "choco_name": "firefox"
+    },
+    {
+      "choco_name": "discord"
+    },
+    {
+      "choco_name": "steam"
+    },
+    {
+      "choco_name": "googlechrome"
+    },
+    {
+      "choco_name": "f.lux"
+    },
+    {
+      "choco_name": "geforce-experience"
+    },
+    {
+      "choco_name": "wezterm"
+    },
+    {
+      "choco_name": "win32yank"
+    }
+  ]
 }
