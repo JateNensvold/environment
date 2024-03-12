@@ -32,7 +32,7 @@
           packages = with pkgs; [
             # Nix development packages
             nixpkgs-fmt
-            rnix-lsp
+            nil
             # VSCode extension packages
             powershell
             shellcheck

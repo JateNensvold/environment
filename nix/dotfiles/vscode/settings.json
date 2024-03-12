@@ -203,7 +203,7 @@
         "editor.defaultFormatter": "vscode.json-language-features"
     },
     "gitlens.plusFeatures.enabled": false,
-    "nix.serverPath": "rnix-lsp",
+    "nix.serverPath": "nil",
     "search.exclude": {
         "env": true,
         "src/*/build": true,
