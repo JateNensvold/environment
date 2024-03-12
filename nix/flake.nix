@@ -1,6 +1,7 @@
 {
 
   description = "My Nix config";
+  # Inspired by https://github.com/Baitinq/nixos-config/blob/df435deda17e75eb994305a49e6d94685a40d2c2/flake.nix
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -37,18 +38,20 @@
         { user = "tosh"; }
         # Laptop
         { user = "nate"; }
-        # Work profile
+        # Work user
         { user = "jensvold"; }
       ];
 
       hosts = [
         { host = "home"; extraOverlays = [ ]; extraModules = [ ]; }
-        # Work profile
-        { host = "amazon"; extraOverlays = [ ]; extraModules = [ ]; }
+        # Work devices
+        { host = "amazon-clouddesk"; extraOverlays = [ ]; extraModules = [ ]; }
+        { host = "amazon-laptop"; extraOverlays = [ ]; extraModules = [ ]; }
       ];
 
       hardwares = [
-        { hardware = "default"; stateVersion = "22.05"; }
+        { hardware = "default"; stateVersion = "23.11"; }
+        { hardware = "macbook"; stateVersion = "23.11"; }
       ];
 
       systems = [
@@ -74,12 +77,17 @@
       #   isHardware = true;
       # });
 
+      # imports = [
+      #   ./modules/nix.nix
+      # ];
+
       homeConfigurations = import ./hosts (commonInherits // {
         isNixOS = false;
         isMacOS = false;
         isIso = false;
         isHardware = false;
       });
+
 
 
       # home-manager.lib.homeManagerConfiguration

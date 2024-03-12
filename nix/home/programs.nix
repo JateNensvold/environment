@@ -94,6 +94,11 @@
         ns = "nix-env --query --available --attr-path";
         nv = "nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'";
 
+        x2 = "exa --tree --level=2";
+        x3 = "exa --tree --level=3";
+        x4 = "exa --tree --level=4";
+        x = "x2";
+
         u = "utils";
         fe = "env | fzf -m --header='[find:env]'";
         reload = "reload-home-manager-config";
@@ -129,13 +134,13 @@
           "autojump"
           "copypath"
           "command-not-found"
-          "fd"
           "direnv"
+          "fd"
           "fzf"
+          "hitchhiker"
           "jsontools"
           "ssh-agent"
           "sudo"
-          "web-search"
           "ripgrep"
         ];
       };
@@ -150,10 +155,6 @@
 
         # ZSH functions
         autoload -Uz ~/.zfuncs/*(:t)
-        # autoload -Uz fp kp ks utils bcp bip bup
-
-        # Source brew path, should be present if system was setup by bash https://raw.githubusercontent.com/JateNensvold/environment/master/scripts/ubuntu/install.sh
-        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
         # fzf-tab does not work without this
         enable-fzf-tab

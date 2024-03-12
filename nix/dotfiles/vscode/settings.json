@@ -39,6 +39,7 @@
         "netselect",
         "nixos",
         "nixpkgs",
+        "numpad",
         "pkgs",
         "pname",
         "podinfo",
@@ -63,6 +64,7 @@
         "truenas",
         "usermod",
         "Ventoy",
+        "vmargs",
         "vsintellicode"
     ],
     "cSpell.ignoreRegExpList": [
@@ -70,6 +72,7 @@
     ],
     "files.autoSave": "onFocusChange",
     "explorer.confirmDragAndDrop": false,
+    "explorer.confirmDelete": false,
     "editor.suggestSelection": "first",
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
     "workbench.editorAssociations": {
@@ -193,7 +196,6 @@
     "editor.accessibilitySupport": "off",
     "telemetry.telemetryLevel": "off",
     "[nix]": {
-        "editor.formatOnSave": true,
         "editor.defaultFormatter": "jnoortheen.nix-ide"
     },
     "nix.enableLanguageServer": true,
@@ -203,8 +205,13 @@
     "gitlens.plusFeatures.enabled": false,
     "nix.serverPath": "rnix-lsp",
     "search.exclude": {
+        "env": true,
+        "src/*/build": true,
+        "build": true,
+        "**/node_modules": true,
+        "**/bower_components": true,
+        "**/*.code-search": true,
         "**/.git": true,
-        // "**/target": true,
         "**/.direnv": true,
         "**/dist": true,
         "**/Cargo.lock": true
@@ -217,5 +224,52 @@
     "cSpell.caseSensitive": false,
     "cSpell.useGitignore": true,
     "cSpell.showAutocompleteSuggestions": true,
-    "java.format.settings.url": "file:///home/jensvold/.vscode-server/data/Machine/java_settings.xml"
+    // Amazon Work Settings
+    "telemetry.enableCrashReporter": false,
+    "telemetry.enableTelemetry": false,
+    "viceroy.config.lastVersion": "0.45.0",
+    "files.watcherExclude": {
+        "**/build/**": true,
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true,
+        "**/node_modules/*/**": true,
+        "**/.hg/store/**": true
+    },
+    "files.exclude": {
+        ".viceroy": true,
+        "apollo-overrides": true,
+        "release-info": true,
+        "src/*/build": false,
+        "build": false,
+        "env": true,
+        "packageInfo*": true,
+        ".bemol": true,
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true
+    },
+    "[brazilPackageConfig]": {
+        "workbench.editor.languageDetection": false
+    },
+    "viceroy.config.internal.lastUpdateTime": "2024-03-12T02:24:47.147Z",
+    "viceroy.marketplace.extensionUpdateChannels": {
+        "marklel.vscode-brazil": "stable"
+    },
+    "viceroy.config.resolveSymlinks": "resolve",
+    "viceroy.workspaceSyncStrategy": "off",
+    "viceroy.config.beautyMode": false,
+    "viceroy.doc.welcome.showAtStartup": false,
+    "java.compile.nullAnalysis.mode": "automatic",
+    // Add extra memory for JVM language server,
+    "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx4G -Xms100m -Xlog:disable",
+    "security.workspace.trust.untrustedFiles": "open",
+    "java.format.settings.url": "/home/jensvold/.vscode-server/data/Machine/java_settings.xml",
+    "editor.formatOnSaveMode": "modificationsIfAvailable",
+    "editor.indentSize": 4,
+    "editor.detectIndentation": true,
+    "java.codeGeneration.generateComments": true,
+    "update.mode": "none"
 }

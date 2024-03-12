@@ -1,6 +1,14 @@
 ---
 tags: [ vcs ]
 ---
+
+# Force push/delete old dev branch to reset history
+git push -d origin jensvold-dev 
+# Set branch upstream on the remote
+git push --set-upstream origin jensvold-dev 
+# Set upstream branch locally
+git branch -u origin jensvold-dev
+
 # Get URL of remote
 git config --get remote.origin.url
 # Display info about remote

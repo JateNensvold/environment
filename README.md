@@ -54,7 +54,7 @@ export HARDWARE=default
 export ARCH=x86_64-linux
 
 cd ~/environment/nix
-home-manager switch --flake .#$USER-$NIX_HOST-$HARDWARE-$ARCH
+home-manager switch --flake ~/environment/nix/.#$USER-$NIX_HOST-$HARDWARE-$ARCH
 ```
 
 #### Mac Setup
