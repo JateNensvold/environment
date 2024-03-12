@@ -2,7 +2,6 @@
 let
   mkHost = { user, host, hardware, stateVersion, system, extraOverlays, extraModules }: isNixOS: isMacOS: isIso: isHardware:
     let
-
       pkgs = import nixpkgs {
         inherit system;
         config = {
@@ -13,7 +12,7 @@ let
         overlays = [
         ] ++ extraOverlays;
       };
-      extraArgs = { inherit pkgs inputs isIso isHardware dotfiles user hardware host system stateVersion; hostname = host + "-" + hardware; };
+      extraArgs = { inherit pkgs inputs isIso isHardware dotfiles home-manager user hardware host system stateVersion; hostname = host + "-" + hardware; };
     in
 
     home-manager.lib.homeManagerConfiguration
@@ -21,8 +20,11 @@ let
         inherit pkgs;
         extraSpecialArgs = extraArgs;
         modules = [
+          ../modules/nix.nix
           ../home/default.nix
           ./${ host }/home.nix
+          ../user/${ user }/default.nix
+          ../hardware/${ hardware }/default.nix
         ];
       };
 

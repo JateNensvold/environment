@@ -35,7 +35,7 @@ nv     [alias] nix-version           nix-instantiate --eval -E '(import <nixpkgs
 
 u      [alias]                       utils
 fe     [alias] find-env              env | fzf \${FZF_DEFAULT_OPTS} -m --header='[find:env]'
-reload [alias] reload-home-manager-config home-manager switch --flake ~/environment/nix#${NIX_HOST}-${HARDWARE}-${ARCH}
+reload [alias] reload-home-manager-config home-manager switch --flake ~/environment/nix#${USER}-${NIX_HOST}-${HARDWARE}-${ARCH}
 c      [alias]                       \$EDITOR .
 zx     [alias]                       source ~/.zshrc
 zz     [alias]                       \$EDITOR ~/.zshrc"

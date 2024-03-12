@@ -42,6 +42,12 @@ install_nix() {
     warn "'Nix' is not installed. Installing..."
     curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --no-confirm
   }
+
+  if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+    # shellcheck source=/dev/null
+    . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+  fi
+
   info "'Nix' is installed! Here is what we have:"
   nix-shell -p nix-info --run "nix-info -m"
 }
@@ -73,13 +79,19 @@ setup_home_manager() {
     info "Backing up $HOME/.config/home-manager to $HOME/.config/home-manager-backup"
     mv --backup=numbered "$HOME/.config/home-manager" "$HOME/.config/home-manager-backup"
   fi
-  ln -s ~/environment/nix/dotfiles/ ~/.config/home-manager
 
   # Setup default nix home-manager profile
   NIX_HOST=home
   HARDWARE=default
   ARCH=x86_64-linux
 
+  OS_TYPE=$(uname -s)
+  if [ "$OS_TYPE" = "Darwin" ];
+  then
+    ARCH=x86_64-darwin
+  fi
+
+  cd ~/environment/nix
   home-manager switch --flake ".#$USER-$NIX_HOST-$HARDWARE-$ARCH"
 
   info "home-manger is configured! Here is what we have:"

@@ -1,15 +1,12 @@
-// Place your key bindings in this file to override the defaultsauto[]
+// Place your key bindings in this file to override the defaults
 [
     {
-        "key": "numpad_subtract",
-        "command": "workbench.view.debug"
+        "key": "ctrl+shift+d",
+        "command": "editor.action.deleteLines",
+        "when": "textInputFocus && !editorReadonly"
     },
     {
-        "key": "ctrl+shift+d",
-        "command": "-workbench.view.debug"
-    },
-    {
-        "key": "ctrl+shift+d",
+        "key": "cmd+shift+d",
         "command": "editor.action.deleteLines",
         "when": "textInputFocus && !editorReadonly"
     },
@@ -23,18 +20,9 @@
         "command": "cursorLineStart"
     },
     {
-        "key": "numpad_subtract",
-        "command": "workbench.action.quickOpenNavigatePreviousInFilePicker",
-        "when": "inFilesPicker && inQuickOpen"
-    },
-    {
         "key": "ctrl+shift+e",
         "command": "-workbench.action.quickOpenNavigatePreviousInFilePicker",
         "when": "inFilesPicker && inQuickOpen"
-    },
-    {
-        "key": "numpad_subtract",
-        "command": "workbench.view.explorer"
     },
     {
         "key": "ctrl+shift+e",
@@ -49,19 +37,13 @@
         "command": "workbench.action.terminal.clear"
     },
     {
-        "key": "numpad_subtract",
-        "command": "expandLineSelection",
-        "when": "textInputFocus"
+        "key": "cmd+l",
+        "command": "workbench.action.terminal.clear"
     },
     {
         "key": "ctrl+l",
         "command": "-expandLineSelection",
         "when": "textInputFocus"
-    },
-    {
-        "key": "numpad_subtract",
-        "command": "notebook.centerActiveCell",
-        "when": "notebookEditorFocused"
     },
     {
         "key": "ctrl+l",
@@ -127,7 +109,7 @@
     },
     {
         "key": "ctrl+,",
-        "command": "workbench.action.terminal.new",
+        "command": "workbench.action.terminal.new"
     },
     {
         "key": "ctrl+tab",
@@ -181,11 +163,11 @@
         "when": "editorTextFocus && vim.active && vim.use<C-w> && !inDebugRepl"
     },
     {
-        "key": "ctrl+shift+l",
-        "command": "workbench.files.action.showActiveFileInExplorer"
+        "key": "ctrl+shift+.",
+        "command": "workbench.action.togglePanel"
     },
     {
-        "key": "ctrl+shift+.",
+        "key": "cmd+shift+.",
         "command": "workbench.action.togglePanel"
     },
     {
@@ -248,11 +230,6 @@
     },
     {
         "key": "ctrl+i",
-        "command": "-toggleSuggestionDetails",
-        "when": "suggestWidgetHasFocusedSuggestion && suggestWidgetVisible && textInputFocus"
-    },
-    {
-        "key": "ctrl+i",
         "command": "extension.vim_insert",
         "when": "editorTextFocus && vim.active && !inDebugRepl"
     },
@@ -289,18 +266,17 @@
         "command": "workbench.action.focusActiveEditorGroup"
     },
     {
+        "key": "cmd+j",
+        "command": "workbench.action.terminal.focus"
+    },
+    {
+        "key": "cmd+k",
+        "command": "workbench.action.focusActiveEditorGroup"
+    },
+    {
         "key": "ctrl+'",
         "command": "editor.action.revealDefinition",
         "when": "editorHasDefinitionProvider && editorTextFocus && !isInEmbeddedEditor"
-    },
-    {
-        "key": "f12",
-        "command": "-editor.action.revealDefinition",
-        "when": "editorHasDefinitionProvider && editorTextFocus && !isInEmbeddedEditor"
-    },
-    {
-        "key": "ctrl+t",
-        "command": "-workbench.action.showAllSymbols"
     },
     {
         "key": "ctrl+t",
@@ -308,38 +284,17 @@
         "when": "editorTextFocus && vim.active && vim.use<C-t> && !inDebugRepl"
     },
     {
-        "key": "ctrl+t",
-        "command": "workbench.action.openPreviousRecentlyUsedEditor"
-    },
-    {
         "key": "ctrl+shift+c",
         "command": "-workbench.action.terminal.openNativeConsole",
         "when": "!terminalFocus"
     },
     {
-        "key": "ctrl+shift+c",
-        "command": "editor.action.inlineSuggest.commit",
-        "when": "inlineSuggestionVisible && tabnine.tab-override && !editorTabMovesFocus"
-    },
-    {
-        "key": "tab",
-        "command": "-editor.action.inlineSuggest.commit",
-        "when": "inlineSuggestionVisible && tabnine.tab-override && !editorTabMovesFocus"
-    },
-    // {
-    //     "key": "tab",
-    //     "command": "editor.action.page",
-    //     "when": "editorTextFocus && vim.active && !inDebugRepl"
-    // },
-    {
         "key": "ctrl+n",
         "command": "extension.vim_escape",
         "when": "vim.mode == 'EasyMotionMode' | vim.mode == 'Insert'"
+    },
+    {
+        "key": "ctrl+b",
+        "command": "workbench.action.toggleSidebarVisibility"
     }
-    // ,
-    // {
-    //     "key": "shift+v",
-    //     "command": "extension.vim_cmd+v",
-    //     "when": "vim.mode == 'Normal'"
-    // }
 ]
