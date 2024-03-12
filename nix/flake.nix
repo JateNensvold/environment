@@ -30,9 +30,6 @@
 
       dotfiles = ./dotfiles;
 
-      name = builtins.getEnv "USER";
-      home = builtins.getEnv "HOME";
-
       users = [
         # Desktop
         { user = "tosh"; }
