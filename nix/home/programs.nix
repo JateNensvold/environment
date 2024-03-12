@@ -137,7 +137,6 @@
           "direnv"
           "fd"
           "fzf"
-          "hitchhiker"
           "jsontools"
           "ssh-agent"
           "sudo"
