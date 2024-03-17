@@ -4,6 +4,7 @@
   home.packages = with pkgs; [
     ansible
     autojump
+    cargo
     cheat
     curl
     delta
