@@ -90,6 +90,7 @@
         ff = "erd -d logical -Hi --hidden --no-git --layout flat | fzf -m --header='[erd:files]'";
         #   Search all files using ripgrep
         sf = "rg -g '!.git' --hidden";
+        sa = "alias | fzf";
         # Nix search
         ns = "nix-env --query --available --attr-path";
         nv = "nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'";
@@ -101,9 +102,13 @@
 
         u = "utils";
         fe = "env | fzf -m --header='[find:env]'";
-        reload = "reload-home-manager-config";
+        reload = "reload-home-manager-config && zx";
+
         c = ''"$EDITOR" .'';
-        zz = ''"$EDITOR" ~/.zshrc'';
+        ce = "cd ~/environment"; 
+        ze = ''"$EDITOR" ~/environment'';
+        zx = ''source ~/.zshrc'';
+        zz = ''"$EDITOR" ~/.config/nvim'';
       };
 
       plugins = [

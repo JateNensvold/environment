@@ -29,16 +29,26 @@ xf     [alias] view-files-fzf        eza --group-directories-first -l | fzf \${F
 xt     [alias] view-files-recursive  eza -T
 ff     [alias] find-file             erd -d logical -Hi --hidden --no-git --layout flat | fzf \${FZF_DEFAULT_OPTS} -m --header='[erd:files]'
 sf     [alias] search-file           rg -g '!.git' --hidden
+sa     [alias]                       alias | fzf
 
 ns     [alias] nix-search            nix-env --query --available --attr-path
 nv     [alias] nix-version           nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'
 
 u      [alias]                       utils
 fe     [alias] find-env              env | fzf \${FZF_DEFAULT_OPTS} -m --header='[find:env]'
-reload [alias] reload-home-manager-config home-manager switch --flake ~/environment/nix#${USER}-${NIX_HOST}-${HARDWARE}-${ARCH}
+reload [alias]                       home-manager switch --flake ~/environment/nix#${USER}-${NIX_HOST}-${HARDWARE}-${ARCH} && zx
+      
+x2     [alias]                       exa --tree --level=2
+x3     [alias]                       exa --tree --level=3
+x4     [alias]                       exa --tree --level=4
+x      [alias]                       x2
+
 c      [alias]                       \$EDITOR .
+
+ce     [alias]                       cd ~/environment 
+ze     [alias]                       \$EDITOR ~/environment
 zx     [alias]                       source ~/.zshrc
-zz     [alias]                       \$EDITOR ~/.zshrc"
+zz     [alias]                       \$EDITOR ~/.config/nvim"
 
 local cmd=$(echo $helptxt | eval "fzf ${FZF_DEFAULT_OPTS} --header='[utils:show]'" | awk '{print $1}')
 
