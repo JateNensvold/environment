@@ -21,6 +21,7 @@
     llvmPackages.bintools
     nix-prefetch-github
     nodejs_21
+    python3
     ripgrep
     # Needed by brew
     ruby
