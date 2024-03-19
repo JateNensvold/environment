@@ -254,7 +254,7 @@
     "[brazilPackageConfig]": {
         "workbench.editor.languageDetection": false
     },
-    "viceroy.config.internal.lastUpdateTime": "2024-03-12T02:24:47.147Z",
+    "viceroy.config.internal.lastUpdateTime": "2024-03-18T23:45:53.087Z",
     "viceroy.marketplace.extensionUpdateChannels": {
         "marklel.vscode-brazil": "stable"
     },
