@@ -1,7 +1,6 @@
 require("tosh-vim.remap")
 require("tosh-vim.lazy_init")
 require("tosh-vim.set")
-require("tosh-vim.work")
 
 
 local augroup = vim.api.nvim_create_augroup
@@ -21,7 +20,7 @@ vim.filetype.add({
 })
 
 autocmd('TextYankPost', {
-        group = yank_group,
+    group = yank_group,
     pattern = '*',
     callback = function()
         vim.highlight.on_yank({
@@ -31,14 +30,14 @@ autocmd('TextYankPost', {
     end,
 })
 
-autocmd({"BufWritePre"}, {
-        group = ToshGroup,
+autocmd({ "BufWritePre" }, {
+    group = ToshGroup,
     pattern = "*",
     command = [[%s/\s\+$//e]],
 })
 
 autocmd('LspAttach', {
-        group = ToshGroup,
+    group = ToshGroup,
     callback = function(e)
         local opts = { buffer = e.buf }
         vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)

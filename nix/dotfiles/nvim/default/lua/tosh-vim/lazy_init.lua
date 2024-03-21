@@ -14,8 +14,5 @@ require("lazy").setup(
     {
         spec = "tosh-vim.lazy",
         change_detection = { notify = false }
-    },
-    {
-        spec = "tosh-vim.work",
-        change_detection = { notify = false }
-    })
+    }
+)
