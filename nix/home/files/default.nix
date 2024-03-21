@@ -14,7 +14,7 @@ in
 
   # Dynamic File (needs to link to a full path to remain pure https://github.com/nix-community/home-manager/issues/2085)
   # see ../../modules/nix.nix for util function
-  home.file.".config/nvim".source = config.lib.meta.mkMutableSymlink "/nvim";
+  home.file.".config/nvim".source = config.lib.meta.mkMutableSymlink "/nvim/default";
 
   home.file.".config/cheat/cheatsheets/community".source = builtins.fetchGit {
     url = "https://github.com/cheat/cheatsheets";

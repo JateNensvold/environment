@@ -38,8 +38,16 @@ return {
             { "hrsh7th/cmp-buffer" },
             { "hrsh7th/cmp-path" },
             { "hrsh7th/cmp-cmdline" },
-            -- UI for neovim notifiactions and LSP messages
-            { "j-hui/fidget.nvim" }
+            -- UI for neovim notifications and LSP messages
+            {
+                "j-hui/fidget.nvim",
+                opts =
+                {
+                    notification = {
+                        override_vim_notify = true
+                    }
+                }
+            }
         },
         config = function()
             local lsp_zero = require('lsp-zero')
@@ -79,7 +87,7 @@ return {
                             capabilities = capabilities
                         }
                     end,
-
+                    jdtls = lsp_zero.noop,
                     ["lua_ls"] = function()
                         local lspconfig = require("lspconfig")
                         lspconfig.lua_ls.setup {
