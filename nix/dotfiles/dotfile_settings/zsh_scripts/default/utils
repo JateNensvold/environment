@@ -10,6 +10,7 @@ ks     [kill:server]
 bcp    [B]rew [C]lean [P]lugin]      Uninstall brew program
 bip    [B]rew [I]nstall [P]lugin]    Install brew program
 bup    [B]rew [U]pdate [P]lugin]     Update brew program
+scpf   [S]cp [F]older                Copy folder over ssh conection  
 
 ga     [alias]                       git add .
 gc     [alias]                       git commit -m \${1}

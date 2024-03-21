@@ -1,0 +1,19 @@
+#!/bin/bash
+### SSH + TAR
+# mnemonic: [SCP] [F]older
+# transfer a remote folder(or file) to a local directory using ssh and tar
+
+if [ "$#" -lt 3 ];
+then
+	echo "Usage: scpf user@host <remote-path> <local-path>"
+	return 1
+fi
+if [ "$#" -eq 2 ];
+then
+	local_path="."
+else
+	local_path=$3
+fi
+
+ssh "$1" "cd $2; tar -czPf - ." | tar xzf - -C "$local_path"
+
