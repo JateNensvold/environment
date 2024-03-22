@@ -29,6 +29,9 @@
     shellcheck
     sl
     tealdeer
+    tmux
     zip
+    # LSP servers
+    nil
   ];
 }

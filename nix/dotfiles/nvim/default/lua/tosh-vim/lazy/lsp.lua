@@ -104,6 +104,9 @@ return {
                 }
             })
 
+            --Manually installed LSP servers
+            require 'lspconfig'.nil_ls.setup {}
+
             -- Setup lsp autocompletion
             local cmp = require('cmp')
             local cmp_select = { behavior = cmp.SelectBehavior.Select }
