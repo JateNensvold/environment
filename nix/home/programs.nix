@@ -105,7 +105,7 @@
         reload = "reload-home-manager-config && zx";
 
         c = ''"$EDITOR" .'';
-        ce = "cd ~/environment"; 
+        ce = "cd ~/environment";
         ze = ''"$EDITOR" ~/environment'';
         zx = ''source ~/.zshrc'';
         zz = ''"$EDITOR" ~/.config/nvim'';
@@ -181,10 +181,6 @@
 
       defaultCommand = "rg --files --no-ignore-vcs --hidden";
       defaultOptions = [ "--height=50%" "--min-height=15" "--reverse" ];
-    };
-
-    tmux = {
-      enable = true;
     };
 
     neovim = {
