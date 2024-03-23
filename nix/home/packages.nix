@@ -32,6 +32,11 @@
     tmux
     zip
     # LSP servers
-    nil
+    nil # nix
+    nodePackages.bash-language-server # bash,  sh
+    # Formatters
+    shfmt # bash, sh
+    eslint_d
+    nixfmt
   ];
 }

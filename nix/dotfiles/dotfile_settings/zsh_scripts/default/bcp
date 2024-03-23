@@ -8,8 +8,7 @@
 local uninst=$(brew leaves | eval "fzf -m --header='[brew:clean]' --query $1")
 
 if [[ $uninst ]]; then
-  for prog in $(echo $uninst)
-  do brew uninstall $prog
-  done
+	for prog in $(echo $uninst); do
+		brew uninstall $prog
+	done
 fi
-
