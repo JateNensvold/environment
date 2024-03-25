@@ -2,11 +2,13 @@
 
 {
   home.packages = with pkgs; [
+    # Tools
     ansible
     autojump
     cargo
     cheat
     curl
+    cmake
     delta
     dogdns
     erdtree
@@ -17,26 +19,28 @@
     gnumake
     httpie
     jq
-    # Install lld
-    llvmPackages.bintools
-    nix-prefetch-github
-    nodejs_21
-    python3
     ripgrep
-    # Needed by brew
-    ruby
     rustscan
     shellcheck
     sl
     tealdeer
     tmux
     zip
+    # Nix tools
+    nix-prefetch-github
+    # Install lld
+    llvmPackages.bintools
+    # Runtimes
+    nodejs_21
+    python3
+    # Needed by brew
+    ruby
     # LSP servers
     nil # nix
     nodePackages.bash-language-server # bash,  sh
     # Formatters
     shfmt # bash, sh
-    eslint_d
-    nixfmt
+    eslint_d # javascript
+    nixfmt # nix
   ];
 }
