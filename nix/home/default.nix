@@ -22,6 +22,7 @@ in {
     # changes in each release.
     stateVersion = "23.11";
 
+    sessionPath = [ "$HOME/.local/bin" ];
     sessionVariables = {
       NIX_HOST = host;
       HARDWARE = hardware;

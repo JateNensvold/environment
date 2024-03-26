@@ -145,10 +145,11 @@
             ~/.zfuncs
             $fpath
         )
-        # Add keybind for sessionizer
-        bindkey -s ^f "tmux-sessionizer\n"
         # ZSH functions
         autoload -Uz ~/.zfuncs/*(:t)
+
+        # Add keybind for sessionizer
+        bindkey -s ^f "tmux-sessionizer\n"
 
         # fzf-tab does not work without this
         enable-fzf-tab

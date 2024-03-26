@@ -3,7 +3,7 @@ let link = config.lib.meta.mkMutableSymlink;
 in {
   # Static files
   home.file.".zfuncs" = {
-    source = "${dotfiles}/dotfile_settings/zsh_scripts/default";
+    source = "${dotfiles}/scripts/zsh/default";
     recursive = true;
   };
   home.file.".p10k.zsh".source = "${dotfiles}/dotfile_settings/.p10k.zsh";
@@ -14,6 +14,7 @@ in {
   # see ../../modules/nix.nix for util function
   home.file.".config/nvim".source = link "/nvim/default";
   home.file.".config/tmux".source = link "/tmux";
+  home.file.".local/bin".source = link "/scripts/bash/default";
 
   home.file.".config/cheat/cheatsheets/community".source = builtins.fetchGit {
     url = "https://github.com/cheat/cheatsheets";
