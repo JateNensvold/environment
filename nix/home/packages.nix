@@ -26,6 +26,9 @@
     tealdeer
     tmux
     zip
+    # Tmux plugins
+    tmuxPlugins.resurrect
+    tmuxPlugins.continuum
     # Nix tools
     nix-prefetch-github
     # Install lld

@@ -1,13 +1,10 @@
-/* Main user-level configuration */
+# Main user-level configuration
 { config, lib, pkgs, user, host, hardware, system, dotfiles, ... }:
 
 let
   homeDirectoryPrefix =
-    if pkgs.stdenv.hostPlatform.isDarwin
-    then "/Users"
-    else "/home";
-in
-{
+    if pkgs.stdenv.hostPlatform.isDarwin then "/Users" else "/home";
+in {
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
 
@@ -29,22 +26,23 @@ in
       NIX_HOST = host;
       HARDWARE = hardware;
       ARCH = system;
+      TMUX_SESSIONIZER_PATHS = "~/:~/projects";
     };
 
     shellAliases = {
-      reload-home-manager-config = "home-manager switch --flake ~/environment/nix#$USER-$NIX_HOST-$HARDWARE-$ARCH";
+      reload-home-manager-config =
+        "home-manager switch --flake ~/environment/nix#$USER-$NIX_HOST-$HARDWARE-$ARCH";
     };
   };
 
-  nixpkgs =
-    {
-      config.allowUnfree = true;
-      overlays = [
-        # sometimes it is useful to pin a version of some tool or program.
-        # this can be done in " overlays/pinned.nix "
-        (import ../overlays/pinned.nix)
-      ];
-    };
+  nixpkgs = {
+    config.allowUnfree = true;
+    overlays = [
+      # sometimes it is useful to pin a version of some tool or program.
+      # this can be done in " overlays/pinned.nix "
+      (import ../overlays/pinned.nix)
+    ];
+  };
 
   # Flakes are not standard yet, but widely used, enable them.
   xdg.configFile."nix/nix.conf ".text = ''
@@ -58,9 +56,9 @@ in
     (import ./programs.nix { inherit config lib pkgs dotfiles; })
 
     # Host Specific setup
-    ../hosts/${ host }/home.nix
-    ../user/${ user }/default.nix
-    ../hardware/${ hardware }/default.nix
+    ../hosts/${host}/home.nix
+    ../user/${user}/default.nix
+    ../hardware/${hardware}/default.nix
   ];
   #  ++ (modules.importAllModules ./modules);
 }

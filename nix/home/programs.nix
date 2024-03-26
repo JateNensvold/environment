@@ -1,5 +1,4 @@
-{ config, lib, pkgs, dotfiles, ... }:
-{
+{ config, lib, pkgs, dotfiles, ... }: {
   programs = {
     # Let Home Manager install and manage itself.
     home-manager.enable = true;
@@ -22,9 +21,7 @@
         difftool."default-difftool" = {
           cmd = "code --wait --diff $LOCAL $REMOTE";
         };
-        interactive = {
-          diffFilter = "delta --color-only";
-        };
+        interactive = { diffFilter = "delta --color-only"; };
         delta = {
           navigate = "true";
           light = "false";
@@ -36,17 +33,12 @@
           conflictstyle = "diff3";
           tool = "vscode";
         };
-        init = {
-          defaultBranch = "master";
-        };
-        pull = {
-          rebase = "true";
-        };
-        url."git@github.com:" = {
-          insteadOf = "https://github.com/";
-        };
+        init = { defaultBranch = "master"; };
+        pull = { rebase = "true"; };
+        url."git@github.com:" = { insteadOf = "https://github.com/"; };
         credential = {
-          helper = "!f() { /home/vscode/.vscode-server/bin/b380da4ef1ee00e224a15c1d4d9793e27c2b6302/node /tmp/vscode-remote-containers-855513c7-ab25-46f4-a4b7-a9c446b753ee.js git-credential-helper $*; }; f";
+          helper =
+            "!f() { /home/vscode/.vscode-server/bin/b380da4ef1ee00e224a15c1d4d9793e27c2b6302/node /tmp/vscode-remote-containers-855513c7-ab25-46f4-a4b7-a9c446b753ee.js git-credential-helper $*; }; f";
         };
       };
     };
@@ -56,13 +48,9 @@
       enableCompletion = true;
       enableAutosuggestions = true;
       syntaxHighlighting.enable = true;
-      history = {
-        share = true;
-      };
+      history = { share = true; };
 
-      sessionVariables = {
-        EDITOR = "vim";
-      };
+      sessionVariables = { EDITOR = "vim"; };
 
       shellAliases = {
         ga = "git add .";
@@ -87,7 +75,8 @@
         #   List all files in current directory and pipe to fzf
         xf = "eza --group-directories-first -l | fzf -m --header='[eza:files]'";
         #   List all files recursively and pipe to fzf
-        ff = "erd -d logical -Hi --hidden --no-git --layout flat | fzf -m --header='[erd:files]'";
+        ff =
+          "erd -d logical -Hi --hidden --no-git --layout flat | fzf -m --header='[erd:files]'";
         #   Search all files using ripgrep
         sf = "rg -g '!.git' --hidden";
         sa = "alias | fzf";
@@ -107,7 +96,7 @@
         c = ''"$EDITOR" .'';
         ce = "cd ~/environment";
         ze = ''"$EDITOR" ~/environment'';
-        zx = ''source ~/.zshrc'';
+        zx = "source ~/.zshrc";
         zz = ''"$EDITOR" ~/.config/nvim'';
       };
 
@@ -156,7 +145,8 @@
             ~/.zfuncs
             $fpath
         )
-
+        # Add keybind for sessionizer
+        bindkey -s ^f "tmux-sessionizer\n"
         # ZSH functions
         autoload -Uz ~/.zfuncs/*(:t)
 
@@ -192,10 +182,7 @@
     eza = {
       enable = true;
       enableAliases = true;
-      extraOptions = [
-        "--group-directories-first"
-        "--header"
-      ];
+      extraOptions = [ "--group-directories-first" "--header" ];
     };
   };
 }
