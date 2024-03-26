@@ -1,15 +1,14 @@
 { lib, inputs, config, pkgs, dotfiles, ... }:
 let
 
-in
-{
+in {
 
   # Recursive static folder
-  home.file.".zfuncs/a" = {
-    source = "${dotfiles}/dotfile_settings/zsh_scripts/work/a";
-  };
+  home.file.".zfuncs/a" = { source = "${dotfiles}/scripts/zsh/work/a"; };
 
   # Dynamic files
-  home.file."Library/Application Support/Code/User/settings.json".source = config.lib.meta.mkMutableSymlink "/vscode/settings.json";
-  home.file."Library/Application Support/Code/User/keybindings.json".source = config.lib.meta.mkMutableSymlink "/vscode/keybindings.json";
+  home.file."Library/Application Support/Code/User/settings.json".source =
+    config.lib.meta.mkMutableSymlink "/vscode/settings.json";
+  home.file."Library/Application Support/Code/User/keybindings.json".source =
+    config.lib.meta.mkMutableSymlink "/vscode/keybindings.json";
 }
