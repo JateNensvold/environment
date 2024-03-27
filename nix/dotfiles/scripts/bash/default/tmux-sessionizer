@@ -4,16 +4,26 @@ if [[ $# -eq 1 ]]; then
 	selected=$1
 else
 	path_array=($(echo "$TMUX_SESSIONIZER_PATHS" | tr ':' '\n'))
-	for i in "${!path_array[@]}"; do
-		path_array[i]="${path_array[i]/#\~/$HOME}"
-	done
 
-	selected=$(find "${path_array[@]}" -mindepth 1 -maxdepth 1 -type d | fzf)
+	real_paths=()
+	for i in "${!path_array[@]}"; do
+		tmp_path="${path_array[i]/#\~/$HOME}"
+
+		if [[ "${tmp_path: -1}" != "/" ]]; then
+			tmp_path="${tmp_path}/"
+		fi
+		_out=$(realpath -e -q "${tmp_path}")
+		code=$?
+
+		if [[ $code -eq 0 ]]; then
+			real_paths+=("${tmp_path}")
+		fi
+	done
+	selected=$(find "${real_paths[@]}" -mindepth 1 -maxdepth 1 -type d | fzf)
 fi
 
 if [[ -z $selected ]]; then
-	# exit 0
-	return
+	exit 0
 fi
 
 selected_name=$(basename "$selected" | tr . _)
@@ -21,12 +31,17 @@ tmux_running=$(pgrep tmux)
 
 if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
 	tmux new-session -s "$selected_name" -c "$selected"
-	# exit 0
-	return
+	exit 0
 fi
 
 if ! tmux has-session -t="$selected_name" 2>/dev/null; then
 	tmux new-session -ds "$selected_name" -c "$selected"
 fi
 
-tmux switch-client -t "$selected_name"
+if [[ -z $TMUX ]]; then
+    # Not in tmux, attach to session
+	tmux attach -t "$selected_name"
+else
+    # In tmux, switch to other session
+	tmux switch-client -t "$selected_name"
+fi

@@ -26,6 +26,8 @@
     tealdeer
     tmux
     zip
+    #Nvim plugins
+    vimPlugins.telescope-fzf-native-nvim
     # Tmux plugins
     tmuxPlugins.resurrect
     tmuxPlugins.continuum
