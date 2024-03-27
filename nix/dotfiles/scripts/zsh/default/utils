@@ -10,7 +10,7 @@ ks     [kill:server]
 bcp    [B]rew [C]lean [P]lugin]      Uninstall brew program
 bip    [B]rew [I]nstall [P]lugin]    Install brew program
 bup    [B]rew [U]pdate [P]lugin]     Update brew program
-scpf   [S]cp [F]older                Copy folder over ssh conection  
+scpf   [S]cp [F]older                Copy folder over ssh conection
 
 ga     [alias]                       git add .
 gc     [alias]                       git commit -m \${1}
@@ -24,29 +24,24 @@ grb    [alias]                       git rebase \${1} \${2} -i
 gs     [alias]                       git status
 gl     [alias]                       git ls-files \${1} | xargs wc -l
 
-xl     [alias] view-files            eza --group-directories-first -l
-xa     [alias] view-files-all        eza --group-directories-first -la --time-style=long-iso
-xf     [alias] view-files-fzf        eza --group-directories-first -l | fzf \${FZF_DEFAULT_OPTS} -m --header='[eza:files]'
 xt     [alias] view-files-recursive  eza -T
-ff     [alias] find-file             erd -d logical -Hi --hidden --no-git --layout flat | fzf \${FZF_DEFAULT_OPTS} -m --header='[erd:files]'
-sf     [alias] search-file           rg -g '!.git' --hidden
-sa     [alias]                       alias | fzf
-
-ns     [alias] nix-search            nix-env --query --available --attr-path
-nv     [alias] nix-version           nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'
-
-u      [alias]                       utils
-fe     [alias] find-env              env | fzf \${FZF_DEFAULT_OPTS} -m --header='[find:env]'
-reload [alias]                       home-manager switch --flake ~/environment/nix#${USER}-${NIX_HOST}-${HARDWARE}-${ARCH} && zx
-      
-x2     [alias]                       exa --tree --level=2
-x3     [alias]                       exa --tree --level=3
-x4     [alias]                       exa --tree --level=4
+x2     [alias]                       eza --tree --level=2
+x3     [alias]                       eza --tree --level=3
+x4     [alias]                       eza --tree --level=4
 x      [alias]                       x2
 
-c      [alias]                       \$EDITOR .
+ff     [alias] find-file             fd | fzf
+sf     [alias] search-file           rg -g '!.git' --hidden
+sa     [alias] search-alias          alias | fzf
+se     [alias] search-env            env | fzf \${FZF_DEFAULT_OPTS} -m --header='[find:env]'
+sp     [alias] search-packages       home-manager packges | fzf
 
-ce     [alias]                       cd ~/environment 
+nv     [alias] nix-version           nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'
+u      [alias]                       utils
+reload [alias]                       home-manager switch --flake ~/environment/nix#${USER}-${NIX_HOST}-${HARDWARE}-${ARCH} && zx
+
+c      [alias]                       \$EDITOR .
+ce     [alias]                       cd ~/environment
 ze     [alias]                       \$EDITOR ~/environment
 zx     [alias]                       source ~/.zshrc
 zz     [alias]                       \$EDITOR ~/.config/nvim"
@@ -54,5 +49,5 @@ zz     [alias]                       \$EDITOR ~/.config/nvim"
 local cmd=$(echo $helptxt | eval "fzf ${FZF_DEFAULT_OPTS} --header='[utils:show]'" | awk '{print $1}')
 
 if [[ -n $cmd ]]; then
-    eval ${cmd}
+	eval ${cmd}
 fi
