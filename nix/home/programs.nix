@@ -66,31 +66,23 @@
         gl = "git ls-files \${1} | xargs wc -l";
         # Steam locomotive
         sl = "sl -ea";
-        #   List all files
-        xa = "eza --group-directories-first -laa --time-style=long-iso";
-        #   List files grouped by directory first
-        xl = "eza --group-directories-first -l";
-        #   List Tree of files
-        xt = "eza -T";
-        #   List all files in current directory and pipe to fzf
-        xf = "eza --group-directories-first -l | fzf -m --header='[eza:files]'";
-        #   List all files recursively and pipe to fzf
-        ff =
-          "erd -d logical -Hi --hidden --no-git --layout flat | fzf -m --header='[erd:files]'";
-        #   Search all files using ripgrep
-        sf = "rg -g '!.git' --hidden";
-        sa = "alias | fzf";
-        # Nix search
-        ns = "nix-env --query --available --attr-path";
-        nv = "nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'";
 
-        x2 = "exa --tree --level=2";
-        x3 = "exa --tree --level=3";
-        x4 = "exa --tree --level=4";
+        xt = "eza -T";
+        x2 = "eza --tree --level=2";
+        x3 = "eza --tree --level=3";
+        x4 = "eza --tree --level=4";
         x = "x2";
 
+        ff = "fd | fzf --header='[find:file]'";
+        fe = "env | fzf --header='[find:env]'";
+
+        sf = "rg -g '!.git' --hidden";
+        sa = "alias | fzf --header='[search:alias]'";
+        se = "env | fzf --header='[search:env]'";
+        sp = "home-manager packages | fzf --header='[search:packages]'";
+
+        nv = "nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'";
         u = "utils";
-        fe = "env | fzf -m --header='[find:env]'";
         reload = "reload-home-manager-config && zx";
 
         c = ''"$EDITOR" .'';
