@@ -30,5 +30,39 @@ return {
 				},
 			},
 		})
+
+		local function is_git_repo()
+			vim.fn.system("git rev-parse --is-inside-work-tree")
+			return vim.v.shell_error == 0
+		end
+		local function get_git_root()
+			local dot_git_path = vim.fn.finddir(".git", ".;")
+			return vim.fn.fnamemodify(dot_git_path, ":h")
+		end
+
+		local neo_command = require("neo-tree.command")
+
+		-- Open vim file tree
+		vim.keymap.set("n", "<leader>pp", function()
+			local cwd = vim.fn.getcwd()
+			if is_git_repo() then
+				cwd = get_git_root()
+			end
+
+			local reveal_file = vim.fn.expand("%:p")
+			print(reveal_file)
+
+			neo_command.execute({
+				action = "focus",
+				position = "current",
+				source = "filesystem",
+				reveal_file = reveal_file,
+				reveal_force_cwd = true,
+				dir = cwd,
+			})
+		end)
+		vim.keymap.set("n", "<leader>pv", "<cmd>Neotree reveal_force_cwd dir=%:p:h:h position=current<CR>")
+		vim.keymap.set("n", "<leader>pb", "<cmd>Neotree position=current source=buffers<CR>")
+		-- vim.keymap.set("n", "<leader>gd", "<cmd>Neotree float reveal_file=<cfile> reveal_force_cwd<CR>")
 	end,
 }

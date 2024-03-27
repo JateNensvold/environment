@@ -1,8 +1,4 @@
 vim.g.mapleader = " "
--- Open vim file tree
-vim.keymap.set("n", "<leader>pv", "<cmd>Neotree reveal position=current<CR>")
---vim.keymapmap.set("n", "<leader>pp", vim.cmd.Ex)
-vim.keymap.set("n", "<leader>pb", "<cmd>Neotree position=current source=buffers<CR>")
 
 -- Moves highlighted lines up and down
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
