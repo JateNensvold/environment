@@ -29,6 +29,7 @@ return {
 
 			path.data_dir = vim.fn.stdpath("cache") .. "/nvim-jdtls"
 
+            print(path.data_dir)
 			local jdtls_install = require("mason-registry").get_package("jdtls"):get_install_path()
 
 			path.java_agent = jdtls_install .. "/lombok.jar"
@@ -155,10 +156,11 @@ return {
 				"-Dosgi.bundles.defaultStartLevel=4",
 				"-Declipse.product=org.eclipse.jdt.ls.core.product",
 				"-Dlog.protocol=true",
-				"-Dlog.level=ALL",
+				-- "-Dlog.level=ALL",
+                "-Dlog.level=ERROR",
 				"-javaagent:" .. path.java_agent,
 				"-Xms4g",
-				"--add-modules=ALL-SYSTEM",
+				-- "--add-modules=ALL-SYSTEM",
 				"--add-opens",
 				"java.base/java.util=ALL-UNNAMED",
 				"--add-opens",

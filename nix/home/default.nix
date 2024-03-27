@@ -27,9 +27,9 @@ in {
       NIX_HOST = host;
       HARDWARE = hardware;
       ARCH = system;
-      TMUX_SESSIONIZER_PATHS = "~/:~/projects";
+      TMUX_SESSIONIZER_PATHS =
+        lib.concatStringsSep ":" [ "~" "~/projects" "~/workspace" ];
     };
-
     shellAliases = {
       reload-home-manager-config =
         "home-manager switch --flake ~/environment/nix#$USER-$NIX_HOST-$HARDWARE-$ARCH";
