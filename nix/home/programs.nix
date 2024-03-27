@@ -73,7 +73,7 @@
         x4 = "eza --tree --level=4";
         x = "x2";
 
-        ff = "fd | fzf --header='[find:file]'";
+        ff = "var=$(fd | fzf --header='[find:file]') && change-location $var";
         fe = "env | fzf --header='[find:env]'";
 
         sf = "rg -g '!.git' --hidden";

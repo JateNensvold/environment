@@ -30,7 +30,7 @@ x3     [alias]                       eza --tree --level=3
 x4     [alias]                       eza --tree --level=4
 x      [alias]                       x2
 
-ff     [alias] find-file             fd | fzf
+ff     [alias] find-file             var=\$(fd | fzf --header='[find:file]') && change-location \$var
 sf     [alias] search-file           rg -g '!.git' --hidden
 sa     [alias] search-alias          alias | fzf
 se     [alias] search-env            env | fzf \${FZF_DEFAULT_OPTS} -m --header='[find:env]'

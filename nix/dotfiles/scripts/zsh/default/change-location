@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+##zsh
+
+# shellcheck disable=SC1071
+
+### PATH
+# mnemonic: [C]hange [L]ocation
+if [[ "$#" -eq 1 ]]; then
+	DIR_NAME=$1
+	if [[ -f $1 ]]; then
+		DIR_NAME=$(dirname "$1")
+	fi
+
+	cd "$DIR_NAME" || return
+else
+	>&2 echo "Error: Invalid Arguments"
+	>&2 echo "Usage: change-location [folder|file]"
+	return 1
+fi
