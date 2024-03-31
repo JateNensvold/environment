@@ -5,7 +5,7 @@
     # Tools
     ansible
     autojump
-    cargo
+    # cargo
     cheat
     curl
     cmake
@@ -38,11 +38,14 @@
     # Runtimes
     nodejs_21
     python3
+    rustup
     # Needed by brew
     ruby
     # LSP servers
     nil # nix
     nodePackages.bash-language-server # bash,  sh
+    docker-compose-language-service # docker compose
+    dockerfile-language-server-nodejs # dockerfile
     # Formatters
     shfmt # bash, sh
     eslint_d # javascript

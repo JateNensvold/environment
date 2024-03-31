@@ -70,18 +70,19 @@ return {
 				cmp_lsp.default_capabilities()
 			)
 
+			local lspconfig = require("lspconfig")
+
 			require("mason-lspconfig").setup({
 				-- Preinstall LSP servers here
 				ensure_installed = {},
 				handlers = {
 					function(server_name) -- default handler (optional)
-						require("lspconfig")[server_name].setup({
+						lspconfig[server_name].setup({
 							capabilities = capabilities,
 						})
 					end,
 					jdtls = lsp_zero.noop,
 					["lua_ls"] = function()
-						local lspconfig = require("lspconfig")
 						lspconfig.lua_ls.setup({
 							capabilities = capabilities,
 							settings = {
@@ -108,11 +109,37 @@ return {
 			})
 
 			--Manually installed LSP servers
-			require("lspconfig").nil_ls.setup({})
-			require("lspconfig").bashls.setup({
+			lspconfig.nil_ls.setup({})
+			lspconfig.bashls.setup({
 				filetypes = {
 					"bash",
 					"zsh",
+				},
+			})
+			lspconfig.docker_compose_language_service.setup({})
+			lspconfig.dockerfile_language_server.setup({})
+			lspconfig.rust_analyzer.setup({
+				---@diagnostic disable-next-line: unused-local
+				on_attach = function(client, bufnr)
+					vim.lsp.inlay_hint.enable(bufnr)
+				end,
+				settings = {
+					["rust-analyzer"] = {
+						imports = {
+							granularity = {
+								group = "module",
+							},
+							prefix = "self",
+						},
+						cargo = {
+							buildScripts = {
+								enable = true,
+							},
+						},
+						procMacro = {
+							enable = true,
+						},
+					},
 				},
 			})
 
@@ -136,9 +163,10 @@ return {
 				}),
 				sources = cmp.config.sources({
 					{ name = "nvim_lsp" },
-					{ name = "luasnip" }, -- For luasnip users.
-				}, {
+					{ name = "path" },
+					-- { name = "luasnip" }, -- For luasnip users.
 					{ name = "buffer" },
+					{ name = "crates" },
 				}),
 			})
 
