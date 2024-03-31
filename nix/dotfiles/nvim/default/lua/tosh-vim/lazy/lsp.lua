@@ -117,7 +117,7 @@ return {
 				},
 			})
 			lspconfig.docker_compose_language_service.setup({})
-			lspconfig.dockerfile_language_server.setup({})
+			lspconfig.dockerls.setup({})
 			lspconfig.rust_analyzer.setup({
 				---@diagnostic disable-next-line: unused-local
 				on_attach = function(client, bufnr)
