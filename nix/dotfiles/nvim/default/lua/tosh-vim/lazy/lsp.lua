@@ -105,6 +105,12 @@ return {
 						filetypes = { "zsh", "bash", "sh" },
 					}),
 					null_ls.builtins.formatting.nixfmt,
+					null_ls.builtins.formatting.sqlfluff.with({
+						extra_args = {
+							"--dialect",
+							"postgres",
+						},
+					}),
 				},
 			})
 
@@ -118,30 +124,7 @@ return {
 			})
 			lspconfig.docker_compose_language_service.setup({})
 			lspconfig.dockerls.setup({})
-			lspconfig.rust_analyzer.setup({
-				---@diagnostic disable-next-line: unused-local
-				on_attach = function(client, bufnr)
-					vim.lsp.inlay_hint.enable(bufnr)
-				end,
-				settings = {
-					["rust-analyzer"] = {
-						imports = {
-							granularity = {
-								group = "module",
-							},
-							prefix = "self",
-						},
-						cargo = {
-							buildScripts = {
-								enable = true,
-							},
-						},
-						procMacro = {
-							enable = true,
-						},
-					},
-				},
-			})
+			-- lspconfig.sqls.setup({})
 
 			-- Setup lsp autocompletion
 			local cmp = require("cmp")

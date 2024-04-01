@@ -46,9 +46,11 @@
     nodePackages.bash-language-server # bash,  sh
     docker-compose-language-service # docker compose
     dockerfile-language-server-nodejs # dockerfile
+    sqls # sql
     # Formatters
     shfmt # bash, sh
     eslint_d # javascript
     nixfmt # nix
+    sqlfluff # sql
   ];
 }

@@ -43,7 +43,7 @@ return {
 		local neo_command = require("neo-tree.command")
 
 		-- Open vim file tree
-		vim.keymap.set("n", "<leader>pp", function()
+		vim.keymap.set("n", "<leader>pv", function()
 			local cwd = vim.fn.getcwd()
 			if is_git_repo() then
 				cwd = get_git_root()
@@ -61,7 +61,7 @@ return {
 				dir = cwd,
 			})
 		end)
-		vim.keymap.set("n", "<leader>pv", "<cmd>Neotree reveal_force_cwd dir=%:p:h:h position=current<CR>")
+		-- vim.keymap.set("n", "<leader>pv", "<cmd>Neotree dir=%:p:h:h position=current<CR>")
 		vim.keymap.set("n", "<leader>pb", "<cmd>Neotree position=current source=buffers<CR>")
 		-- vim.keymap.set("n", "<leader>gd", "<cmd>Neotree float reveal_file=<cfile> reveal_force_cwd<CR>")
 	end,
