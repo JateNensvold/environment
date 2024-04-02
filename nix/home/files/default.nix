@@ -14,7 +14,7 @@ in {
   # see ../../modules/nix.nix for util function
   home.file.".config/nvim".source = link "/nvim/default";
   home.file.".config/tmux".source = link "/tmux";
-  home.file.".local/bin".source = link "/scripts/bash/default";
+  # home.file.".local/bin".source = link "/scripts/bash/default";
 
   home.file.".config/cheat/cheatsheets/community".source = builtins.fetchGit {
     url = "https://github.com/cheat/cheatsheets";
