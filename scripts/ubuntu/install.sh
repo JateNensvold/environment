@@ -62,8 +62,9 @@
 		if ! nix-channel --list | grep -q home-manager; then
 			warn "Adding 'home-manager' Nix channel..."
 			nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
-			nix-channel --update
 		fi
+
+		nix-channel --update
 		info "Home Manager channel is installed. Here are available channels:"
 		nix-channel --list
 	}
@@ -153,7 +154,11 @@
 		port=$2
 
 		if ! grep -F "$host" ~/.ssh/known_hosts >/dev/null; then
-			ssh-keyscan -t rsa -p "$port" "$host" >>~/.ssh/known_hosts
+			if [[ -z $port ]]; then
+				ssh-keyscan -t rsa -p "$port" "$host" >>~/.ssh/known_hosts
+			else
+				ssh-keyscan -t rsa "$host" >>~/.ssh/known_hosts
+			fi
 		fi
 	}
 
@@ -173,6 +178,7 @@
 
 	setup() {
 		add_ssh_key "ssh.github.com" "443"
+		add_ssh_key "github.com" "443"
 		if ! ssh_support; then
 			error "Users SSH key not found, add SSH key to resolve issue..."
 			return 1
