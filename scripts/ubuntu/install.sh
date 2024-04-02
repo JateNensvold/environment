@@ -149,8 +149,8 @@
 	}
 
 	add_github_key() {
-		if ! grep github.com ~/.ssh/known_hosts >/dev/null; then
-			ssh-keyscan -t rsa github.com >>~/.ssh/known_hosts
+		if ! grep ssh.github.com ~/.ssh/known_hosts >/dev/null; then
+			ssh-keyscan -t rsa ssh.github.com >>~/.ssh/known_hosts
 		fi
 	}
 
