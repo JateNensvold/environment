@@ -41,6 +41,7 @@ u      [alias]                       utils
 reload [alias]                       home-manager switch --flake ~/environment/nix#${USER}-${NIX_HOST}-${HARDWARE}-${ARCH} && zx
 
 c      [alias]                       \$EDITOR .
+vv     [alias]                       var=\$(fd | fzf --header='[find:file]') && full_var=\$(realpath \$var) && change-location \$var && vim \$full_var
 ce     [alias]                       cd ~/environment
 ze     [alias]                       \$EDITOR ~/environment
 zx     [alias]                       source ~/.zshrc

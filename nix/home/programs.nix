@@ -74,6 +74,8 @@
         x = "x2";
 
         ff = "var=$(fd | fzf --header='[find:file]') && change-location $var";
+        vv =
+          "var=$(fd | fzf --header='[find:file]') && full_var=$(realpath $var) && change-location $var && vim $full_var ";
         fe = "env | fzf --header='[find:env]'";
 
         sf = "rg -g '!.git' --hidden";
@@ -142,6 +144,7 @@
 
         # Add keybind for sessionizer
         bindkey -s ^f "tmux-sessionizer\n"
+        bindkey -s ^p "vv\n"
 
         # fzf-tab does not work without this
         enable-fzf-tab
