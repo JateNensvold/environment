@@ -9,6 +9,7 @@
     cheat
     curl
     cmake
+    cmatrix # hacker man
     delta
     dogdns
     erdtree
