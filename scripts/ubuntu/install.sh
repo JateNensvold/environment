@@ -150,7 +150,7 @@
 
 	add_github_key() {
 		if ! grep ssh.github.com ~/.ssh/known_hosts >/dev/null; then
-			ssh-keyscan -t rsa ssh.github.com >>~/.ssh/known_hosts
+			ssh-keyscan -t rsa "$1" >>~/.ssh/known_hosts
 		fi
 	}
 
@@ -169,7 +169,7 @@
 	}
 
 	setup() {
-		add_github_key
+		add_github_key "[ssh.github.com]:443"
 		if ! ssh_support; then
 			error "Users SSH key not found, add SSH key to resolve issue..."
 			return 1
