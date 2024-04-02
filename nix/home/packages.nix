@@ -49,10 +49,12 @@
     dockerfile-language-server-nodejs # dockerfile
     sqls # sql
     lua-language-server # lua
+    nodePackages.pyright # python
     # Formatters
     shfmt # bash, sh
     eslint_d # javascript
     nixfmt # nix
     sqlfluff # sql
+    black # python
   ];
 }

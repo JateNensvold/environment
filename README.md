@@ -40,7 +40,7 @@ WSL Specific Dependencies
 Copy and run the following command to automate environment setup(Tested on ubuntu 22.04 and AL2)
 
 ```bash
-bash -i <(curl -fsSL https://raw.githubusercontent.com/JateNensvold/environment/master/scripts/ubuntu/install.sh)
+curl -fsSL https://raw.githubusercontent.com/JateNensvold/environment/master/scripts/ubuntu/install.sh | bash -is setup
 ```
 
 ##### Home-manager configuration
