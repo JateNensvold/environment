@@ -123,13 +123,11 @@
 
 		# Reset environment repo if it already exists
 		if [ -e "${clone_target}/" ]; then
-			if [ -d "${clone_target}" ]; then
-				warn "Looks like '${clone_target}' exists and it is not what we want. Backing up as '${clone_target}.backup-before-clone'..."
-				mv --backup=numbered "${clone_target}" "${clone_target}.backup-before-clone"
-			fi
-			warn "Cloning '${repository}' into '${clone_target}'..."
-			git clone "${repository}" "${clone_target}"
+			warn "Looks like '${clone_target}' exists and it is not what we want. Backing up as '${clone_target}.backup-before-clone'..."
+			mv --backup=numbered "${clone_target}" "${clone_target}.backup-before-clone"
 		fi
+		warn "Cloning '${repository}' into '${clone_target}'..."
+		git clone "${repository}" "${clone_target}"
 
 		info "'${clone_target}' is sourced from github.com:'${repository}'."
 		cd "${clone_target}"
@@ -150,6 +148,12 @@
 		return 1
 	}
 
+	add_github_key() {
+		if ! grep github.com ~/.ssh/known_hosts >/dev/null; then
+			ssh-keyscan -t rsa github.com >>~/.ssh/known_hosts
+		fi
+	}
+
 	git_SSH_convert() {
 
 		ssh_support
@@ -165,12 +169,19 @@
 	}
 
 	setup() {
+		add_github_key
+		if ! ssh_support; then
+			error "Users SSH key not found, add SSH key to resolve issue..."
+			return 1
+		fi
+
 		sudo_prompt
 		install_nix
 		install_home_manager
 		install_homebrew
 		clone_repository
 		setup_home_manager
+		git_SSH_convert
 	}
 
 	if [ "$1" = "setup" ]; then
