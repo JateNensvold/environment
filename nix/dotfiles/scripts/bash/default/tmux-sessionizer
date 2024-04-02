@@ -17,7 +17,8 @@ if [[ $# -eq 0 ]]; then
 			real_paths+=("${tmp_path}")
 		fi
 	done
-	selected=$(find "${real_paths[@]}" -mindepth 1 -maxdepth 1 -type d | fzf)
+
+    selected=$(fd . "${real_paths[@]}" -H --min-depth=1 --max-depth=1 --type=directory | fzf)
 else
 	selected=$1
 fi
@@ -27,11 +28,6 @@ if [[ -z $selected ]]; then
 fi
 
 selected_name=$(basename "$selected" | tr . _)
-
-if [[ $# -eq 2 ]]; then
-	selected_name="${selected_name}_${2}"
-	echo $selected_name
-fi
 
 tmux_running=$(pgrep tmux)
 
