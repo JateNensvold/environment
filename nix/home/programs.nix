@@ -11,7 +11,7 @@
 
       extraConfig = {
         core = {
-          editor = "code --wait";
+          # editor = "code --wait";
           pager = "delta";
         };
         diff = {
@@ -19,27 +19,27 @@
           colorMoved = "default";
         };
         difftool."default-difftool" = {
-          cmd = "code --wait --diff $LOCAL $REMOTE";
+          # cmd = "code --wait --diff $LOCAL $REMOTE";
         };
         interactive = { diffFilter = "delta --color-only"; };
         delta = {
           navigate = "true";
           light = "false";
         };
-        mergetool."vscode" = {
-          cmd = "code --wait --merge $REMOTE $LOCAL $BASE $MERGED";
-        };
+        # mergetool."vscode" = {
+        #   cmd = "code --wait --merge $REMOTE $LOCAL $BASE $MERGED";
+        # };
         merge = {
           conflictstyle = "diff3";
-          tool = "vscode";
+          # tool = "vscode";
         };
         init = { defaultBranch = "master"; };
         pull = { rebase = "true"; };
         url."git@github.com:" = { insteadOf = "https://github.com/"; };
-        credential = {
-          helper =
-            "!f() { /home/vscode/.vscode-server/bin/b380da4ef1ee00e224a15c1d4d9793e27c2b6302/node /tmp/vscode-remote-containers-855513c7-ab25-46f4-a4b7-a9c446b753ee.js git-credential-helper $*; }; f";
-        };
+        # credential = {
+        #   helper =
+        #     "!f() { /home/vscode/.vscode-server/bin/b380da4ef1ee00e224a15c1d4d9793e27c2b6302/node /tmp/vscode-remote-containers-855513c7-ab25-46f4-a4b7-a9c446b753ee.js git-credential-helper $*; }; f";
+        # };
       };
     };
 

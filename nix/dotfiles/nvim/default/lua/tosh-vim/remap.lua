@@ -1,3 +1,5 @@
+local M = require "utils.functions"
+
 vim.g.mapleader = " "
 
 -- Moves highlighted lines up and down
@@ -44,9 +46,13 @@ vim.keymap.set("i", "<C-c>", "<Esc>")
 vim.keymap.set("n", "Q", "<nop>")
 -- Open new tmux pane
 vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
+-- vim.keymap.set("n", "<C-b>", function()
+--     local tmux_build = string.format("silent !tmux neww tmux-sessionizer %s", M.get_project_or_cwd())
+--     vim.cmd(tmux_build)
+-- end)
+
 -- Format current file
-vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
-vim.keymap.set("v", "<leader>f", vim.lsp.buf.format)
+vim.keymap.set({ "n", "v" }, "<leader>f", vim.lsp.buf.format)
 
 -- Vim quickfix
 vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
@@ -61,5 +67,5 @@ vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
 -- source current file
 vim.keymap.set("n", "<leader><leader>", function()
-	vim.cmd("so")
+    vim.cmd("so")
 end)

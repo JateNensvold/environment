@@ -47,6 +47,7 @@
     docker-compose-language-service # docker compose
     dockerfile-language-server-nodejs # dockerfile
     sqls # sql
+    lua-language-server # lua
     # Formatters
     shfmt # bash, sh
     eslint_d # javascript

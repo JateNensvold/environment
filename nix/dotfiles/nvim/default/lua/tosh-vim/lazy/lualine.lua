@@ -7,6 +7,10 @@ return {
                 options = {
                     theme = "auto",
                 },
+                tabline = {
+                    lualine_a = { 'buffers' },
+                    lualine_z = { 'tabs' }
+                }
             })
         end,
     },
