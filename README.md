@@ -39,14 +39,19 @@ WSL Specific Dependencies
 
 Copy and run the following command to automate environment setup(Tested on ubuntu 22.04 and AL2)
 
-**Note**
-On some platforms the nixbld GID are taken already, in that case export the following variables or prepend them to the below command
-```
-
-```
 
 ```bash
 bash -i <(curl -fsSL https://raw.githubusercontent.com/JateNensvold/environment/master/scripts/ubuntu/install.sh) setup
+```
+
+**Note**
+On some platforms the nixbld GID are taken already, in that case add the NIXBLD start ID to the setup command
+
+
+```bash
+# setup nixbld starting at ID 20000400
+bash -i <(curl -fsSL https://raw.githubusercontent.com/JateNensvold/environment/master/scripts/ubuntu/install.sh) setup 20000400
+
 ```
 
 ##### Home-manager configuration
