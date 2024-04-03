@@ -80,7 +80,7 @@
 		header "Running Home Manager"
 		command -v home-manager >/dev/null || {
 			warn "'home-manager' is not installed. installing..."
-			nix-shell '<home-manager>' -A install
+			nix-env -i home-manager
 		}
 		mkdir -p ~/.config
 
