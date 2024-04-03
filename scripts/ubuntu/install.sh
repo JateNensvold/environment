@@ -44,7 +44,13 @@
 		header "Installing Nix"
 		command -v nix >/dev/null || {
 			warn "'Nix' is not installed. Installing..."
-			curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --no-confirm
+			NIX_INSTALL_VERSION="v0.11.0"
+			NIX_BUILD_GROUP_ID=$1
+			if [[ $NIX_BUILD_GROUP_ID ]]; then
+				curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix/tag/${NIX_INSTALL_VERSION} | sh -s -- install --no-confirm --nix-build-group-id "$NIX_BUILD_GROUP_ID"
+			else
+				curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix/tag/${NIX_INSTALL_VERSION} | sh -s -- install --no-confirm
+			fi
 		}
 
 		if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
@@ -185,7 +191,7 @@
 		fi
 
 		sudo_prompt
-		install_nix
+		install_nix "$2"
 		install_home_manager
 		install_homebrew
 		clone_repository
@@ -194,6 +200,6 @@
 	}
 
 	if [ "$1" = "setup" ]; then
-		setup
+		setup "$@"
 	fi
 } # Prevent script running if partially downloaded
