@@ -102,7 +102,7 @@
 		cd ~/environment/nix
 		home-manager switch --flake ".#$USER-$NIX_HOST-$HARDWARE-$ARCH"
 
-		info "home-manger is configured! Here is what we have:"
+		info "home-manager is configured! Here is what we have:"
 		home-manager --version
 	}
 
@@ -145,9 +145,11 @@
 	ssh_support() {
 		# Piped commands output status of first command, split across two lines to get grep status
 		ssh_output=$(ssh -T -p 443 git@ssh.github.com 2>&1)
+
 		echo "${ssh_output}" | grep -q success
-		exit_code=$?
-		if [[ $exit_code -eq 0 ]]; then
+		ssh_code=$?
+
+		if [[ $ssh_code -eq 0 ]]; then
 			# Supported
 			return 0
 		fi
@@ -198,8 +200,13 @@
 		setup_home_manager
 		git_SSH_convert
 	}
+	# set -o xtrace
 
 	if [ "$1" = "setup" ]; then
 		setup "$@"
+	else
+		# allow functions to be invoked by calling the script with arguments
+		set +eo pipefail
+		"$@"
 	fi
 } # Prevent script running if partially downloaded

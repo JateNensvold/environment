@@ -15,8 +15,7 @@
             NOCOLOR='\033[0m'
             RED='\033[0;31m'
 
-            source ./scripts/ubuntu/install.sh
-            ssh_support
+            ./scripts/ubuntu/install.sh ssh_support
             ssh_status=$?
 
             if [ $ssh_status -eq 1 ];
