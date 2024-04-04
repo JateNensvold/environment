@@ -1,7 +1,5 @@
-{ config, lib, pkgs, username, importType, ... }:
-{
-  home.packages = with pkgs; [
+{ ... }: {
+  home.packages = [
     # aws-sam-cli
   ];
 }
-

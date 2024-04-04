@@ -1,4 +1,4 @@
-{ config, lib, inputs, pkgs, dotfiles, ... }: {
+{ pkgs, ... }: {
   imports = [ ./files/default.nix ../common/amazon.nix ];
 
   home.packages = [ pkgs.jdk ];

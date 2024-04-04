@@ -1,4 +1,4 @@
-{ config, lib, pkgs, inputs, user, hostname, location, secrets, dotfiles, ... }:
+{ ... }:
 let
 in {
   programs.zsh.initExtra = ''
@@ -6,5 +6,5 @@ in {
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
   '';
 
-  home.packages = with pkgs; [ ] ++ (with pkgs.custom; [ ]);
+  home.packages = [ ] ++ ([ ]);
 }

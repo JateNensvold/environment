@@ -36,22 +36,6 @@
         "type": "github"
       }
     },
-    "hosts": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1710096483,
-        "narHash": "sha256-lco2IThnMSmd0m0dIkJczaPhpGGC2K+zZEKKeXykW9o=",
-        "owner": "StevenBlack",
-        "repo": "hosts",
-        "rev": "7eaea3c5132db65ec9facb5ff10e4f84324f7597",
-        "type": "github"
-      },
-      "original": {
-        "owner": "StevenBlack",
-        "repo": "hosts",
-        "type": "github"
-      }
-    },
     "nix-darwin": {
       "inputs": {
         "nixpkgs": [
@@ -92,7 +76,6 @@
       "inputs": {
         "hardware": "hardware",
         "home-manager": "home-manager",
-        "hosts": "hosts",
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs"
       }
