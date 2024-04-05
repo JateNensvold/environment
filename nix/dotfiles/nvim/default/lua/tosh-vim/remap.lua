@@ -1,5 +1,3 @@
-local M = require "utils.functions"
-
 vim.g.mapleader = " "
 
 -- Moves highlighted lines up and down
@@ -8,7 +6,7 @@ vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
 -- C-i and Tab both send U+0009 https://unix.stackexchange.com/questions/563469/conflict-ctrl-i-with-tab-in-normal-mode
 -- Remapping C-n to C-i before remapping Tab on the next line
-vim.keymap.set("n", "<C-n>", "<C-i>")
+-- vim.keymap.set("n", "<C-n>", "<C-i>")
 
 -- change line indent
 vim.keymap.set("v", "<Tab>", ">gv")
@@ -35,7 +33,7 @@ vim.keymap.set("x", "<leader>p", [["_dP]])
 -- Yank into system clipboard - asbjornHaland
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 vim.keymap.set("n", "<leader>Y", [["+Y]])
--- delete into system register
+-- delete into void
 vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 
 -- This is going to get me cancelled
@@ -46,10 +44,6 @@ vim.keymap.set("i", "<C-c>", "<Esc>")
 vim.keymap.set("n", "Q", "<nop>")
 -- Open new tmux pane
 vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
--- vim.keymap.set("n", "<C-b>", function()
---     local tmux_build = string.format("silent !tmux neww tmux-sessionizer %s", M.get_project_or_cwd())
---     vim.cmd(tmux_build)
--- end)
 
 -- Format current file
 vim.keymap.set({ "n", "v" }, "<leader>f", vim.lsp.buf.format)
@@ -60,8 +54,6 @@ vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
 vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
 vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
 
--- Starts globaly replacing the word the cursor is on
--- vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 -- Set current file to be executable from terminal
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
@@ -69,3 +61,5 @@ vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 vim.keymap.set("n", "<leader><leader>", function()
     vim.cmd("so")
 end)
+
+vim.keymap.set("n", "<C-R>", "<cmd>vsp .<CR>", { silent = true })

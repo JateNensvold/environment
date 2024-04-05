@@ -32,3 +32,5 @@ vim.opt.colorcolumn = "80"
 vim.opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" }
 
 vim.opt.spelllang = { "en" }
+
+vim.opt.splitright = true
