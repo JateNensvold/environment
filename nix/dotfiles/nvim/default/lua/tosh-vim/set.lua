@@ -15,8 +15,6 @@ vim.opt.backup = false
 vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 vim.opt.undofile = true
 
-vim.opt.hlsearch = false
-vim.opt.incsearch = true
 vim.opt.ignorecase = true
 vim.opt.cursorline = true
 
@@ -34,3 +32,4 @@ vim.opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "
 vim.opt.spelllang = { "en" }
 
 vim.opt.splitright = true
+vim.opt.splitbelow = true

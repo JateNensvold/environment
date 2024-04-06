@@ -38,7 +38,7 @@ vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 
 -- This is going to get me cancelled
 -- Allow ctrl-c to exit insert mode
-vim.keymap.set("i", "<C-c>", "<Esc>")
+vim.keymap.set({ "n", "i" }, "<C-c>", "<Esc>")
 
 -- Remove EX mode
 vim.keymap.set("n", "Q", "<nop>")
@@ -48,7 +48,7 @@ vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
 -- Format current file
 vim.keymap.set({ "n", "v" }, "<leader>f", vim.lsp.buf.format)
 
--- Vim quickfix
+-- Vim quickfixremap.l
 vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
 vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
 vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
@@ -62,4 +62,5 @@ vim.keymap.set("n", "<leader><leader>", function()
     vim.cmd("so")
 end)
 
-vim.keymap.set("n", "<C-R>", "<cmd>vsp .<CR>", { silent = true })
+vim.keymap.set("n", "<leader>r", "<cmd>vsp .<CR>", { silent = true })
+vim.keymap.set("n", "<leader>l", "<cmd>sp .<CR>", { silent = true })
