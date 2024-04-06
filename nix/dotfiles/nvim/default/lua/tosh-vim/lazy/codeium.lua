@@ -3,7 +3,7 @@ return {
     event = 'BufEnter',
     config = function()
         vim.keymap.set('i', '<C-y>', function() return vim.fn['codeium#Accept']() end, { expr = true, silent = true })
-        vim.keymap.set('i', '<C-n>', function() return vim.fn['codeium#CycleOrCompletions'](1) end,
+        vim.keymap.set('i', '<C-n>', function() return vim.fn['codeium#CycleCompletions'](1) end,
             { expr = true, silent = true })
         vim.keymap.set('i', '<C-p>', function() return vim.fn['codeium#CycleCompletions'](-1) end,
             { expr = true, silent = true })
