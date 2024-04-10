@@ -17,6 +17,7 @@
     fd
     git
     git-crypt
+    lazygit
     gnumake
     httpie
     jq
