@@ -220,7 +220,7 @@
 		# Argument 2 is an optional determinate nix versions to install, argument 3 is an optional NIX_BUILD_GROUP_ID range,
 		install_nix "$2" "$3"
 		install_home_manager
-		install_homebrew
+		# install_homebrew
 		clone_repository
 		setup_home_manager
 		git_SSH_convert
