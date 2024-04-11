@@ -50,8 +50,6 @@
       syntaxHighlighting.enable = true;
       history = { share = true; };
 
-      sessionVariables = { EDITOR = "vim"; };
-
       shellAliases = {
         ga = "git add .";
         gc = "git commit -m \${1}";

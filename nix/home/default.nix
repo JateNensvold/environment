@@ -1,9 +1,17 @@
 # Main user-level configuration
-{ config, lib, pkgs, user, host, hardware, system, dotfiles, ... }:
+{ config, lib, pkgs, user, host, hardware, system, dotfiles, stateVersion, ...
+}:
 
 let
   homeDirectoryPrefix =
     if pkgs.stdenv.hostPlatform.isDarwin then "/Users" else "/home";
+  reloadHomeManagerSuffix =
+    "switch --flake ~/environment/nix#$USER-$NIX_HOST-$HARDWARE-$ARCH";
+  reloadHomeManagerPrefix = if pkgs.stdenv.hostPlatform.isDarwin then
+    "darwin-rebuild ${reloadHomeManagerSuffix}"
+  else
+    "home-manager ${reloadHomeManagerSuffix}";
+
 in {
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
@@ -20,7 +28,7 @@ in {
     # You can update Home Manager without changing this value. See
     # the Home Manager release notes for a list of state version
     # changes in each release.
-    stateVersion = "${hardware.stateVersion}";
+    stateVersion = stateVersion;
 
     sessionPath = [ "$HOME/.local/bin" ];
     sessionVariables = {
@@ -29,12 +37,11 @@ in {
       ARCH = system;
       TMUX_SESSIONIZER_PATHS =
         lib.concatStringsSep ":" [ "~" "~/projects" "~/workspace" ];
+      EDITOR = "vim";
     };
     shellAliases = {
-      reload-home-manager-config = if pkgs.system == "aarch64-darwin" then
-        "darwin-rebuild --flake ~/environment/nix#$USER-$NIX_HOST-$HARDWARE-$ARCH"
-      else
-        "home-manager switch --flake ~/environment/nix#$USER-$NIX_HOST-$HARDWARE-$ARCH";
+      reload-home-manager-config =
+        "${reloadHomeManagerPrefix} ${reloadHomeManagerSuffix}";
     };
   };
 

@@ -32,19 +32,19 @@ let
         specialArgs = extraArgs;
         modules = [
           ./darwin.nix
-          # ../modules/nix.nix
-          # ../home/default.nix
-          # ../user/${user}/default.nix
-          # ../hardware/${hardware}/default.nix
           home-manager.darwinModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = extraArgs;
             home-manager.users."${user}" = {
-              imports = [ 
-	../modules/nix.nix
-../home/default.nix ];
+              imports = [
+                ../modules/nix.nix
+                ../home/default.nix
+                ./${host}/home.nix
+                ../user/${user}/default.nix
+                ../hardware/${hardware}/default.nix
+              ];
             };
           }
         ];
