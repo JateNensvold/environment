@@ -209,7 +209,7 @@
 
 	setup() {
 		# add github.com before other github subdomains so grep does not show it as detected
-		add_ssh_key "github.com" "443"
+		add_ssh_key "github.com"
 		add_ssh_key "ssh.github.com" "443"
 		if ! ssh_support; then
 			error "Users SSH key not found, add SSH key to  ~/.ssh to continue..."
