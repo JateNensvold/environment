@@ -177,6 +177,10 @@
 		host=$1
 		port=$2
 
+		if [ ! -e ~/.ssh/known_hosts ]; then
+            touch ~/.ssh/known_hosts
+        fi
+
 		if ! grep -F "$host" ~/.ssh/known_hosts >/dev/null; then
 			if [[ -z $port ]]; then
 				ssh-keyscan -t rsa -p "$port" "$host" >>~/.ssh/known_hosts
