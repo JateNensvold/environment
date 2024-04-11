@@ -184,7 +184,8 @@
 		fi
 
 		if ! grep -F "$host" ~/.ssh/known_hosts >/dev/null; then
-			if [[ -z $port ]]; then
+			# check if $port exists
+			if [[ -n $port ]]; then
 				ssh-keyscan -t rsa -p "$port" "$host" >>~/.ssh/known_hosts
 			else
 				ssh-keyscan -t rsa "$host" >>~/.ssh/known_hosts
@@ -207,10 +208,11 @@
 	}
 
 	setup() {
-		add_ssh_key "ssh.github.com" "443"
+		# add github.com before other github subdomains so grep does not show it as detected
 		add_ssh_key "github.com" "443"
+		add_ssh_key "ssh.github.com" "443"
 		if ! ssh_support; then
-			error "Users SSH key not found, add SSH key to resolve issue..."
+			error "Users SSH key not found, add SSH key to  ~/.ssh to continue..."
 			return 1
 		fi
 
