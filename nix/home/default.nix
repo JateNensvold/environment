@@ -20,7 +20,7 @@ in {
     # You can update Home Manager without changing this value. See
     # the Home Manager release notes for a list of state version
     # changes in each release.
-    stateVersion = "23.11";
+    stateVersion = "${hardware.stateVersion}";
 
     sessionPath = [ "$HOME/.local/bin" ];
     sessionVariables = {
@@ -31,18 +31,11 @@ in {
         lib.concatStringsSep ":" [ "~" "~/projects" "~/workspace" ];
     };
     shellAliases = {
-      reload-home-manager-config =
+      reload-home-manager-config = if pkgs.system == "aarch64-darwin" then
+        "darwin-rebuild --flake ~/environment/nix#$USER-$NIX_HOST-$HARDWARE-$ARCH"
+      else
         "home-manager switch --flake ~/environment/nix#$USER-$NIX_HOST-$HARDWARE-$ARCH";
     };
-  };
-
-  nixpkgs = {
-    config.allowUnfree = true;
-    overlays = [
-      # sometimes it is useful to pin a version of some tool or program.
-      # this can be done in " overlays/pinned.nix "
-      (import ../overlays/pinned.nix)
-    ];
   };
 
   # Flakes are not standard yet, but widely used, enable them.
@@ -55,11 +48,6 @@ in {
     ./packages.nix
     (import ./files/default.nix { inherit config lib pkgs dotfiles; })
     (import ./programs.nix { inherit config lib pkgs dotfiles; })
-
-    # Host Specific setup
-    ../hosts/${host}/home.nix
-    ../user/${user}/default.nix
-    ../hardware/${hardware}/default.nix
   ];
   #  ++ (modules.importAllModules ./modules);
 }

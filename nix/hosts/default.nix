@@ -1,10 +1,12 @@
 { lib, flakeInputs, dotfiles, users, hosts, hardwares, systems, isNixOS, isMacOS
-, isIso, isHardware, nixpkgs, home-manager, ... }:
+, isIso, isHardware, nixpkgs, home-manager, nix-darwin, ... }:
 let
   mkHost =
     { user, host, extraOverlays, extraModules, hardware, stateVersion, system }:
     isNixOS: isMacOS: isIso: isHardware:
+
     let
+
       pkgs = import nixpkgs {
         inherit system;
         config = {
@@ -12,7 +14,11 @@ let
           allowBroken = true;
           allowUnsupportedSystem = true;
         };
-        overlays = [ ];
+        overlays = [
+          #     # sometimes it is useful to pin a version of some tool or program.
+          #     # this can be done in " overlays/pinned.nix "
+          #     (import ../overlays/pinned.nix)
+        ];
       };
       extraArgs = {
         inherit pkgs flakeInputs isIso isHardware dotfiles home-manager user
@@ -20,17 +26,41 @@ let
         hostname = host + "-" + hardware;
       };
 
-    in home-manager.lib.homeManagerConfiguration {
-      inherit pkgs;
-      extraSpecialArgs = extraArgs;
-      modules = [
-        ../modules/nix.nix
-        ../home/default.nix
-        ./${host}/home.nix
-        ../user/${user}/default.nix
-        ../hardware/${hardware}/default.nix
-      ];
-    };
+    in if isMacOS then
+      nix-darwin.lib.darwinSystem {
+        inherit system;
+        specialArgs = extraArgs;
+        modules = [
+          ./darwin.nix
+          # ../modules/nix.nix
+          # ../home/default.nix
+          # ../user/${user}/default.nix
+          # ../hardware/${hardware}/default.nix
+          home-manager.darwinModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs = extraArgs;
+            home-manager.users."${user}" = {
+              imports = [ 
+	../modules/nix.nix
+../home/default.nix ];
+            };
+          }
+        ];
+      }
+    else
+      home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        extraSpecialArgs = extraArgs;
+        modules = [
+          ../modules/nix.nix
+          ../home/default.nix
+          ./${host}/home.nix
+          ../user/${user}/default.nix
+          ../hardware/${hardware}/default.nix
+        ];
+      };
 
   userPermutedHosts =
     lib.concatMap (user: map (host: host // user) hosts) users;

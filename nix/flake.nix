@@ -55,11 +55,11 @@
       hardwares = [
         {
           hardware = "default";
-          stateVersion = "23.11";
+          stateVersion = "22.05";
         }
         {
           hardware = "macbook";
-          stateVersion = "23.11";
+          stateVersion = "22.05";
         }
       ];
 
@@ -83,6 +83,13 @@
         isMacOS = false;
         isIso = false;
         isHardware = false;
+      });
+
+      darwinConfigurations = import ./hosts (commonInherits // {
+        isNixOS = false;
+        isMacOS = true;
+        isIso = false;
+        isHardware = true;
       });
 
       tests = flakeInputs.nixtest.run ./.;

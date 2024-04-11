@@ -46,7 +46,7 @@
     zsh = {
       enable = true;
       enableCompletion = true;
-      enableAutosuggestions = true;
+      autosuggestion = { enable = true; };
       syntaxHighlighting.enable = true;
       history = { share = true; };
 
@@ -178,7 +178,9 @@
 
     eza = {
       enable = true;
-      enableAliases = true;
+      # enableAliases = true;
+      enableZshIntegration = true;
+      enableBashIntegration = true;
       extraOptions = [ "--group-directories-first" "--header" ];
     };
   };

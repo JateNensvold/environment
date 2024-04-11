@@ -1,4 +1,11 @@
-{ config, lib, pkgs, username, importType, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  username,
+  importType,
+  ...
+}:
 
 {
   home.packages = with pkgs; [
@@ -54,7 +61,7 @@
     # Formatters
     shfmt # bash, sh
     eslint_d # javascript
-    nixfmt # nix
+    nixfmt-classic # nix
     sqlfluff # sql
     black # python
   ];

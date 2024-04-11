@@ -44,12 +44,17 @@
 		header "Installing Nix"
 		command -v nix >/dev/null || {
 			warn "'Nix' is not installed. Installing..."
-			NIX_INSTALL_VERSION="v0.11.0"
-			NIX_BUILD_GROUP_ID=$1
-			if [[ $NIX_BUILD_GROUP_ID ]]; then
-				curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix/tag/${NIX_INSTALL_VERSION} | sh -s -- install --no-confirm --nix-build-group-id "$NIX_BUILD_GROUP_ID"
+			if [[ $1 ]]; then
+
+				NIX_INSTALL_VERSION=$1
 			else
-				curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix/tag/${NIX_INSTALL_VERSION} | sh -s -- install --no-confirm
+				NIX_INSTALL_VERSION="v0.11.0"
+			fi
+			NIX_BUILD_GROUP_ID=$2
+			if [[ $NIX_BUILD_GROUP_ID ]]; then
+				curl --proto '=https' --tlsv1.2 -sSf -L "https://install.determinate.systems/nix/tag/${NIX_INSTALL_VERSION}" | sh -s -- install --no-confirm --nix-build-group-id "$NIX_BUILD_GROUP_ID"
+			else
+				curl --proto '=https' --tlsv1.2 -sSf -L "https://install.determinate.systems/nix/tag/${NIX_INSTALL_VERSION}" | sh -s -- install --no-confirm
 			fi
 		}
 
@@ -95,15 +100,26 @@
 		ARCH=x86_64-linux
 
 		OS_TYPE=$(uname -s)
+		ARCH_TYPE=$(uname -m)
 		if [ "$OS_TYPE" = "Darwin" ]; then
 			ARCH=x86_64-darwin
+			if [ "$ARCH_TYPE" = "arm64" ]; then
+				ARCH=aarch64-darwin
+			fi
 		fi
 
 		cd ~/environment/nix
-		home-manager switch --flake ".#$USER-$NIX_HOST-$HARDWARE-$ARCH"
+		if [ "$OS_TYPE" = "Darwin" ]; then
+			nix run --extra-experimental-features nix-command --extra-experimental-features flakes nix-darwin -- switch --flake ".#$USER-$NIX_HOST-$HARDWARE-$ARCH"
 
-		info "home-manager is configured! Here is what we have:"
-		home-manager --version
+			info "darwin: home-manager is configured! Here is what we have:"
+			darwin-version
+		else
+			home-manager switch --flake ".#$USER-$NIX_HOST-$HARDWARE-$ARCH"
+
+			info "home-manager is configured! Here is what we have:"
+			home-manager --version
+		fi
 	}
 
 	install_homebrew() {
@@ -193,7 +209,8 @@
 		fi
 
 		sudo_prompt
-		install_nix "$2"
+		# Argument 2 is an optional determinate nix versions to install, argument 3 is an optional NIX_BUILD_GROUP_ID range,
+		install_nix "$2" "$3"
 		install_home_manager
 		install_homebrew
 		clone_repository
