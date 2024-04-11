@@ -177,9 +177,11 @@
 		host=$1
 		port=$2
 
+		mkdir -p ~/.ssh
+
 		if [ ! -e ~/.ssh/known_hosts ]; then
-            touch ~/.ssh/known_hosts
-        fi
+			touch ~/.ssh/known_hosts
+		fi
 
 		if ! grep -F "$host" ~/.ssh/known_hosts >/dev/null; then
 			if [[ -z $port ]]; then
