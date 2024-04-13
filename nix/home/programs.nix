@@ -106,7 +106,6 @@
           "command-not-found"
           "direnv"
           "fd"
-          "fzf"
           "jsontools"
           "ssh-agent"
           "sudo"

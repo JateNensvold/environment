@@ -1,4 +1,4 @@
-{ pkgs, user, system, ... }: {
+{ user, system, ... }: {
   users.users."${user}".home = "/Users/${user}";
   environment.systemPackages = [ ];
 
