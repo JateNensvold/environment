@@ -38,14 +38,15 @@ sp     [alias] search-packages       home-manager packges | fzf
 
 nv     [alias] nix-version           nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'
 u      [alias]                       utils
-reload [alias]                       home-manager switch --flake ~/environment/nix#${USER}-${NIX_HOST}-${HARDWARE}-${ARCH} && zx
+reload [alias] reload-nix            $RELOAD_PREFIX $RELOAD_SUFFIX Current Config: \$USER=${USER} - \$NIX_HOST=${NIX_HOST} \$HARDWARE=${HARDWARE} \$ARCH=${ARCH}
 
 c      [alias]                       \$EDITOR .
 vv     [alias]                       var=\$(fd | fzf --header='[find:file]') && full_var=\$(realpath \$var) && change-location \$var && vim \$full_var
 ce     [alias]                       cd ~/environment
 ze     [alias]                       \$EDITOR ~/environment
 zx     [alias]                       source ~/.zshrc
-zz     [alias]                       \$EDITOR ~/.config/nvim"
+zz     [alias]                       \$EDITOR ~/.config/nvim
+"
 
 local cmd=$(echo $helptxt | eval "fzf ${FZF_DEFAULT_OPTS} --header='[utils:show]'" | awk '{print $1}')
 

@@ -6,11 +6,11 @@ let
   homeDirectoryPrefix =
     if pkgs.stdenv.hostPlatform.isDarwin then "/Users" else "/home";
   reloadHomeManagerSuffix =
-    "switch --flake ~/environment/nix#$USER-$NIX_HOST-$HARDWARE-$ARCH";
+    "switch --flake ~/environment#$USER-$NIX_HOST-$HARDWARE-$ARCH";
   reloadHomeManagerPrefix = if pkgs.stdenv.hostPlatform.isDarwin then
-    "darwin-rebuild ${reloadHomeManagerSuffix}"
+    "darwin-rebuild"
   else
-    "home-manager ${reloadHomeManagerSuffix}";
+    "home-manager";
 
 in {
   # Home Manager needs a bit of information about you and the
@@ -38,11 +38,19 @@ in {
       TMUX_SESSIONIZER_PATHS =
         lib.concatStringsSep ":" [ "~" "~/projects" "~/workspace" ];
       EDITOR = "vim";
+      RELOAD_PREFIX = "${reloadHomeManagerPrefix}";
+      RELOAD_SUFFIX = "${reloadHomeManagerSuffix}";
     };
     shellAliases = {
       reload-home-manager-config =
         "${reloadHomeManagerPrefix} ${reloadHomeManagerSuffix}";
     };
+  };
+
+  nix.gc = {
+    automatic = true;
+    frequency = "weekly";
+    options = "--delete-older-than 29d";
   };
 
   # Flakes are not standard yet, but widely used, enable them.
@@ -56,5 +64,4 @@ in {
     (import ./files/default.nix { inherit config lib pkgs dotfiles; })
     (import ./programs.nix { inherit config lib pkgs dotfiles; })
   ];
-  #  ++ (modules.importAllModules ./modules);
 }
