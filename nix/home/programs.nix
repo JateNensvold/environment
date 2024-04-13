@@ -1,4 +1,4 @@
-{ config, lib, pkgs, dotfiles, ... }: {
+{ pkgs, dotfiles, ... }: {
   programs = {
     # Let Home Manager install and manage itself.
     home-manager.enable = true;
@@ -10,36 +10,20 @@
       userEmail = "jensvoldnate@gmail.com";
 
       extraConfig = {
-        core = {
-          # editor = "code --wait";
-          pager = "delta";
-        };
+        core = { pager = "delta"; };
         diff = {
           tool = "default-difftool";
           colorMoved = "default";
-        };
-        difftool."default-difftool" = {
-          # cmd = "code --wait --diff $LOCAL $REMOTE";
         };
         interactive = { diffFilter = "delta --color-only"; };
         delta = {
           navigate = "true";
           light = "false";
         };
-        # mergetool."vscode" = {
-        #   cmd = "code --wait --merge $REMOTE $LOCAL $BASE $MERGED";
-        # };
-        merge = {
-          conflictstyle = "diff3";
-          # tool = "vscode";
-        };
+        merge = { conflictstyle = "diff3"; };
         init = { defaultBranch = "master"; };
         pull = { rebase = "true"; };
         url."git@github.com:" = { insteadOf = "https://github.com/"; };
-        # credential = {
-        #   helper =
-        #     "!f() { /home/vscode/.vscode-server/bin/b380da4ef1ee00e224a15c1d4d9793e27c2b6302/node /tmp/vscode-remote-containers-855513c7-ab25-46f4-a4b7-a9c446b753ee.js git-credential-helper $*; }; f";
-        # };
       };
     };
 
@@ -176,7 +160,6 @@
 
     eza = {
       enable = true;
-      # enableAliases = true;
       enableZshIntegration = true;
       enableBashIntegration = true;
       extraOptions = [ "--group-directories-first" "--header" ];

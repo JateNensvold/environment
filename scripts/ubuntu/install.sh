@@ -67,7 +67,7 @@
 		nix-shell -p nix-info --run "nix-info -m"
 	}
 
-	install_home_manager() {
+	install_home_manager_channel() {
 		echo
 		header "Installing Home Manager"
 		if ! nix-channel --list | grep -q home-manager; then
@@ -81,19 +81,6 @@
 	}
 
 	setup_home_manager() {
-		echo
-		header "Running Home Manager"
-		command -v home-manager >/dev/null || {
-			warn "'home-manager' is not installed. installing..."
-			nix run home-manager/master -- init --switch
-		}
-		mkdir -p ~/.config
-
-		if [ -e "$HOME/.config/home-manager" ]; then
-			info "Backing up $HOME/.config/home-manager to $HOME/.config/home-manager-backup"
-			mv --backup=numbered "$HOME/.config/home-manager" "$HOME/.config/home-manager-backup"
-		fi
-
 		# Setup default nix home-manager profile
 		NIX_HOST=home
 		HARDWARE=default
@@ -101,21 +88,44 @@
 
 		OS_TYPE=$(uname -s)
 		ARCH_TYPE=$(uname -m)
+
+		echo
+		header "Installing Home Manager"
+
 		if [ "$OS_TYPE" = "Darwin" ]; then
+			echo
+			header "Skiping Home Manager install on darwin"
+
 			ARCH=x86_64-darwin
 			if [ "$ARCH_TYPE" = "arm64" ]; then
 				ARCH=aarch64-darwin
 			fi
+		else
+
+			command -v home-manager >/dev/null || {
+				warn "'home-manager' is not installed. installing..."
+				nix run home-manager/master -- init --switch
+			}
+			mkdir -p ~/.config
+
+			if [ -e "$HOME/.config/home-manager" ]; then
+				info "Backing up $HOME/.config/home-manager to $HOME/.config/home-manager-backup"
+				backup_destination="$HOME/.config/home-manager-backup"
+
+				rm -rf "$backup_destination" && mv "$HOME/.config/home-manager" "$backup_destination"
+			fi
 		fi
+
+		homeManagerConfigurationCommandSuffix="switch --flake .#$USER-$NIX_HOST-$HARDWARE-$ARCH"
 
 		cd ~/environment/nix
 		if [ "$OS_TYPE" = "Darwin" ]; then
-			nix run --extra-experimental-features nix-command --extra-experimental-features flakes nix-darwin -- switch --flake ".#$USER-$NIX_HOST-$HARDWARE-$ARCH"
+			nix run --extra-experimental-features nix-command --extra-experimental-features flakes nix-darwin -- "$homeManagerConfigurationCommandSuffix"
 
 			info "darwin: home-manager is configured! Here is what we have:"
 			darwin-version
 		else
-			home-manager switch --flake ".#$USER-$NIX_HOST-$HARDWARE-$ARCH"
+			home-manager "$homeManagerConfigurationCommandSuffix"
 
 			info "home-manager is configured! Here is what we have:"
 			home-manager --version
@@ -219,7 +229,7 @@
 		sudo_prompt
 		# Argument 2 is an optional determinate nix versions to install, argument 3 is an optional NIX_BUILD_GROUP_ID range,
 		install_nix "$2" "$3"
-		install_home_manager
+		install_home_manager_channel
 		# install_homebrew
 		clone_repository
 		setup_home_manager

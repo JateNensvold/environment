@@ -72,12 +72,12 @@ cheatpaths:
   #   readonly: false
 
   - name: personal
-    path: ~/environment/nix/dotfiles/cheat/cheats/
+    path: ~/environment/dotfiles/cheat/cheats/
     tags: [personal]
     readonly: false
 
   - name: work
-    path: ~/environment/nix/dotfiles/cheat/work/
+    path: ~/environment/dotfiles/cheat/work/
     tags: [work]
     readonly: false
 

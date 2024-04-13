@@ -1,8 +1,4 @@
-{ lib, inputs, config, pkgs, dotfiles, ... }:
-let
-
-in {
-
+{ config, dotfiles, ... }: {
   # Recursive static folder
   home.file.".zfuncs/a" = { source = "${dotfiles}/scripts/zsh/work/a"; };
 

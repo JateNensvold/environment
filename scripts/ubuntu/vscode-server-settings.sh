@@ -1,5 +1,7 @@
 #!/bin/bash
 
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+script_path=$(realpath "$0")
+script_dir=$(dirname "$script_path")
+repo_root="$script_dir/../.."
 
-ln "$SCRIPT_DIR/../../nix/dotfiles/vscode/settings.json" "$HOME/.vscode-server/data/Machine/settings.json"
+ln "${repo_root}/dotfiles/vscode/settings.json" "$HOME/.vscode-server/data/Machine/settings.json"

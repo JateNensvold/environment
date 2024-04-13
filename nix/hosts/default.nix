@@ -1,4 +1,4 @@
-{ lib, flakeInputs, dotfiles, users, hosts, hardwares, systems, isNixOS, isMacOS
+{ lib, flakeInputs, dotfiles, users, hosts, hardwares, hostSystems, isNixOS, isMacOS
 , isIso, isHardware, nixpkgs, home-manager, nix-darwin, ... }:
 let
   mkHost =
@@ -69,7 +69,7 @@ let
     hardwares;
   systemsPermutedHosts = lib.concatMap
     (system: map (permutation: permutation // system) hardwarePermutedHosts)
-    systems;
+    hostSystems;
   permutedHosts = systemsPermutedHosts;
 
   /* We have a list of sets.
