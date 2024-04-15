@@ -64,12 +64,18 @@ return {
                     }),
                     null_ls.builtins.formatting.nixfmt,
                     null_ls.builtins.formatting.black,
+                    null_ls.builtins.formatting.yamlfmt.with(
+                        {
+                        }
+                    ),
                     null_ls.builtins.formatting.sqlfluff.with({
                         extra_args = {
                             "--dialect",
                             "postgres",
                         },
                     }),
+                    -- linters
+                    null_ls.builtins.diagnostics.ansiblelint
                 },
             })
 
@@ -82,6 +88,7 @@ return {
                 },
             })
             lspconfig.docker_compose_language_service.setup({})
+            lspconfig.ansiblels.setup({})
             lspconfig.pyright.setup({
                 capabilities = capabilities,
             })

@@ -21,6 +21,7 @@ vim.filetype.add({
         ["docker-compose.yml"] = "yaml.docker-compose",
     },
     pattern = {
+        [".*yaml.ansible"] = "yaml.ansible",
         [".*"] = {
             priority = -math.huge,
             ---@diagnostic disable-next-line: unused-local
@@ -28,8 +29,6 @@ vim.filetype.add({
                 local content = vim.filetype.getlines(bufnr, 1)
                 if vim.filetype.matchregex(content, [[^#!.*bash]]) then
                     return 'bash'
-                    -- elseif vim.filetype.matchregex(content, [[\<drawing\>]]) then
-                    --     return 'drawing'
                 end
             end,
         }
@@ -52,6 +51,23 @@ autocmd({ "BufWritePre" }, {
     pattern = "*",
     command = [[%s/\s\+$//e]],
 })
+
+
+
+---@param key string
+---@param direction "next"|"prev"
+---@param severity string?
+---@param bufnr number
+local function diagnostic_goto(key, direction, severity, bufnr)
+    local go = direction == "next" and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
+    severity = severity or nil
+    vim.keymap.set(
+        "n",
+        key,
+        function() go({ severity = severity }) end,
+        { silent = true, buffer = bufnr }
+    )
+end
 
 autocmd("LspAttach", {
     group = ToshGroup,
@@ -81,12 +97,10 @@ autocmd("LspAttach", {
         vim.keymap.set("i", "<C-h>", function()
             vim.lsp.buf.signature_help()
         end, opts)
-        vim.keymap.set("n", "[d", function()
-            vim.diagnostic.goto_next()
-        end, opts)
-        vim.keymap.set("n", "]d", function()
-            vim.diagnostic.goto_prev()
-        end, opts)
+        diagnostic_goto("[d", "next", nil, e.bufnr)
+        diagnostic_goto("]d", "prev", nil, e.bufnr)
+        diagnostic_goto("[e", "next", vim.diagnostic.severity.ERROR, e.bufnr)
+        diagnostic_goto("]e", "prev", vim.diagnostic.severity.ERROR, e.bufnr)
     end,
 })
 

@@ -43,6 +43,7 @@
     rustup
     # Needed by brew
     ruby
+
     # LSP servers
     nil # nix
     nodePackages.bash-language-server # bash,  sh
@@ -51,11 +52,17 @@
     sqls # sql
     lua-language-server # lua
     nodePackages.pyright # python
+    ansible-language-server
+
     # Formatters
     shfmt # bash, sh
     eslint_d # javascript
     nixfmt-classic # nix
     sqlfluff # sql
     black # python
+    yamlfmt # yaml
+
+    # Linters
+    ansible-lint
   ];
 }

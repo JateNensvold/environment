@@ -1,7 +1,7 @@
 local M = require "utils.functions"
 return {
     "nvim-telescope/telescope.nvim",
-    tag = "0.1.5",
+    branch = "0.1.x",
     dependencies = {
         "nvim-lua/plenary.nvim",
         "folke/trouble.nvim",
@@ -21,7 +21,6 @@ return {
         local telescope = require("telescope")
         local lga_actions = require("telescope-live-grep-args.actions")
 
-        require("telescope").load_extension("live_grep_args")
         telescope.setup({
             defaults = {
                 preview = {
@@ -49,35 +48,73 @@ return {
             },
         })
 
+        require("telescope").load_extension("live_grep_args")
+
         local live_grep_args = telescope.extensions.live_grep_args
+        local live_grep_args_shortcuts = require("telescope-live-grep-args.shortcuts")
 
         local function live_grep_args_from_project_git_root(opts)
+            local default_opts = M.default(opts, {})
             if M.is_git_repo() then
-                opts.cwd = M.get_git_root()
+                default_opts.cwd = M.get_git_root()
             end
-            live_grep_args.live_grep_args(opts)
+            live_grep_args.live_grep_args(default_opts)
+        end
+
+        local function visual_live_grep_args_from_project_git_root(opts)
+            local default_opts = M.default(opts, {})
+            if M.is_git_repo() then
+                default_opts.cwd = M.get_git_root()
+            end
+            live_grep_args_shortcuts.grep_visual_selection(default_opts)
+        end
+
+        local function word_live_grep_args_from_project_git_root(opts)
+            local default_opts = M.default(opts, {})
+            if M.is_git_repo() then
+                default_opts.cwd = M.get_git_root()
+            end
+            live_grep_args_shortcuts.grep_word_under_cursor(default_opts)
         end
 
         local function find_files_from_project_git_root(opts)
+            local default_opts = M.default(opts, {})
             if M.is_git_repo() then
-                opts.cwd = M.get_git_root()
+                default_opts.cwd = M.get_git_root()
             end
-            require("telescope.builtin").find_files(opts)
+            require("telescope.builtin").find_files(default_opts)
         end
 
         local builtin = require("telescope.builtin")
-        vim.keymap.set("n", "<C-p>", function()
-            find_files_from_project_git_root({}) -- Find hidden files
-        end)
-        vim.keymap.set("n", "<leader>ph", function()
-            find_files_from_project_git_root({ hidden = true, no_ignore = true }) -- Find hidden files
+
+        -- find files
+        vim.keymap.set("n", "<C-p>", find_files_from_project_git_root)
+        vim.keymap.set("n", "<leader>phf", function()
+            find_files_from_project_git_root({ hidden = true, no_ignore = true })
         end)
         vim.keymap.set("n", "<leader>pf", builtin.git_files, {})
 
-        vim.keymap.set("n", "<leader>ps", function()
-            live_grep_args_from_project_git_root({})
+        -- grep files
+        vim.keymap.set("n", "<leader>ps", live_grep_args_from_project_git_root)
+        vim.keymap.set("n", "<leader>ws", word_live_grep_args_from_project_git_root)
+        vim.keymap.set("v", "<leader>vs", visual_live_grep_args_from_project_git_root)
+
+        -- diagnostic files
+        vim.keymap.set("n", "<leader>td", function()
+            builtin.diagnostics()
         end)
-        -- vim.keymap.set("n", "<leader>mm", "<cmd>Telescope noice<CR>")
+        -- vim.keymap.set("n", "<leader>tl", function()
+        --     builtin.diagnostics()
+        -- end)
+        -- vim.keymap.set("n", "<leader>ts", function()
+        --     builtin.diagnostics()
+        -- end)
+        -- vim.keymap.set("n", "<leader>te", function()
+        --     builtin.diagnostics()
+        -- end)
+
+        -- misc telescope commands
+        vim.keymap.set("n", "<leader>vh", builtin.help_tags)
         vim.keymap.set("n", "<leader>pb", function()
             builtin.buffers({ sort_mru = true, ignore_current_buffer = true })
         end)

@@ -12,9 +12,17 @@ end
 function M.get_project_or_cwd()
     local cwd = vim.fn.getcwd()
     if M.is_git_repo() then
-        cwd =  M.get_git_root()
+        cwd = M.get_git_root()
     end
     return cwd
+end
+
+function M.default(value, default_value)
+    if value == nil then
+        return default_value
+    else
+        return value
+    end
 end
 
 return M

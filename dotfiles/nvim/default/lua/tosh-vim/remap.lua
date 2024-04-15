@@ -46,7 +46,10 @@ vim.keymap.set("n", "Q", "<nop>")
 vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
 
 -- Format current file
-vim.keymap.set({ "n", "v" }, "<leader>f", vim.lsp.buf.format)
+vim.keymap.set({ "n", "v" }, "<leader>f", function()
+    vim.lsp.buf.format()
+    vim.diagnostic.enable(0)
+end)
 
 -- Vim quickfixremap.l
 vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
@@ -61,6 +64,3 @@ vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 vim.keymap.set("n", "<leader><leader>", function()
     vim.cmd("so")
 end)
-
-vim.keymap.set("n", "<leader>r", "<cmd>vsp .<CR>", { silent = true })
-vim.keymap.set("n", "<leader>l", "<cmd>sp .<CR>", { silent = true })
