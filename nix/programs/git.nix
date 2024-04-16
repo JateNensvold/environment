@@ -1,13 +1,6 @@
 { ... }:
 
-let
-  # put a shell script into the nix store
-  # gitIdentity =
-  #   pkgs.writeShellScriptBin "git-identity" (builtins.readFile dotfiles/scripts/default/bash./git-identity);
-in {
-  # we will use the excellent fzf in our `git-identity` script, so let's make sure it's available
-  # let's add the gitIdentity script to the path as well
-
+{
   programs.git = {
     enable = true;
 
@@ -39,32 +32,6 @@ in {
     aliases = {
       identity = "! git-identity";
       id = "! git-identity";
-      # git change-commits GIT_AUTHOR_NAME "old name" "new name"
-      # git change-commits GIT_AUTHOR_EMAIL "old@email.com" "new@email.com" HEAD~10..HEAD
-      change-commits = ''
-        !f() {
-            VAR=$1;
-            OLD=$2;
-            NEW=$3;
-            shift 3;
-            git filter-repo --env-filter "
-            if [[ \"$`echo $VAR`\" = '$OLD' ]]; then
-                export $VAR='$NEW';
-            fi
-            " $@; };
-        f'';
     };
-
   };
-
-  # programs.git = {
-  #   extraConfig = {
-  #
-  #     # the `work` identity
-  #     user.work.name = "Spider-Man";
-  #     user.work.email = "friendlyspidey@neighborhood.com";
-  #
-  #   };
-  # };
-
 }

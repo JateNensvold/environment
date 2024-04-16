@@ -17,6 +17,7 @@
     fd
     git
     git-crypt
+    git-filter-repo
     lazygit
     gnumake
     httpie
