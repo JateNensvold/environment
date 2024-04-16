@@ -1,20 +1,48 @@
 return {
-    {
-        "folke/trouble.nvim",
-        branch = "dev",
-        config = function()
-            require("trouble").setup({
-                icons = false,
-            })
-
-            vim.keymap.set("n", "<leader>tt", "<cmd>Trouble diagnostics toggle<cr>")
-            -- vim.keymap.set("n", "[t", function()
-            --     require("trouble").next({ skip_groups = true, jump = true })
-            -- end)
-            --
-            -- vim.keymap.set("n", "]t", function()
-            --     require("trouble").previous({ skip_groups = true, jump = true })
-            -- end)
-        end,
+    "folke/trouble.nvim",
+    branch = "dev",
+    keys = {
+        {
+            "<leader>tt",
+            "<cmd>Trouble diagnostics toggle<cr>",
+            desc = "Diagnostics (Trouble)",
+        },
+        -- {
+        --     "<leader>qq",
+        --     "<cmd>Trouble telescope toggle<cr>",
+        --     desc = "Quickfix List (Trouble)",
+        -- },
+        -- {
+        --     "[t",
+        --     "<cmd>lua require(\"trouble\").next({ mode = \"diagnostic\", skip_groups = true, jump = true })<cr>",
+        --     desc = "Quickfix List (Trouble)",
+        -- },
+        -- {
+        --     "]t",
+        --     "<cmd>lua require(\"trouble\").prev({ mode = \"diagnostic\", skip_groups = true, jump = true })<cr>",
+        --     desc = "Quickfix List (Trouble)",
+        -- },
+        -- {
+        --     "<C-j>",
+        --     "<cmd>lua require(\"trouble\").next({ mode = \"qflist\", skip_groups = true, jump = true })<cr>",
+        --     desc = "Quickfix List (Trouble)",
+        -- },
+        -- {
+        --     "<C-k>",
+        --     "<cmd>lua require(\"trouble\").prev({ mode = \"qflist\", skip_groups = true, jump = true })<cr>",
+        --     desc = "Quickfix List (Trouble)",
+        -- },
+    },
+    opts = {},
+    modes = {
+        test = {
+            mode = "diagnostics",
+            preview = {
+                type = "split",
+                relative = "win",
+                position = "right",
+                size = 0.3,
+            },
+        },
     },
 }

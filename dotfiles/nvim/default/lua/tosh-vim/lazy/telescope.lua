@@ -94,29 +94,29 @@ return {
         end)
         vim.keymap.set("n", "<leader>pf", builtin.git_files, {})
 
-        -- grep files
-        vim.keymap.set("n", "<leader>ps", live_grep_args_from_project_git_root)
-        vim.keymap.set("n", "<leader>ws", word_live_grep_args_from_project_git_root)
-        vim.keymap.set("v", "<leader>vs", visual_live_grep_args_from_project_git_root)
+        -- project commands
+        vim.keymap.set("n", "<leader>ps", live_grep_args_from_project_git_root, {})
+        vim.keymap.set("n", "<leader>ws", word_live_grep_args_from_project_git_root, {})
+        vim.keymap.set("v", "<leader>vs", visual_live_grep_args_from_project_git_root, {})
+        vim.keymap.set("n", "<leader>pb", function()
+            builtin.buffers({ sort_mru = true, ignore_current_buffer = true })
+        end, {})
 
         -- diagnostic files
         vim.keymap.set("n", "<leader>td", function()
+            builtin.diagnostics({ bufnr = 0 })
+        end, {})
+        vim.keymap.set("n", "<leader>te", function()
+            builtin.diagnostics({ severity = vim.diagnostic.severity.ERROR, bufnr = 0 })
+        end, {})
+        vim.keymap.set("n", "<leader>ts", function()
             builtin.diagnostics()
-        end)
-        -- vim.keymap.set("n", "<leader>tl", function()
-        --     builtin.diagnostics()
-        -- end)
-        -- vim.keymap.set("n", "<leader>ts", function()
-        --     builtin.diagnostics()
-        -- end)
-        -- vim.keymap.set("n", "<leader>te", function()
-        --     builtin.diagnostics()
-        -- end)
+        end, {})
+        vim.keymap.set("n", "<leader>tl", function()
+            builtin.diagnostics({ severity = vim.diagnostic.severity.ERROR })
+        end, {})
 
         -- misc telescope commands
-        vim.keymap.set("n", "<leader>vh", builtin.help_tags)
-        vim.keymap.set("n", "<leader>pb", function()
-            builtin.buffers({ sort_mru = true, ignore_current_buffer = true })
-        end)
+        vim.keymap.set("n", "<leader>vh", builtin.help_tags, {})
     end,
 }
