@@ -1,31 +1,34 @@
 { pkgs, dotfiles, ... }: {
+
+  imports = [ ../programs/git.nix ];
+
   programs = {
     # Let Home Manager install and manage itself.
     home-manager.enable = true;
 
-    git = {
-      enable = true;
-
-      userName = "Nate Jensvold";
-      userEmail = "jensvoldnate@gmail.com";
-
-      extraConfig = {
-        core = { pager = "delta"; };
-        diff = {
-          tool = "default-difftool";
-          colorMoved = "default";
-        };
-        interactive = { diffFilter = "delta --color-only"; };
-        delta = {
-          navigate = "true";
-          light = "false";
-        };
-        merge = { conflictstyle = "diff3"; };
-        init = { defaultBranch = "master"; };
-        pull = { rebase = "true"; };
-        url."git@github.com:" = { insteadOf = "https://github.com/"; };
-      };
-    };
+    # git = {
+    #   enable = true;
+    #
+    #   userName = "Nate Jensvold";
+    #   userEmail = "jensvoldnate@gmail.com";
+    #
+    #   extraConfig = {
+    #     core = { pager = "delta"; };
+    #     diff = {
+    #       tool = "default-difftool";
+    #       colorMoved = "default";
+    #     };
+    #     interactive = { diffFilter = "delta --color-only"; };
+    #     delta = {
+    #       navigate = "true";
+    #       light = "false";
+    #     };
+    #     merge = { conflictstyle = "diff3"; };
+    #     init = { defaultBranch = "master"; };
+    #     pull = { rebase = "true"; };
+    #     url."git@github.com:" = { insteadOf = "https://github.com/"; };
+    #   };
+    # };
 
     zsh = {
       enable = true;
