@@ -32,6 +32,16 @@
     aliases = {
       identity = "! git-identity";
       id = "! git-identity";
+      who = ''
+        !f() {
+            user=$(git config user.name)
+            email=$(git config user.email)
+
+            echo "User=[$user]"
+            echo "Email=[$email]"
+          }
+          f
+      '';
     };
   };
 }
