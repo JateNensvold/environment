@@ -41,7 +41,7 @@ u      [alias]                       utils
 reload [alias] reload-nix            $RELOAD_PREFIX $RELOAD_SUFFIX Current Config: \$USER=${USER} - \$NIX_HOST=${NIX_HOST} \$HARDWARE=${HARDWARE} \$ARCH=${ARCH}
 
 c      [alias]                       \$EDITOR .
-vv     [alias]                       var=\$(fd | fzf --header='[find:file]') && full_var=\$(realpath \$var) && change-location \$var && vim \$full_var
+vv     [alias]                       var=\$(fd | fzf --header='[vim:file]') && full_var=\$(realpath \$var) && change-location \$var && vim \$full_var
 ce     [alias]                       cd ~/environment
 ze     [alias]                       \$EDITOR ~/environment
 zx     [alias]                       source ~/.zshrc

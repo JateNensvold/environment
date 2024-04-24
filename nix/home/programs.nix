@@ -6,30 +6,6 @@
     # Let Home Manager install and manage itself.
     home-manager.enable = true;
 
-    # git = {
-    #   enable = true;
-    #
-    #   userName = "Nate Jensvold";
-    #   userEmail = "jensvoldnate@gmail.com";
-    #
-    #   extraConfig = {
-    #     core = { pager = "delta"; };
-    #     diff = {
-    #       tool = "default-difftool";
-    #       colorMoved = "default";
-    #     };
-    #     interactive = { diffFilter = "delta --color-only"; };
-    #     delta = {
-    #       navigate = "true";
-    #       light = "false";
-    #     };
-    #     merge = { conflictstyle = "diff3"; };
-    #     init = { defaultBranch = "master"; };
-    #     pull = { rebase = "true"; };
-    #     url."git@github.com:" = { insteadOf = "https://github.com/"; };
-    #   };
-    # };
-
     zsh = {
       enable = true;
       enableCompletion = true;
@@ -60,7 +36,7 @@
 
         ff = "var=$(fd | fzf --header='[find:file]') && change-location $var";
         vv =
-          "var=$(fd | fzf --header='[find:file]') && full_var=$(realpath $var) && change-location $var && vim $full_var ";
+          "var=$(fd | fzf --header='[vim:file]') && full_var=$(realpath $var) && change-location $var && vim $full_var ";
         fe = "env | fzf --header='[find:env]'";
 
         sf = "rg -g '!.git' --hidden";
