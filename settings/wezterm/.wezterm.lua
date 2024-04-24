@@ -10,6 +10,9 @@ if is_windows then
     config.default_domain = "WSL:Ubuntu"
 
     local user = os.getenv("UserProfile")
+    -- use multiple wezterm backgrounds
+    -- https://github.com/KevinSilvester/wezterm-config
+
     -- config.window_background_image = string.format("%s/wez_backgrounds/castle-background.jpg", user)
     config.window_background_image = string.format("%s/wez_backgrounds/smoke-1178319.jpg", user)
 end
