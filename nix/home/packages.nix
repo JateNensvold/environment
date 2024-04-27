@@ -5,7 +5,6 @@
     # Tools
     ansible
     autojump
-    # cargo
     cheat
     curl
     cmake
@@ -26,6 +25,7 @@
     rustscan
     shellcheck
     sl
+    sqlite
     tealdeer
     tmux
     zip

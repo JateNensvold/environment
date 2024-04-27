@@ -89,7 +89,7 @@ return {
 
         -- find files
         vim.keymap.set("n", "<C-p>", find_files_from_project_git_root)
-        vim.keymap.set("n", "<leader>phf", function()
+        vim.keymap.set("n", "<leader>ph", function()
             find_files_from_project_git_root({ hidden = true, no_ignore = true })
         end)
         vim.keymap.set("n", "<leader>pf", builtin.git_files, {})
