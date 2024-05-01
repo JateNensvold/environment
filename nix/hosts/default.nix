@@ -63,6 +63,7 @@ let
       }
     else
       home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
         extraSpecialArgs = extraArgs;
         modules = [
           ../modules/shared/nix
