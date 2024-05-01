@@ -4,6 +4,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgsStable.url = "github:nixos/nixpkgs/23.11";
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -16,8 +17,8 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs =
-    flakeInputs@{ self, nixpkgs, home-manager, nix-darwin, flake-utils, ... }:
+  outputs = flakeInputs@{ self, nixpkgs, nixpkgsStable, home-manager, nix-darwin
+    , flake-utils, ... }:
     let
 
       dotfiles = ./dotfiles;
@@ -68,13 +69,12 @@
       hostSystems = [
         { system = "x86_64-linux"; }
         { system = "x86_64-darwin"; }
-        { system = "aarch64-linux"; }
         { system = "aarch64-darwin"; }
       ];
 
       commonInherits = {
         inherit (nixpkgs) lib;
-        inherit flakeInputs nixpkgs home-manager nix-darwin;
+        inherit flakeInputs nixpkgs nixpkgsStable home-manager nix-darwin;
         inherit users hosts dotfiles hardwares hostSystems;
       };
 
@@ -97,23 +97,26 @@
       tests = flakeInputs.nixtest.run ./.;
 
     } // flake-utils.lib.eachDefaultSystem (system:
-      let shellPkgs = import nixpkgs { inherit system; };
-      in {
-        devShell = shellPkgs.mkShell {
-          shellHook = ''
-            NOCOLOR='\033[0m'
-            RED='\033[0;31m'
+      # let shellPkgs = import nixpkgs { inherit system; };
+      # in {
+      #   devShell = shellPkgs.mkShell {
+      #     shellHook = ''
+      #       NOCOLOR='\033[0m'
+      #       RED='\033[0;31m'
+      #
+      #       ./scripts/ubuntu/install.sh ssh_support
+      #       ssh_status=$?
+      #
+      #       if [ $ssh_status -eq 1 ];
+      #       then
+      #         printf "''${RED}%s''${NOCOLOR}\n" "Github SSH support not detected, add a private key to ~/.ssh, or follow the directions in this link
+      #         https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account"
+      #       fi
+      #     '';
+      #     packages = [ ];
+      #   };
+      # }
+      {
 
-            ./scripts/ubuntu/install.sh ssh_support
-            ssh_status=$?
-
-            if [ $ssh_status -eq 1 ];
-            then
-              printf "''${RED}%s''${NOCOLOR}\n" "Github SSH support not detected, add a private key to ~/.ssh, or follow the directions in this link
-              https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account"
-            fi
-          '';
-          packages = [ ];
-        };
       });
 }

@@ -1,6 +1,6 @@
 { pkgs, dotfiles, ... }: {
 
-  imports = [ ../programs/git.nix ];
+  imports = [ ../../programs/git.nix ];
 
   programs = {
     # Let Home Manager install and manage itself.

@@ -1,5 +1,6 @@
-{ lib, flakeInputs, dotfiles, users, hosts, hardwares, hostSystems, isNixOS, isMacOS
-, isIso, isHardware, nixpkgs, home-manager, nix-darwin, ... }:
+{ lib, flakeInputs, dotfiles, users, hosts, hardwares, hostSystems, isNixOS
+, isMacOS, isIso, isHardware, nixpkgs, nixpkgsStable, home-manager, nix-darwin
+, ... }:
 let
   mkHost =
     { user, host, extraOverlays, extraModules, hardware, stateVersion, system }:
@@ -20,9 +21,20 @@ let
           #     (import ../overlays/pinned.nix)
         ];
       };
+
+      stablePkgs = import nixpkgsStable {
+        inherit system;
+        config = {
+          allowUnfree = true;
+          allowBroken = true;
+          allowUnsupportedSystem = true;
+        };
+        overlays = [ ];
+      };
+
       extraArgs = {
-        inherit pkgs flakeInputs isIso isHardware dotfiles home-manager user
-          hardware host system stateVersion;
+        inherit pkgs stablePkgs flakeInputs isIso isHardware dotfiles
+          home-manager user hardware host system stateVersion;
         hostname = host + "-" + hardware;
       };
 
@@ -31,7 +43,7 @@ let
         inherit system;
         specialArgs = extraArgs;
         modules = [
-          ./darwin.nix
+          ../modules/darwin/darwin.nix
           home-manager.darwinModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
@@ -39,11 +51,11 @@ let
             home-manager.extraSpecialArgs = extraArgs;
             home-manager.users."${user}" = {
               imports = [
-                ../modules/nix.nix
-                ../home/default.nix
+                ../modules/shared/nix
+                ../modules/home/default.nix
                 ./${host}/home.nix
-                ../user/${user}/default.nix
-                ../hardware/${hardware}/default.nix
+                ../modules/shared/user/${user}/default.nix
+                ../modules/shared/hardware/${hardware}/default.nix
               ];
             };
           }
@@ -51,14 +63,13 @@ let
       }
     else
       home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
         extraSpecialArgs = extraArgs;
         modules = [
-          ../modules/nix.nix
-          ../home/default.nix
+          ../modules/shared/nix
+          ../modules/home/default.nix
           ./${host}/home.nix
-          ../user/${user}/default.nix
-          ../hardware/${hardware}/default.nix
+          ../modules/shared/user/${user}/default.nix
+          ../modules/shared/hardware/${hardware}/default.nix
         ];
       };
 
@@ -72,8 +83,8 @@ let
     hostSystems;
   permutedHosts = systemsPermutedHosts;
 
-  /* We have a list of sets.
-     Map each element of the list applying the mkHost function to its elements and returning a set in the listToAttrs format
+  /* Dynamically generate a list of mkHost options so each combination of user/host/hardware/system do not have to be manually created
+     We have a list of sets. Map each element of the list applying the mkHost function to its elements and returning a set in the listToAttrs format
      builtins.listToAttrs on the result
   */
 in builtins.listToAttrs (map (mInput@{ user, host, hardware, system, ... }: {

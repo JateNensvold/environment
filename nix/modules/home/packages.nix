@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, stablePkgs, ... }:
 
 {
   home.packages = with pkgs; [
@@ -40,7 +40,7 @@
     llvmPackages.bintools
     # Runtimes
     nodejs_21
-    python3
+    stablePkgs.python3
     rustup
     # Needed by brew
     ruby
