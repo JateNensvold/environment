@@ -1,4 +1,4 @@
-{ config, lib, pkgs, username, importType, ... }:
+{ pkgs, ... }:
 
 {
   home.packages = with pkgs; [
@@ -54,6 +54,7 @@
     lua-language-server # lua
     nodePackages.pyright # python
     ansible-language-server
+    htmx-lsp # htmx
 
     # Formatters
     shfmt # bash, sh
@@ -62,6 +63,7 @@
     sqlfluff # sql
     black # python
     yamlfmt # yaml
+    prettierd # html/js/css
 
     # Linters
     ansible-lint
