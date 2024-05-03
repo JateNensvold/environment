@@ -116,17 +116,17 @@
 			fi
 		fi
 
-		homeManagerConfigurationCommandSuffix="switch --flake .#$USER-$NIX_HOST-$HARDWARE-$ARCH"
+		# use a bash array for program arguments so they are split when passing to program
+		homeManagerConfigurationCommandSuffix=(switch --flake ".#$USER-$NIX_HOST-$HARDWARE-$ARCH")
 
 		cd ~/environment/nix
 		if [ "$OS_TYPE" = "Darwin" ]; then
-			echo "nix run --extra-experimental-features nix-command --extra-experimental-features flakes nix-darwin switch --flake \".#${USER}-${NIX_HOST}-${HARDWARE}-${ARCH}\""
-			nix run --extra-experimental-features nix-command --extra-experimental-features flakes nix-darwin switch --flake ".#${USER}-${NIX_HOST}-${HARDWARE}-${ARCH}"
+			nix run --extra-experimental-features nix-command --extra-experimental-features "${homeManagerConfigurationCommandSuffix[@]}"
 
 			info "darwin: home-manager is configured! Here is what we have:"
 			darwin-version
 		else
-			home-manager "$homeManagerConfigurationCommandSuffix"
+			home-manager "${homeManagerConfigurationCommandSuffix[@]}"
 
 			info "home-manager is configured! Here is what we have:"
 			home-manager --version
