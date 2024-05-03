@@ -31,6 +31,15 @@ return {
             { "hrsh7th/cmp-path" },
             { "hrsh7th/cmp-cmdline" },
         },
+        opt = {
+            servers = {
+                tsserver = {
+                    root_dir = function(...)
+                        return require("lspconfig.util").root_pattern(".git")(...)
+                    end,
+                }
+            }
+        },
         config = function()
             local lsp_zero = require("lsp-zero")
             ---@diagnostic disable-next-line: unused-local
@@ -95,6 +104,10 @@ return {
                 capabilities = capabilities,
             })
             lspconfig.dockerls.setup({})
+
+            -- TypeScript
+            lspconfig.tsserver.setup({})
+
             lspconfig.lua_ls.setup({
                 capabilities = capabilities,
                 settings = {
@@ -105,7 +118,6 @@ return {
                     },
                 },
             })
-            -- lspconfig.sqls.setup({})
 
             -- Setup lsp autocompletion
             local cmp = require("cmp")

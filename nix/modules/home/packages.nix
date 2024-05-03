@@ -55,10 +55,10 @@
     nodePackages.pyright # python
     ansible-language-server
     htmx-lsp # htmx
+    nodePackages.typescript-language-server # js/ts
 
     # Formatters
     shfmt # bash, sh
-    eslint_d # javascript
     nixfmt-classic # nix
     sqlfluff # sql
     black # python
