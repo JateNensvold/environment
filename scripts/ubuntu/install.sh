@@ -156,8 +156,9 @@
 
 		# Reset environment repo if it already exists
 		if [ -e "${clone_target}/" ]; then
-			warn "Looks like '${clone_target}' exists and it is not what we want. Backing up as '${clone_target}.backup-before-clone'..."
-			mv --backup=numbered "${clone_target}" "${clone_target}.backup-before-clone"
+            backup_destination="${clone_target}.backup-before-clone"
+			warn "Looks like '${clone_target}' exists and it is not what we want. Backing up as '${backup_destination}'..."
+			rm -rf "$backup_destination" && mv "${clone_target}" "${backup_destination}"
 		fi
 		warn "Cloning '${repository}' into '${clone_target}'..."
 		git clone "${repository}" "${clone_target}"
