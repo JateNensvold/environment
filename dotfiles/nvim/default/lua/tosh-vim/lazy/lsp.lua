@@ -66,7 +66,9 @@ return {
                     null_ls.builtins.formatting.nixfmt,
                     null_ls.builtins.formatting.black,
                     null_ls.builtins.formatting.yamlfmt,
-                    null_ls.builtins.formatting.prettierd,
+                    null_ls.builtins.formatting.prettierd.with({
+                        filetypes = { "htmldjango" }
+                    }),
                     null_ls.builtins.formatting.sqlfluff.with({
                         extra_args = {
                             "--dialect",
@@ -121,16 +123,16 @@ return {
                     ["<C-y>"] = cmp.mapping.confirm({ select = true }),
                     ["<C-Space>"] = cmp.mapping.complete(),
                 }),
+                -- grouping of sources determines if a source is used,
+                -- second group is only used if no values are found for the first group
                 sources = cmp.config.sources({
                     { name = "nvim_lua" },
                     { name = "nvim_lsp" },
-                    -- { name = "luasnip" },
                 }, {
                     { name = "path" },
+                    { name = "crates" },
                     { name = "buffer", keyword_length = 5 },
                 }, {
-                    -- { name = "gh_issues" },
-                    { name = "crates" },
                 }),
                 sorting = {
                     -- yanked from teej https://github.com/tjdevries/config_manager/blob/78608334a7803a0de1a08a9a4bd1b03ad2a5eb11/xdg_config/nvim/after/plugin/completion.lua#L129

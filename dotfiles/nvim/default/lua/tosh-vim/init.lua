@@ -3,9 +3,9 @@ require("tosh-vim.lazy_init")
 require("tosh-vim.set")
 
 local augroup = vim.api.nvim_create_augroup
-local ToshGroup = augroup("AutoTosh", {})
-
 local autocmd = vim.api.nvim_create_autocmd
+
+local ToshGroup = augroup("AutoTosh", {})
 local yank_group = augroup("HighlightYank", {})
 
 function R(name)
@@ -41,7 +41,7 @@ autocmd("TextYankPost", {
     callback = function()
         vim.highlight.on_yank({
             higroup = "IncSearch",
-            timeout = 40,
+            timeout = 100,
         })
     end,
 })
@@ -69,6 +69,22 @@ local function diagnostic_goto(key, direction, severity, bufnr)
     )
 end
 
+
+
+local function show_documentation()
+    local filetype = vim.bo.filetype
+    if vim.tbl_contains({ 'vim', 'help' }, filetype) then
+        vim.cmd('h ' .. vim.fn.expand('<cword>'))
+    elseif vim.tbl_contains({ 'man' }, filetype) then
+        vim.cmd('Man ' .. vim.fn.expand('<cword>'))
+    elseif vim.fn.expand('%:t') == 'Cargo.toml' and require('crates').popup_available() then
+        require('crates').show_popup()
+    else
+        vim.lsp.buf.hover()
+    end
+end
+
+
 autocmd("LspAttach", {
     group = ToshGroup,
     callback = function(e)
@@ -77,7 +93,7 @@ autocmd("LspAttach", {
             vim.lsp.buf.definition()
         end, opts)
         vim.keymap.set("n", "K", function()
-            vim.lsp.buf.hover()
+            show_documentation()
         end, opts)
         vim.keymap.set("n", "<leader>vws", function()
             vim.lsp.buf.workspace_symbol()

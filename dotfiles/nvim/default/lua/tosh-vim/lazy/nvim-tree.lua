@@ -22,6 +22,7 @@ return {
 
             -- Remove keybinds
             vim.keymap.del('n', 'D', { buffer = bufnr })
+            vim.keymap.del('n', '<C-e>', { buffer = bufnr })
         end
 
         local function toggle_tree_repo_root(config)
