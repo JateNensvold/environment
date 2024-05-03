@@ -119,7 +119,7 @@
 		# use a bash array for program arguments so they are split when passing to program
 		homeManagerConfigurationCommandSuffix=(switch --flake ".#$USER-$NIX_HOST-$HARDWARE-$ARCH")
 
-		cd ~/environment/nix
+		cd ~/environment/
 		if [ "$OS_TYPE" = "Darwin" ]; then
 			nix run --extra-experimental-features nix-command --extra-experimental-features flakes nix-darwin -- "${homeManagerConfigurationCommandSuffix[@]}"
 
