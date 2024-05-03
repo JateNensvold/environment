@@ -120,7 +120,7 @@
 
 		cd ~/environment/nix
 		if [ "$OS_TYPE" = "Darwin" ]; then
-			nix run --extra-experimental-features nix-command --extra-experimental-features flakes nix-darwin -- "$homeManagerConfigurationCommandSuffix"
+			nix run --extra-experimental-features nix-command --extra-experimental-features flakes nix-darwin -- "${homeManagerConfigurationCommandSuffix}"
 
 			info "darwin: home-manager is configured! Here is what we have:"
 			darwin-version
