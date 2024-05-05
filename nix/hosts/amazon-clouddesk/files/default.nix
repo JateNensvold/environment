@@ -1,7 +1,11 @@
-{ config, ... }: {
+{ config, ... }:
+let
+  link = config.lib.file.mkOutOfStoreSymlink;
+  dotfilePath = "${config.home.homeDirectory}/environment/dotfiles";
+in {
   # Dynamic files
   home.file.".vscode-server/data/Machine/java_settings.xml".source =
-    config.lib.meta.mkMutableSymlink "/vscode/work/java_settings.xml";
+    link "${dotfilePath}/vscode/work/java_settings.xml";
   home.file.".vscode-server/data/Machine/settings.json".source =
-    config.lib.meta.mkMutableSymlink "/vscode/settings.json";
+    link "${dotfilePath}vscode/settings.json";
 }

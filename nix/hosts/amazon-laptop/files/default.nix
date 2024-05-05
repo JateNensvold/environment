@@ -1,10 +1,14 @@
-{ config, dotfiles, ... }: {
+{ config, dotfiles, ... }:
+let
+  link = config.lib.file.mkOutOfStoreSymlink;
+  dotfilePath = "${config.home.homeDirectory}/environment/dotfiles";
+in {
   # Recursive static folder
   home.file.".zfuncs/a" = { source = "${dotfiles}/scripts/zsh/work/a"; };
 
   # Dynamic files
   home.file."Library/Application Support/Code/User/settings.json".source =
-    config.lib.meta.mkMutableSymlink "/vscode/settings.json";
+    link "${dotfilePath}/vscode/settings.json";
   home.file."Library/Application Support/Code/User/keybindings.json".source =
-    config.lib.meta.mkMutableSymlink "/vscode/keybindings.json";
+    link "${dotfilePath}/vscode/keybindings.json";
 }
