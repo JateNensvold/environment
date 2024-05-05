@@ -1,0 +1,71 @@
+{ user, host, hardware, pkgs, stablePkgs, ... }:
+let
+  modulePath = "./modules";
+  hostPath = "./hosts";
+in {
+
+  # have to enable zsh in darwin config due to some weird darwin bug
+  programs.zsh.enable = true;
+
+  imports = [ ./${modulePath}/darwin/dock ];
+
+  # nix-darwin configuration
+  users.users.${user} = {
+    name = "${user}";
+    home = "/Users/${user}";
+  };
+
+  # home-manager configuration
+  home-manager = {
+    useGlobalPkgs = true;
+    users."${user}" = {
+      imports = [
+        ./${modulePath}/home/default.nix
+        ./${hostPath}/${host}/home.nix
+        ./${modulePath}/shared/user/${user}/default.nix
+        ./${modulePath}/shared/hardware/${hardware}/default.nix
+      ];
+    };
+  };
+
+  services.nix-daemon.enable = true;
+
+  nix = {
+    settings.experimental-features = "nix-command flakes";
+    settings.extra-nix-path = "nixpkgs=flake:nixpkgs";
+  };
+
+  environment.systemPackages = [ ]
+    ++ (import ./${modulePath}/home/packages.nix { inherit pkgs stablePkgs; });
+
+  fonts.fontDir.enable = true;
+
+  system.defaults = {
+    dock = {
+      orientation = "left";
+      autohide = false;
+      show-recents = false;
+    };
+    NSGlobalDomain = { "com.apple.swipescrolldirection" = false; };
+    finder = { _FXShowPosixPathInTitle = true; };
+  };
+
+  # https://github.com/zmre/mac-nix-simple-example
+  homebrew = {
+    enable = true;
+    casks = [
+      "docker" # docker packaging is broken on non nixos systems
+    ];
+  };
+
+  local = {
+    dock.enable = true;
+    dock.entries = [
+      { path = "${pkgs.custom.wezterm}/Applications/WezTerm.app"; }
+      { path = "/Applications/Slack.app"; }
+      { path = "${pkgs.spotify}/Applications/Spotify.app"; }
+      { path = "${pkgs.obsidian}/Applications/Obsidian.app"; }
+      { path = "/Applications/Firefox.app/"; }
+    ];
+  };
+}

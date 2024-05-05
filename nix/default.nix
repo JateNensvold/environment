@@ -16,10 +16,10 @@ let
           allowUnsupportedSystem = true;
         };
         overlays = [
-          #     # sometimes it is useful to pin a version of some tool or program.
-          #     # this can be done in " overlays/pinned.nix "
-          #     (import ../overlays/pinned.nix)
-        ];
+          # import program overlays
+          (import ./programs)
+          (import ./overlays/pinned.nix)
+        ] ++ extraOverlays;
       };
 
       stablePkgs = import nixpkgsStable {
@@ -43,35 +43,28 @@ let
         inherit system;
         specialArgs = extraArgs;
         modules = [
-          ../modules/darwin/darwin.nix
           home-manager.darwinModules.home-manager
+          { home-manager.extraSpecialArgs = extraArgs; }
+          flakeInputs.nix-homebrew.darwinModules.nix-homebrew
           {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = extraArgs;
-            home-manager.users."${user}" = {
-              imports = [
-                ../modules/shared/nix
-                ../modules/home/default.nix
-                ./${host}/home.nix
-                ../modules/shared/user/${user}/default.nix
-                ../modules/shared/hardware/${hardware}/default.nix
-              ];
+            nix-homebrew = {
+              inherit user;
+              enable = true;
+              taps = {
+                "homebrew/homebrew-core" = flakeInputs.homebrew-core;
+                "homebrew/homebrew-cask" = flakeInputs.homebrew-cask;
+                "homebrew/homebrew-bundle" = flakeInputs.homebrew-bundle;
+              };
             };
           }
+          ./darwin.nix
         ];
       }
     else
       home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         extraSpecialArgs = extraArgs;
-        modules = [
-          ../modules/shared/nix
-          ../modules/home/default.nix
-          ./${host}/home.nix
-          ../modules/shared/user/${user}/default.nix
-          ../modules/shared/hardware/${hardware}/default.nix
-        ];
+        modules = [ ./linux.nix ];
       };
 
   userPermutedHosts =

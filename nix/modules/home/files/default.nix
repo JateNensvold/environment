@@ -1,6 +1,9 @@
-{ config, lib, pkgs, dotfiles, ... }:
-let link = config.lib.meta.mkMutableSymlink;
+{ dotfiles, config, ... }:
+let
+  link = config.lib.file.mkOutOfStoreSymlink;
+  dotfilePath = "${config.home.homeDirectory}/environment/dotfiles";
 in {
+
   # Static files
   home.file.".zfuncs" = {
     source = "${dotfiles}/scripts/zsh/default";
@@ -12,9 +15,9 @@ in {
 
   # Dynamic File (needs to link to a full path to remain pure https://github.com/nix-community/home-manager/issues/2085)
   # see ../../modules/nix.nix for util function
-  home.file.".config/nvim".source = link "/nvim/default";
-  home.file.".config/tmux".source = link "/tmux";
-  home.file.".local/bin".source = link "/scripts/bash/default";
+  home.file.".config/nvim".source = link "${dotfilePath}/nvim/default";
+  home.file.".config/tmux".source = link "${dotfilePath}/tmux";
+  home.file.".local/bin".source = link "${dotfilePath}/scripts/bash/default";
 
   home.file.".config/cheat/cheatsheets/community".source = builtins.fetchGit {
     url = "https://github.com/cheat/cheatsheets";

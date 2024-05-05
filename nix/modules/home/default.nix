@@ -11,10 +11,7 @@ let
     "darwin-rebuild"
   else
     "home-manager";
-
 in {
-  # Home Manager needs a bit of information about you and the
-  # paths it should manage.
 
   home = {
     username = user;
@@ -53,15 +50,9 @@ in {
     options = "--delete-older-than 29d";
   };
 
-  # Flakes are not standard yet, but widely used, enable them.
-  xdg.configFile."nix/nix.conf ".text = ''
-    experimental-features = nix-command flakes
-  '';
-
   imports = [
-    # Programs to install
-    ./packages.nix
-    (import ./files/default.nix { inherit config lib pkgs dotfiles; })
+    # program and dotfile installation/setup
+    (import ./files/default.nix { inherit dotfiles config; })
     (import ./programs.nix { inherit config lib pkgs dotfiles; })
   ];
 }

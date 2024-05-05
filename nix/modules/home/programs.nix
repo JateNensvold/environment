@@ -1,6 +1,8 @@
-{ pkgs, dotfiles, ... }: {
+{ pkgs, dotfiles, ... }:
+let programPath = "../../programs/";
+in {
 
-  imports = [ ../../programs/git.nix ];
+  imports = [ ./${programPath}/programs/git.nix ];
 
   programs = {
     # Let Home Manager install and manage itself.

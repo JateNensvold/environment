@@ -15,12 +15,24 @@
     };
     hardware.url = "github:NixOS/nixos-hardware";
     flake-utils.url = "github:numtide/flake-utils";
+    nix-homebrew = { url = "github:zhaofengli-wip/nix-homebrew"; };
+    homebrew-bundle = {
+      url = "github:homebrew/homebrew-bundle";
+      flake = false;
+    };
+    homebrew-core = {
+      url = "github:homebrew/homebrew-core";
+      flake = false;
+    };
+    homebrew-cask = {
+      url = "github:homebrew/homebrew-cask";
+      flake = false;
+    };
   };
 
   outputs = flakeInputs@{ self, nixpkgs, nixpkgsStable, home-manager, nix-darwin
     , flake-utils, ... }:
     let
-
       dotfiles = ./dotfiles;
 
       users = [
@@ -80,14 +92,14 @@
 
     in {
 
-      homeConfigurations = import ./nix/hosts (commonInherits // {
+      homeConfigurations = import ./nix/default.nix (commonInherits // {
         isNixOS = false;
         isMacOS = false;
         isIso = false;
         isHardware = false;
       });
 
-      darwinConfigurations = import ./nix/hosts (commonInherits // {
+      darwinConfigurations = import ./nix/default.nix (commonInherits // {
         isNixOS = false;
         isMacOS = true;
         isIso = false;
@@ -97,26 +109,6 @@
       tests = flakeInputs.nixtest.run ./.;
 
     } // flake-utils.lib.eachDefaultSystem (system:
-      # let shellPkgs = import nixpkgs { inherit system; };
-      # in {
-      #   devShell = shellPkgs.mkShell {
-      #     shellHook = ''
-      #       NOCOLOR='\033[0m'
-      #       RED='\033[0;31m'
-      #
-      #       ./scripts/ubuntu/install.sh ssh_support
-      #       ssh_status=$?
-      #
-      #       if [ $ssh_status -eq 1 ];
-      #       then
-      #         printf "''${RED}%s''${NOCOLOR}\n" "Github SSH support not detected, add a private key to ~/.ssh, or follow the directions in this link
-      #         https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account"
-      #       fi
-      #     '';
-      #     packages = [ ];
-      #   };
-      # }
-      {
-
-      });
+      let shellPkgs = import nixpkgs { inherit system; };
+      in { devShell = shellPkgs.mkShell { }; });
 }
