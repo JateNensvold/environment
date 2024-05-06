@@ -5,6 +5,8 @@ with pkgs; [
   ansible
   autojump
   cheat
+  # add realpath for darwin systems
+  coreutils
   curl
   cmake
   cmatrix # hacker man

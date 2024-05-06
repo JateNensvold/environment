@@ -1,4 +1,4 @@
-{ pkgs, dotfiles, ... }:
+{ pkgs, dotfiles, lib, ... }:
 let programPath = "../../programs/";
 in {
 
@@ -82,7 +82,6 @@ in {
       oh-my-zsh = {
         enable = true;
         plugins = [
-          "autojump"
           "copypath"
           "command-not-found"
           "direnv"
@@ -91,7 +90,7 @@ in {
           "ssh-agent"
           "sudo"
           "ripgrep"
-        ];
+        ] ++ lib.optionals (!pkgs.stdenv.isDarwin) [ "autojump" ];
       };
 
       initExtra = ''
@@ -106,6 +105,7 @@ in {
 
         # Add keybind for sessionizer
         bindkey -s ^f "tmux-sessionizer\n"
+        # Enable opening file in vim from terminal using fuzzy finder in vv
         bindkey -s ^p "vv\n"
 
         # fzf-tab does not work without this

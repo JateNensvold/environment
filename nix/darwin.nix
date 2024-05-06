@@ -7,7 +7,7 @@ in {
   # have to enable zsh in darwin config due to some weird darwin bug
   programs.zsh.enable = true;
 
-  imports = [ ./${modulePath}/darwin/dock ];
+  imports = [ ./${hostPath}/${host}/darwin ];
 
   # nix-darwin configuration
   users.users.${user} = {
@@ -56,16 +56,17 @@ in {
     casks = [
       "docker" # docker packaging is broken on non nixos systems
     ];
+
+    # Install apps from mac store
+    # mas = mac app store
+    # https://github.com/mas-cli/mas
+    #
+    # nix shell nixpkgs#mas
+    # mas search <app name>
+    masApps = { "amphetamine" = 937984704; };
   };
 
-  local = {
-    dock.enable = true;
-    dock.entries = [
-      { path = "${pkgs.custom.wezterm}/Applications/WezTerm.app"; }
-      { path = "/Applications/Slack.app"; }
-      { path = "${pkgs.spotify}/Applications/Spotify.app"; }
-      { path = "${pkgs.obsidian}/Applications/Obsidian.app"; }
-      { path = "/Applications/Firefox.app/"; }
-    ];
-  };
+  system.activationScripts.postUserActivation.text = ''
+    osascript -e 'tell application "Finder" to set desktop picture to POSIX file "/Users/${user}/environment/settings/wezterm/backgrounds/smoke-1178319.jpg"'
+  '';
 }
