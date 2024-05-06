@@ -1,4 +1,4 @@
-{ user, host, hardware, ... }:
+{ user, host, hardware, pkgs, stablePkgs, ... }:
 let
   modulePath = "./modules/";
   hostPath = "./hosts/";
@@ -10,11 +10,13 @@ in {
 
   imports = [
     ./${modulePath}/home/default.nix
-    ./${modulePath}/home/packages.nix
     ./${hostPath}/${host}/home.nix
     ./${modulePath}/shared/user/${user}/default.nix
     ./${modulePath}/shared/hardware/${hardware}/default.nix
   ];
+
+  home.packages = [ ]
+    ++ (import ./${modulePath}/home/packages.nix { inherit pkgs stablePkgs; });
 
   # programs.zsh.initExtra = ''
   #   # Source brew path, should be present if system was setup by bash https://raw.githubusercontent.com/JateNensvold/environment/master/scripts/ubuntu/install.sh
