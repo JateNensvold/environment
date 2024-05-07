@@ -17,8 +17,10 @@ in {
 
       shellAliases = {
         ga = "git add .";
+        gau = "git add -u .";
         gc = "git commit -m \${1}";
         gd = "git diff";
+        gds = "git diff --staged";
         gdt = "git difftool";
         gmt = "git mergetool";
         gp = "git push \${1} \${2}";
