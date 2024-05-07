@@ -16,6 +16,8 @@ stdenv.mkDerivation {
 
     mkdir -p "$out/Applications"
     cp -r WezTerm.app "$out/Applications/"
+    mkdir -p "$out/bin"
+    ln -s "$out"/Applications/WezTerm.app/Contents/MacOS/* "$out/bin/"
 
     runHook postInstall
   '';

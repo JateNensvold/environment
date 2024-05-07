@@ -13,7 +13,7 @@ $USER_DIR = Resolve-Path ~
 $ENVIRONMENT_DIRECTORY = (get-item $PSScriptRoot).Parent.Parent.Parent.FullName
 
 $OLD_SETTINGS_FILEPATH = Join-Path $USER_DIR ".wezterm.lua.old"
-$SETTINGS_FILEPATH = Join-Path $ENVIRONMENT_DIRECTORY "settings" "wezterm" ".wezterm.lua"
+$SETTINGS_FILEPATH = Join-Path $ENVIRONMENT_DIRECTORY "settings" "wezterm" "wezterm.lua"
 $SETTINGS_TARGET_FILEPATH = Join-Path $USER_DIR ".wezterm.lua"
 
 Write-Host "------------------------------------" -ForegroundColor Yellow
