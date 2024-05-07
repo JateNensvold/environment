@@ -14,5 +14,7 @@ in {
     link "${dotfilePath}/vscode/keybindings.json";
 
   home.file.".config/wezterm/wezterm.lua".source =
-    link "${settingsPath}/wezterm/.wezterm.lua";
+    link "${settingsPath}/wezterm/wezterm.lua";
+  home.file.".config/aerospace/aerospace.toml".source =
+    link "${dotfilePath}/aerospace/aerospace.toml";
 }

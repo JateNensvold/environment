@@ -11,7 +11,7 @@
       # packages only for this host
       spotify
       obsidian
-    ] ++ (with pkgs; [ custom.wezterm ]);
+    ] ++ (with pkgs; [ custom.wezterm custom.aerospace ]);
 
   # https://builderhub.corp.amazon.com/docs/builder-toolbox/user-guide/getting-started.html#install-toolbox-macos
   # manually install the following tools from self service tools(App)
