@@ -26,7 +26,7 @@ in {
         ./${modulePath}/shared/hardware/${hardware}/default.nix
       ];
     };
-     backupFileExtension = "hm-backup";
+    backupFileExtension = "hm-backup";
   };
 
   services.nix-daemon.enable = true;
@@ -46,6 +46,10 @@ in {
       orientation = "left";
       autohide = false;
       show-recents = false;
+      # disable bottom right corner as MacOS hot corner
+      wvous-br-corner = 1;
+      # config is only reloaded when dock is restarted
+      # - killall Dock
     };
     NSGlobalDomain = { "com.apple.swipescrolldirection" = false; };
     finder = { _FXShowPosixPathInTitle = true; };
