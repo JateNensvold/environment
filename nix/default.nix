@@ -36,6 +36,7 @@ let
         inherit pkgs stablePkgs flakeInputs isIso isHardware dotfiles
           home-manager user hardware host system stateVersion;
         hostname = host + "-" + hardware;
+        isOther = !(isMacOS || isNixOS);
       };
 
     in if isMacOS then

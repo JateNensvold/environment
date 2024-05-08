@@ -26,6 +26,7 @@ in {
         ./${modulePath}/shared/hardware/${hardware}/default.nix
       ];
     };
+     backupFileExtension = "hm-backup";
   };
 
   services.nix-daemon.enable = true;
