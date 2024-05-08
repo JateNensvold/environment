@@ -38,6 +38,15 @@
   # - Setup amphetamine manually, it does not support config files
   # - Manually enable notifications for apps(slack/email/chime) in settings -> notifications -> App Name
 
+  # firefox setup
+  # - export firefox profile
+  #     - find profile at 'about:support'
+  #     - zip -r firefox.zip /Users/jensvold/Library/Application Support/Firefox/Profiles/buf8y2d5.default-esr"
+  # scp file to clouddesk
+  #		- scp firefox.zip clouddesk:~
+  # scp file to new laptop
+  #		-
+
   # programs.firefox = {
   #   enable = true;
   #   package = pkgs.firefox-bin;
