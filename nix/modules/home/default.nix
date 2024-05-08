@@ -1,16 +1,20 @@
 # Main user-level configuration
-{ config, lib, pkgs, user, host, hardware, system, dotfiles, stateVersion, ...
-}:
+{ config, lib, pkgs, user, host, hardware, system, dotfiles, stateVersion
+, isOther, ... }:
 
 let
   homeDirectoryPrefix =
     if pkgs.stdenv.hostPlatform.isDarwin then "/Users" else "/home";
-  reloadHomeManagerSuffix =
+  _reloadHomeManagerSuffix =
     "switch --flake ~/environment#$USER-$NIX_HOST-$HARDWARE-$ARCH";
-  reloadHomeManagerPrefix = if pkgs.stdenv.hostPlatform.isDarwin then
-    "darwin-rebuild"
+
+  reloadHomeManagerSuffix = if isOther then
+    _reloadHomeManagerSuffix + " -b hm-backup"
   else
-    "home-manager";
+    _reloadHomeManagerSuffix;
+
+  reloadHomeManagerPrefix =
+    if pkgs.stdenv.isDarwin then "darwin-rebuild" else "home-manager";
 in {
 
   home = {

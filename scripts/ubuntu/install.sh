@@ -126,7 +126,7 @@
 			info "darwin: home-manager is configured! Here is what we have:"
 			darwin-version
 		else
-			home-manager "${homeManagerConfigurationCommandSuffix[@]}"
+			home-manager "${homeManagerConfigurationCommandSuffix[@]}" "-b hm-backup"
 
 			info "home-manager is configured! Here is what we have:"
 			home-manager --version
