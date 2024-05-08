@@ -110,5 +110,14 @@
 
     } // flake-utils.lib.eachDefaultSystem (system:
       let shellPkgs = import nixpkgs { inherit system; };
-      in { devShell = shellPkgs.mkShell { }; });
+      in {
+        devShell = shellPkgs.mkShell {
+          packages = with shellPkgs;
+            [
+              # dev packages
+            ] ++
+            # darwin specific tools
+            lib.optional shellPkgs.stdenv.isDarwin dockutil;
+        };
+      });
 }
