@@ -76,7 +76,7 @@ return {
                     null_ls.builtins.formatting.black,
                     null_ls.builtins.formatting.yamlfmt,
                     null_ls.builtins.formatting.prettierd.with({
-                        filetypes = { "htmldjango" }
+                        filetypes = { "htmldjango", "json" }
                     }),
                     null_ls.builtins.formatting.sqlfluff.with({
                         extra_args = {
