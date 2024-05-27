@@ -118,6 +118,7 @@ return {
                     },
                 },
             })
+            lspconfig.unocss.setup {}
 
             -- Setup lsp autocompletion
             local cmp = require("cmp")
