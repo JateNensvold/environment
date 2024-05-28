@@ -82,7 +82,7 @@ run = ['layout floating', 'move-node-to-workspace 3']
 [[on-window-detected]]
 if.app-id = 'com.amazon.Amazon-Chime'
 # This should run in workspace 4, but popups should still show up in other workspaces
-run = ['layout floating']
+run = ['layout floating', 'move-node-to-workspace 4']
 
 [[on-window-detected]]
 if.app-id = 'com.microsoft.Outlook'
