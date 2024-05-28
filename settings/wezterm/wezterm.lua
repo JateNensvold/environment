@@ -70,8 +70,10 @@ config.keys = {
     { key = "v",          mods = "CTRL",       action = wezterm.action({ PasteFrom = "Clipboard" }) },
     { key = "v",          mods = "CTRL|SHIFT", action = wezterm.action({ SendKey = { key = "v", mods = "CTRL" } }) },
     -- allow terminal traversal using arrow keys
-    { key = "LeftArrow",  mods = "CTRL",       action = wezterm.action { SendString = "\x1bb" } },
-    { key = "RightArrow", mods = "CTRL",       action = wezterm.action { SendString = "\x1bf" } },
+    { key = "LeftArrow",  mods = "OPT",       action = wezterm.action { SendString = "\x1bb" } },
+    { key = "RightArrow", mods = "OPT",       action = wezterm.action { SendString = "\x1bf" } },
+    { key = "LeftArrow",  mods = "CMD",       action = wezterm.action { SendString = "\x1bOH" } },
+    { key = "RightArrow", mods = "CMD",       action = wezterm.action { SendString = "\x1bOF" } },
 }
 
 -- and finally, return the configuration to wezterm

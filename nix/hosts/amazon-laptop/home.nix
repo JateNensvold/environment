@@ -95,7 +95,7 @@
   # https://stackoverflow.com/questions/58396821/what-is-the-proper-way-to-create-a-root-sym-link-in-catalina
   # - sudo chown $USER /etc/synthetic.conf
   # - restart computer
-  # - toolbox install bemol barium brazilcli cr
+  # - toolbox install bemol barium brazilcli cr gordian-knot
 
   # enable git off vpn
   # - https://sage.amazon.dev/posts/1593689?t=7
@@ -109,6 +109,7 @@
   # - Log into apple account jensvold@amazon.com
   # - Setup amphetamine manually, it does not support config files
   # - Manually enable notifications for apps(slack/email/chime) in settings -> notifications -> App Name
+  # block connections popup https://sage.amazon.dev/posts/255179?t=7
 
   # firefox setup
   # - export firefox profile
