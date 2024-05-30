@@ -1,2 +1,2 @@
-**/work/* filter=git-crypt diff=git-crypt
-**/common/amazon.nix filter=git-crypt diff=git-crypt
+**/work*/** filter=git-crypt diff=git-crypt
+**/amazon*/** filter=git-crypt diff=git-crypt
