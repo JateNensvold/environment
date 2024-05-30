@@ -16,6 +16,7 @@ in {
       history = { share = true; };
 
       shellAliases = {
+        lg = "lazygit";
         ga = "git add .";
         gau = "git add -u .";
         gc = "git commit -m \${1}";
