@@ -24,12 +24,13 @@ in {
         gds = "git diff --staged";
         gdt = "git difftool";
         gmt = "git mergetool";
+        # Todo: fix parameter expansion in alias. Alias do not support parameters, and these require converting to functions if parameters are needed
         gp = "git push \${1} \${2}";
         gco = "git checkout \${1} \${2}";
         gpl = "git pull \${1} \${2}";
         grb = "git rebase -i \${1} \${2}";
         gs = "git status";
-        gl = "git ls-files \${1} | xargs wc -l";
+        gl = "git ls-files | xargs wc -l";
         # Steam locomotive
         sl = "sl -ea";
 
