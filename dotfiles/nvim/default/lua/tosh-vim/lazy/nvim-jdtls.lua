@@ -209,9 +209,9 @@ return {
 					-- },
 					format = {
 						enabled = true,
-						-- settings = {
-						--  url = ""
-						-- },
+						settings = {
+						 url = "~/.config/jdtls/java_settings.xml"
+						},
 					},
 				},
 				signatureHelp = {
