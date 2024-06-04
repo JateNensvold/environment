@@ -1,6 +1,6 @@
 #!/usr/bin/env pwsh
 
-# PowerShell Verison check
+# PowerShell Version check
 # $PSVersionTable
 
 choco upgrade powershell-core -y

@@ -41,7 +41,7 @@ with pkgs; [
   # Install lld
   llvmPackages.bintools
   # Runtimes
-  # nodejs_21
+  nodejs_22
   stablePkgs.python3
   rustup
   # Needed by brew
@@ -49,7 +49,7 @@ with pkgs; [
 
   # LSP servers
   nil # nix
-  nodePackages.bash-language-server # bash,  sh
+  nodePackages.bash-language-server # bash, sh
   docker-compose-language-service # docker compose
   dockerfile-language-server-nodejs # dockerfile
   sqls # sql
@@ -58,6 +58,9 @@ with pkgs; [
   ansible-language-server
   htmx-lsp # htmx
   nodePackages.typescript-language-server # js/ts
+  markdownlint-cli # markdown
+  nodePackages.cspell # spelling
+  vscode-langservers-extracted # html/css/json/ESLint
 
   # Formatters
   shfmt # bash, sh

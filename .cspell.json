@@ -1,0 +1,22 @@
+{
+  "globRoot": ".",
+  "language": "en",
+  "dictionaryDefinitions": [
+    {
+      "path": ".cspell/neovim.txt",
+      "name": "neovim",
+      "addWords": true
+    },
+    {
+      "path": ".cspell/authors.txt",
+      "name": "authors",
+      "addWords": true
+    }
+  ],
+  "words": [],
+  "version": "0.2",
+  "dictionaries": [
+    "neovim",
+    "authors"
+  ]
+}

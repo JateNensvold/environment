@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC1071
+
+spellify() {
+#
+read -r -d '' DEFAULT_CSPELL << EOM
+{
+  "globRoot": ".",
+  "language": "en",
+  "dictionaryDefinitions": [
+    {
+      "path": ".cspell/custom-dictionary.txt",
+      "name": "neovim",
+      "addWords": true
+    }
+  ],
+  "words": [],
+  "version": "0.2",
+  "dictionaries": [
+    "neovim"
+  ]
+}
+EOM
+  if [ ! -e ./.cspell.json ]; then
+    mkdir -p .cspell/
+    echo "$DEFAULT_CSPELL" > .cspell.json
+    touch .cspell/custom-dictionary.txt
+  fi
+}
