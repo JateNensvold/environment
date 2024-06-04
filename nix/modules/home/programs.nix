@@ -43,16 +43,16 @@ in {
         ff = "var=$(fd | fzf --header='[find:file]') && change-location $var";
         vv =
           "var=$(fd | fzf --header='[vim:file]') && full_var=$(realpath $var) && change-location $var && vim $full_var ";
-        fe = "env | fzf --header='[find:env]'";
+        fe = "export | fzf --header='[find:env]'";
 
         sf = "rg -g '!.git' --hidden";
         sa = "alias | fzf --header='[search:alias]'";
-        se = "env | fzf --header='[search:env]'";
         sp = "home-manager packages | fzf --header='[search:packages]'";
 
         nv = "nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'";
         u = "utils";
         reload = "reload-home-manager-config && zx";
+        tsession = "TMUX_SESSIONIZER_PATHS=$TMUX_SESSIONIZER_PATHS tmux-sessionizer";
 
         c = ''"$EDITOR" .'';
         ce = "cd ~/environment";
@@ -96,8 +96,23 @@ in {
           "ripgrep"
         ] ++ lib.optionals (!pkgs.stdenv.isDarwin) [ "autojump" ];
       };
+      # zsh sessionVariables allow for more variables types than home.sessionVariables which are restricted to only strings/integers
+      sessionVariables = {
+        # set list of strings to be parsed by tmux-sessionizer
+        TMUX_SESSIONIZER_PATHS = [
+          # mapping between path and path depth
+          "~:1"
+          "~/projects:1"
+          "~/workspace:2"
+        ];
+      };
 
       initExtra = ''
+        # unset __HM_ZSH_SESS_VARS_SOURCED to allow .zshenv variables to get set
+        # https://github.com/nix-community/home-manager/issues/2751
+        unset __HM_ZSH_SESS_VARS_SOURCED
+        . ~/.zshenv
+
         # Updates to ZSH function paths
         fpath=(
             # For custom ZSH functions
@@ -108,7 +123,7 @@ in {
         autoload -Uz ~/.zfuncs/*(:t)
 
         # Add keybind for sessionizer
-        bindkey -s ^f "tmux-sessionizer\n"
+        bindkey -s ^f "tsession\n"
         # Enable opening file in vim from terminal using fuzzy finder in vv
         bindkey -s ^p "vv\n"
 

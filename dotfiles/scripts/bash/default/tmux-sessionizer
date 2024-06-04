@@ -1,11 +1,21 @@
 #!/usr/bin/env bash
 
 if [[ $# -eq 0 ]]; then
-	path_array=($(echo "$TMUX_SESSIONIZER_PATHS" | tr ':' '\n'))
-
+	# load TMUX_SESSIONIZER_PATHS into a new array as ZSH arrays are exported from ZSH -> BASH as strings
 	real_paths=()
-	for i in "${!path_array[@]}"; do
-		tmp_path="${path_array[i]/#\~/$HOME}"
+	read -ra TMUX_PATHS <<<"$TMUX_SESSIONIZER_PATHS"
+
+	for raw_tmux_sessionizer_var in "${TMUX_PATHS[@]}"; do
+		tmp_var=$(echo "${raw_tmux_sessionizer_var}" | tr ':' '\n')
+
+		tmux_sessionizer_vars=()
+		mapfile -t tmux_sessionizer_vars <<<"$tmp_var"
+
+		raw_tmux_sessionizer_path=${tmux_sessionizer_vars[0]}
+		tmux_sessionizer_depth=${tmux_sessionizer_vars[1]}
+
+		# expand sessionizer path
+		tmp_path="${raw_tmux_sessionizer_path/#\~/$HOME}"
 
 		if [[ "${tmp_path: -1}" != "/" ]]; then
 			tmp_path="${tmp_path}/"
@@ -14,11 +24,14 @@ if [[ $# -eq 0 ]]; then
 		code=$?
 
 		if [[ $code -eq 0 ]]; then
-			real_paths+=("${tmp_path}")
+			# TODO: Run fd in parrallel
+			tmp_var=$(fd . "${tmp_path}" -H --min-depth=1 --max-depth="${tmux_sessionizer_depth:-2}" --type=directory)
+			mapfile -t -O "${#real_paths[@]}" real_paths <<<"$tmp_var"
 		fi
+
 	done
 
-    selected=$(fd . "${real_paths[@]}" -H --min-depth=1 --max-depth=1 --type=directory | fzf)
+	selected=$(printf "%s\n" "${real_paths[@]}" | fzf)
 else
 	selected=$1
 fi

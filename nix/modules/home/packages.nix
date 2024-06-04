@@ -29,6 +29,7 @@ with pkgs; [
   sqlite
   tealdeer
   tmux
+  xclip
   zip
   #Nvim plugins
   vimPlugins.telescope-fzf-native-nvim
