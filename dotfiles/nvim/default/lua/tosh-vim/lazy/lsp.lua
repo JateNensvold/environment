@@ -64,28 +64,34 @@ return {
 
             local lspconfig = require("lspconfig")
 
-            --Manually installed linters and formaters
+            --Manually installed linters and formatters
             local null_ls = require("null-ls")
+            local cspell = require("cspell")
+
             null_ls.setup({
                 sources = {
-                    -- formatterslinters
+                    -- formatters
                     null_ls.builtins.formatting.shfmt.with({
                         filetypes = { "zsh", "bash", "sh" },
                     }),
                     null_ls.builtins.formatting.nixfmt,
                     null_ls.builtins.formatting.black,
                     null_ls.builtins.formatting.yamlfmt,
-                    null_ls.builtins.formatting.prettierd.with({
-                        filetypes = { "htmldjango", "json" }
-                    }),
+                    -- null_ls.builtins.formatting.prettierd.with({
+                    --     filetypes = { "htmldjango", "json", "markdown" }
+                    -- }),
                     null_ls.builtins.formatting.sqlfluff.with({
                         extra_args = {
                             "--dialect",
                             "postgres",
                         },
                     }),
+                    null_ls.builtins.formatting.markdownlint,
                     -- linters
-                    null_ls.builtins.diagnostics.ansiblelint
+                    null_ls.builtins.diagnostics.ansiblelint,
+                    null_ls.builtins.diagnostics.markdownlint,
+                    cspell.diagnostics,
+                    cspell.code_actions
                 },
             })
 
@@ -120,6 +126,12 @@ return {
             })
             lspconfig.unocss.setup {}
 
+            local jsonls_capabilities = vim.lsp.protocol.make_client_capabilities()
+            capabilities.textDocument.completion.completionItem.snippetSupport = true
+            lspconfig.jsonls.setup {
+                capabilities = jsonls_capabilities
+            }
+
             -- Setup lsp autocompletion
             local cmp = require("cmp")
             local cmp_select = { behavior = cmp.SelectBehavior.Select }
@@ -140,7 +152,7 @@ return {
                 -- second group is only used if no values are found for the first group
                 sources = cmp.config.sources({
                     { name = "nvim_lua" },
-                    { name = "nvim_lsp" },
+                    { name = "nvim_lsp", trigger_characters = { '-' } },
                 }, {
                     { name = "path" },
                     { name = "crates" },
