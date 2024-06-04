@@ -36,8 +36,6 @@ in {
       NIX_HOST = host;
       HARDWARE = hardware;
       ARCH = system;
-      TMUX_SESSIONIZER_PATHS =
-        lib.concatStringsSep ":" [ "~" "~/projects" "~/workspace" ];
       EDITOR = "vim";
       RELOAD_PREFIX = "${reloadHomeManagerPrefix}";
       RELOAD_SUFFIX = "${reloadHomeManagerSuffix}";
