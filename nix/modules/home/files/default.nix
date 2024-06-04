@@ -19,6 +19,8 @@ in {
   home.file.".config/tmux".source = link "${dotfilePath}/tmux";
   home.file.".local/bin".source = link "${dotfilePath}/scripts/bash/default";
 
+  home.file.".config/.cspell".source = link "${dotfilePath}/cspell";
+
   home.file.".config/cheat/cheatsheets/community".source = builtins.fetchGit {
     url = "https://github.com/cheat/cheatsheets";
     rev = "36bdb99dcfadde210503d8c2dcf94b34ee950e1d";

@@ -7,7 +7,7 @@ return {
         local Job = require('plenary.job')
         local config = {
             cspell_config_dirs = {
-                -- "~/.config/",
+                "~/.config/",
                 -- "~/tmp/cspell"
             },
             encode_json = function(cspell_tbl)
