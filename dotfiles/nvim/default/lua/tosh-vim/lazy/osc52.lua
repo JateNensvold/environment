@@ -14,5 +14,8 @@ return {
 			copy = { ['+'] = copy, ['*'] = copy },
 			paste = { ['+'] = paste, ['*'] = paste },
 		}
+		require('osc52').setup {
+			tmux_passthrough = true, -- Use tmux passthrough (requires tmux: set -g allow-passthrough on)
+		}
 	end
 }
