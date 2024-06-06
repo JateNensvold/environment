@@ -66,7 +66,6 @@ return {
 
             --Manually installed linters and formatters
             local null_ls = require("null-ls")
-            local cspell = require("cspell")
 
             null_ls.setup({
                 sources = {
@@ -93,8 +92,6 @@ return {
                     null_ls.builtins.diagnostics.cfn_lint.with({
                         filetypes = { "yml", "yaml" },
                     }),
-                    cspell.diagnostics,
-                    cspell.code_actions
                 },
             })
 

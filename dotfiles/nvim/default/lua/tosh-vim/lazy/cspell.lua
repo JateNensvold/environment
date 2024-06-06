@@ -1,6 +1,7 @@
 local M = require "utils.functions"
 return {
 	"davidmh/cspell.nvim",
+	enabled = false,
 	dev = false,
 	dir = "~/projects/cspell.nvim/",
 	config = function()
@@ -41,11 +42,9 @@ return {
 			end
 		}
 		local cspell = require('cspell')
-		require("null-ls").setup {
-			sources = {
-				cspell.diagnostics.with({ config = config }),
-				cspell.code_actions.with({ config = config }),
-			}
-		}
+		require("null-ls").register({
+			cspell.diagnostics.with({ config = config }),
+			cspell.code_actions.with({ config = config }),
+		})
 	end
 }
