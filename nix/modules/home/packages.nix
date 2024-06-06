@@ -1,6 +1,7 @@
 { pkgs, stablePkgs, ... }:
 
-with pkgs; [
+with pkgs;
+[
   # Tools
   ansible
   autojump
@@ -72,4 +73,7 @@ with pkgs; [
 
   # Linters
   ansible-lint
-]
+] ++ ([
+  # custom packages
+  pkgs.custom.cfn-lint
+])

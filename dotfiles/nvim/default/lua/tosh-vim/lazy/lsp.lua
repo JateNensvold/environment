@@ -90,6 +90,9 @@ return {
                     -- linters
                     null_ls.builtins.diagnostics.ansiblelint,
                     null_ls.builtins.diagnostics.markdownlint,
+                    null_ls.builtins.diagnostics.cfn_lint.with({
+                        filetypes = { "yml", "yaml" },
+                    }),
                     cspell.diagnostics,
                     cspell.code_actions
                 },
