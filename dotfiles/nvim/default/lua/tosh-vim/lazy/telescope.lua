@@ -105,18 +105,23 @@ return {
         -- diagnostic files
         vim.keymap.set("n", "<leader>td", function()
             builtin.diagnostics({ bufnr = 0 })
-        end, {})
+        end, { desc = "Open diagnostic for buffer" })
         vim.keymap.set("n", "<leader>te", function()
             builtin.diagnostics({ severity = vim.diagnostic.severity.ERROR, bufnr = 0 })
-        end, {})
-        vim.keymap.set("n", "<leader>ts", function()
+        end, { desc = "Open errors for buffer" })
+        vim.keymap.set("n", "<leader>tp", function()
             builtin.diagnostics()
-        end, {})
-        vim.keymap.set("n", "<leader>tl", function()
+        end, { desc = "Open diagnostic for project" })
+        vim.keymap.set("n", "<leader>tb", function()
             builtin.diagnostics({ severity = vim.diagnostic.severity.ERROR })
-        end, {})
+        end, { desc = "Open errors for project" })
+
+        vim.keymap.set("n", "<leader>q", function()
+            require("telescope.builtin").quickfix()
+            vim.cmd(":cclose")
+        end, { desc = "Open Quickfix (Telescope)" })
 
         -- misc telescope commands
-        vim.keymap.set("n", "<leader>vh", builtin.help_tags, {})
+        vim.keymap.set("n", "<leader>vh", builtin.help_tags, { desc = "Open vim help" })
     end,
 }

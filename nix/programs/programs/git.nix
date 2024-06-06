@@ -16,6 +16,13 @@
         tool = "default-difftool";
         colorMoved = "default";
       };
+
+      merge = { tool = "nvim"; };
+      mergetool = {
+        prompt = false;
+        "nvim" = { cmd = "nvim -f -c GitConflictListQf"; };
+      };
+
       interactive = { diffFilter = "delta --color-only"; };
       delta = {
         navigate = "true";
