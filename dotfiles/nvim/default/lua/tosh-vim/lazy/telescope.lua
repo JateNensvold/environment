@@ -109,10 +109,10 @@ return {
         vim.keymap.set("n", "<leader>te", function()
             builtin.diagnostics({ severity = vim.diagnostic.severity.ERROR, bufnr = 0 })
         end, { desc = "Open errors for buffer" })
-        vim.keymap.set("n", "<leader>tp", function()
+        vim.keymap.set("n", "<leader>tb", function()
             builtin.diagnostics()
         end, { desc = "Open diagnostic for project" })
-        vim.keymap.set("n", "<leader>tb", function()
+        vim.keymap.set("n", "<leader>tp", function()
             builtin.diagnostics({ severity = vim.diagnostic.severity.ERROR })
         end, { desc = "Open errors for project" })
 
