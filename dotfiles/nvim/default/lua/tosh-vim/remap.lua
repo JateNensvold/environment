@@ -43,7 +43,7 @@ vim.keymap.set({ "n", "i" }, "<C-c>", "<Esc>")
 -- Remove EX mode
 vim.keymap.set("n", "Q", "<nop>")
 -- Open new tmux pane
-vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww $SHELL -l -i -c tsession<CR>")
+vim.keymap.set({ "n", "v" }, "<C-f>", "<cmd>silent !tmux neww $SHELL -l -i -c tsession<CR>")
 
 -- Format current file
 vim.keymap.set({ "n", "v" }, "<leader>f", function()
