@@ -19,7 +19,22 @@ return {
     },
     config = function()
         local telescope = require("telescope")
+        local actions = require('telescope.actions')
+        local builtin = require('telescope.builtin')
         local lga_actions = require("telescope-live-grep-args.actions")
+
+        local transform_mod = require("telescope.actions.mt").transform_mod
+        local local_actions = setmetatable({}, {
+            __index = function(_, k)
+                error("Key does not exist for 'telescope.local_actions': " .. tostring(k))
+            end,
+        })
+
+        local_actions.open_qfix = function(_)
+            builtin.quickfix()
+        end
+        local_actions = transform_mod(local_actions)
+        local qfix = actions.send_to_qflist + local_actions.open_qfix
 
         telescope.setup({
             defaults = {
@@ -28,10 +43,11 @@ return {
                 },
                 mappings = {
                     n = {
-                        ["<C-c>"] = require("telescope.actions").close,
+                        ["<C-c>"] = actions.close,
                     },
                     i = {
                         ["<C-c>"] = false,
+                        ["<C-q>"] = qfix,
                     },
                 },
             },
@@ -82,10 +98,8 @@ return {
             if M.is_git_repo() then
                 default_opts.cwd = M.get_git_root()
             end
-            require("telescope.builtin").find_files(default_opts)
+            builtin.find_files(default_opts)
         end
-
-        local builtin = require("telescope.builtin")
 
         -- find files
         vim.keymap.set("n", "<C-p>", find_files_from_project_git_root)
@@ -117,7 +131,7 @@ return {
         end, { desc = "Open errors for project" })
 
         vim.keymap.set("n", "<leader>q", function()
-            require("telescope.builtin").quickfix()
+            builtin.quickfix()
             vim.cmd(":cclose")
         end, { desc = "Open Quickfix (Telescope)" })
 
