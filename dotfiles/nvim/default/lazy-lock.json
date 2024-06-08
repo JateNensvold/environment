@@ -5,6 +5,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   "LuaSnip": { "branch": "master", "commit": "b152822e1a4bafb6bdf11a16cc26525cbd95ee00" },
 <<<<<<< HEAD
 ||||||| parent of bc33d12 (Added osc52 as default neovim clipboard, refactored tmux-sessionizer to support variable path depth for each path)
@@ -45,11 +46,18 @@
 =======
   "NinjaHooks": { "branch": "mainline", "commit": "c7109aacee00bbfd87e43dd3122c0011cbf7046d" },
 >>>>>>> dec9b52 (Added derivation and installation for cfn-lint to nix. Updated nvim lsp to use cfn-lint)
+||||||| parent of f0e9501 (Added vim-mode to nix zsh installation)
+  "LuaSnip": { "branch": "master", "commit": "2b6860d15aaab01d3fb90859c0ba97f20ad7bc5f" },
+  "NinjaHooks": { "branch": "mainline", "commit": "c7109aacee00bbfd87e43dd3122c0011cbf7046d" },
+=======
+  "LuaSnip": { "branch": "master", "commit": "2b6860d15aaab01d3fb90859c0ba97f20ad7bc5f" },
+>>>>>>> f0e9501 (Added vim-mode to nix zsh installation)
   "cmp-buffer": { "branch": "main", "commit": "3022dbc9166796b644a841a02de8dd1cc1d311fa" },
   "cmp-cmdline": { "branch": "main", "commit": "d250c63aa13ead745e3a40f61fdd3470efde3923" },
   "cmp-nvim-lsp": { "branch": "main", "commit": "39e2eda76828d88b773cc27a3f61d2ad782c922d" },
   "cmp-nvim-lua": { "branch": "main", "commit": "f12408bdb54c39c23e67cab726264c10db33ada8" },
   "cmp-path": { "branch": "main", "commit": "91ff86cd9c29299a64f968ebb45846c485725f23" },
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -71,6 +79,10 @@
   "codeium.vim": { "branch": "main", "commit": "289eb724e5d6fab2263e94a1ad6e54afebefafb2" },
 =======
 >>>>>>> dec9b52 (Added derivation and installation for cfn-lint to nix. Updated nvim lsp to use cfn-lint)
+||||||| parent of f0e9501 (Added vim-mode to nix zsh installation)
+=======
+  "codeium.vim": { "branch": "main", "commit": "decfb541c9fd176f467991dcde8923c7db362e02" },
+>>>>>>> f0e9501 (Added vim-mode to nix zsh installation)
   "crates.nvim": { "branch": "main", "commit": "8437522d12a8c523da2aee9db2979d070b2ecc33" },
   "dressing.nvim": { "branch": "master", "commit": "e3714c8049b2243e792492c4149e4cc395c68eb9" },
   "eyeliner.nvim": { "branch": "main", "commit": "c540d58bf52aa979d4cca639c60387ae0c0ccf88" },

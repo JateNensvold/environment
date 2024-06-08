@@ -10,7 +10,7 @@ in buildPythonPackage rec {
   src = fetchFromGitHub {
     owner = "aws-cloudformation";
     repo = "cfn-lint";
-    rev = "refs/tags/${version}";
+    rev = "refs/tags/v${version}";
     sha256 = "sha256-fs5V7dUo7IjfbBaYD9RjFUulKqo2kO3HyHQKym8Lo1w=";
   };
 
@@ -35,6 +35,6 @@ in buildPythonPackage rec {
     description = "Python application for linting cloudformation files";
     homepage = "https://github.com/aws-cloudformation/cfn-lint";
     changelog =
-      "https://github.com/aws-cloudformation/cfn-lint/releases/tag/${version}";
+      "https://github.com/aws-cloudformation/cfn-lint/releases/tag/v${version}";
   };
 }
