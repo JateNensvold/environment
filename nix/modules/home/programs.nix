@@ -52,7 +52,8 @@ in {
         nv = "nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'";
         u = "utils";
         reload = "reload-home-manager-config && zx";
-        tsession = "TMUX_SESSIONIZER_PATHS=$TMUX_SESSIONIZER_PATHS tmux-sessionizer";
+        tsession =
+          "TMUX_SESSIONIZER_PATHS=$TMUX_SESSIONIZER_PATHS tmux-sessionizer";
 
         c = ''"$EDITOR" .'';
         ce = "cd ~/environment";
@@ -80,6 +81,11 @@ in {
             rev = "c2b4aa5ad2532cca91f23908ac7f00efb7ff09c9";
             sha256 = "gvZp8P3quOtcy1Xtt1LAW1cfZ/zCtnAmnWqcwrKel6w=";
           };
+        }
+        {
+          name = "vi-mode";
+          src = pkgs.zsh-vi-mode;
+          file = "share/zsh-vi-mode/zsh-vi-mode.plugin.zsh";
         }
       ];
 
@@ -122,13 +128,17 @@ in {
         # ZSH functions
         autoload -Uz ~/.zfuncs/*(:t)
 
-        # Add keybind for sessionizer
-        bindkey -s ^f "tsession\n"
-        # Enable opening file in vim from terminal using fuzzy finder in vv
-        bindkey -s ^p "vv\n"
+        # The plugin will auto execute this zvm_after_init function
+        function zvm_after_init() {
+          # fzf-tab does not work without this
+          enable-fzf-tab
 
-        # fzf-tab does not work without this
-        enable-fzf-tab
+          # Add keybind for sessionizer
+          bindkey -s ^f "tsession\n"
+
+          # Enable opening file in vim from terminal using fuzzy finder in vv
+          bindkey -s ^p "vv\n"
+        }
 
         # Disable annoying beep sound in terminal
         unsetopt beep

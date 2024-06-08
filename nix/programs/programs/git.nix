@@ -1,9 +1,6 @@
-{ ... }:
-
-{
+{ ... }: {
   programs.git = {
     enable = true;
-
     extraConfig = {
       user.personal.name = "Nate Jensvold";
       user.personal.email = "jensvoldnate@gmail.com";
