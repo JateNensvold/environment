@@ -5,10 +5,6 @@ let
 in {
 
   # Static files
-  home.file.".zfuncs" = {
-    source = "${dotfiles}/scripts/zsh/default";
-    recursive = true;
-  };
   home.file.".p10k.zsh".source = "${dotfiles}/dotfile_settings/.p10k.zsh";
   home.file.".config/cheat/conf.yml".source = "${dotfiles}/cheat/conf.yml";
   home.file.".inputrc".source = "${dotfiles}/dotfile_settings/.inputrc";
@@ -18,6 +14,7 @@ in {
   home.file.".config/nvim".source = link "${dotfilePath}/nvim/default";
   home.file.".config/tmux".source = link "${dotfilePath}/tmux";
   home.file.".local/bin".source = link "${dotfilePath}/scripts/bash/default";
+  home.file.".zfuncs".source = link "${dotfilePath}/scripts/zsh/default";
 
   home.file.".config/.cspell".source = link "${dotfilePath}/cspell";
 

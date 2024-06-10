@@ -114,6 +114,11 @@ return {
             -- TypeScript
             lspconfig.tsserver.setup({})
 
+            -- toml
+            lspconfig.taplo.setup({
+                cmd = { 'taplo', 'lsp', '--config', vim.fn.expand('~/environment/dotfiles/taplo/taplo.toml'), 'stdio' }
+            })
+
             lspconfig.lua_ls.setup({
                 capabilities = capabilities,
                 settings = {

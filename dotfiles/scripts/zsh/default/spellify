@@ -1,9 +1,7 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 # shellcheck disable=SC1071
 
-spellify() {
-#
-read -r -d '' DEFAULT_CSPELL << EOM
+read -r -d '' DEFAULT_CSPELL <<EOM
 {
   "globRoot": ".",
   "language": "en",
@@ -21,9 +19,8 @@ read -r -d '' DEFAULT_CSPELL << EOM
   ]
 }
 EOM
-  if [ ! -e ./.cspell.json ]; then
-    mkdir -p .cspell/
-    echo "$DEFAULT_CSPELL" > .cspell.json
-    touch .cspell/custom-dictionary.txt
-  fi
-}
+if [ ! -e ./.cspell.json ]; then
+	mkdir -p .cspell/
+	echo "$DEFAULT_CSPELL" >.cspell.json
+	touch .cspell/custom-dictionary.txt
+fi

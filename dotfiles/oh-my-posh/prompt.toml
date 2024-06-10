@@ -1,0 +1,138 @@
+#:schema https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
+
+version = 2
+final_space = true
+console_title_template = '{{ .Shell }} in {{ .Folder }}'
+
+[palette]
+  grey = '#6c6c6c'
+  green = 'green'
+  yellow = 'yellow'
+  git-modified = '178'
+  git-conflict = '196'
+  dark-blue = '31'
+  red = 'red'
+  exec-time = '101'
+  direnv = '178'
+  nix-shell = '200'
+  time = '66'
+  filler = 'p:time'
+
+[[blocks]]
+  type = 'prompt'
+  alignment = 'left'
+
+  [[blocks.segments]]
+    type = 'path'
+    style = 'plain'
+    background = 'transparent'
+    foreground = 'p:dark-blue'
+    template = '{{ .Path }}'
+
+    [blocks.segments.properties]
+      style = 'full'
+
+  [[blocks.segments]]
+    type = 'git'
+    style = 'plain'
+    foreground = 'p:green'
+    background = 'transparent'
+    foreground_templates = [
+      "{{ if or (.Working.Changed) (.Staging.Changed) }}p:git-modified{{ end }}",
+      "{{ if or (.Merge) (.Rebase) }}p:git-conflict{{ end }}",
+      "{{ if .Detached }}p:grey{{ end }}",
+    ]
+    templates = [
+      ' {{ .HEAD }}',
+      '{{ if (gt .Ahead 0) }}<p:green,>+{{ .Ahead }}</>{{ end }}',
+      '{{ if (gt .Behind 0) }}<p:git-conflict,>-{{ .Behind }}</>{{ end }}',
+      '{{ if or (.Working.Changed) (.Staging.Changed) }}<p:filler,>(</>{{ end }}',
+      '{{ if .Working.Changed }}<p:git-modified,>{{ .Working.String }}</>{{ end }}',
+      '{{ if and (.Working.Changed) (.Staging.Changed) }}<p:filler,>|</>{{ end }}',
+      '{{ if .Staging.Changed }}<p:green,>{{ .Staging.String }}</>{{ end }}',
+      '{{ if or (.Working.Changed) (.Staging.Changed) }}<p:filler,>)</>{{ end }}',
+      '{{ if gt .StashCount 0 }} *{{ .StashCount }}{{ end }}',
+    ]
+    templates_logic = 'join'
+
+    [blocks.segments.properties]
+      branch_icon = ''
+      commit_icon = ''
+      fetch_status = true
+
+  [[blocks.segments]]
+    type = 'text'
+    style = 'plain'
+    foreground = 'p:filler'
+    template = ' .'
+
+
+[[blocks]]
+  type = 'prompt'
+  overflow = 'hide'
+  alignment = 'right'
+  filler = '<p:filler,>.</>'
+
+  [[blocks.segments]]
+    type = 'executiontime'
+    style = 'plain'
+    foreground = 'p:exec-time'
+    background = 'transparent'
+    template = ' {{ .FormattedMs }}'
+
+  [[blocks.segments]]
+    type = 'text'
+    style = 'plain'
+    foreground = 'p:direnv'
+    background = 'transparent'
+    template = '{{ if .Env.DIRENV_DIR }} direnv{{end}}'
+
+    [blocks.segments.properties]
+      threshold = 1000
+
+  [[blocks.segments]]
+    type = 'time'
+    style = 'plain'
+    foreground = 'p:time'
+    background = 'transparent'
+
+    [blocks.segments.properties]
+      time_format = '3:04:05 PM'
+
+[[blocks]]
+  type = 'prompt'
+  alignment = 'left'
+  newline = true
+
+  [[blocks.segments]]
+    type = 'text'
+    style = 'plain'
+    foreground = 'p:nix-shell'
+    background = 'transparent'
+    template = '{{ if .Env.IN_NIX_SHELL }}[nix-shell] {{end}}'
+
+  [[blocks.segments]]
+    type = 'text'
+    style = 'plain'
+    foreground_templates = [
+      "{{if gt .Code 0}}p:red{{end}}",
+      "{{if eq .Code 0}}p:green{{end}}",
+    ]
+    background = 'transparent'
+    template = '>'
+
+[transient_prompt]
+  foreground_templates = [
+    "{{if gt .Code 0}}p:red{{end}}",
+    "{{if eq .Code 0}}p:green{{end}}",
+  ]
+  background = 'transparent'
+  template = '> '
+
+[secondary_prompt]
+  foreground_templates = [
+    "{{if gt .Code 0}}p:red{{end}}",
+    "{{if eq .Code 0}}p:green{{end}}",
+  ]
+  background = 'transparent'
+  template = '>> '

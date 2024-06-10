@@ -1,15 +1,13 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 # shellcheck disable=SC1071
 
 ### BREW + FZF
 # mnemonic [B]rew [I]nstall [P]lugin
 
-
 local inst=$(brew search --formula $1 | eval "fzf -m --header='[brew:install]'")
 
 if [[ $inst ]]; then
-  for prog in $(echo $inst)
-  do brew install $prog
-  done
+	for prog in $(echo $inst); do
+		brew install $prog
+	done
 fi
-

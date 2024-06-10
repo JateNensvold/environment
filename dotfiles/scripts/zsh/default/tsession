@@ -1,0 +1,21 @@
+#!/usr/bin/env zsh
+# shellcheck disable=SC1071
+
+zle
+local zle_status=$?
+if [[ zle_status -eq 0 ]]; then
+	# Restore the standard std* file descriptors for tmux.
+	# https://unix.stackexchange.com/a/512979/22339
+	exec </dev/tty
+	exec <&1
+fi
+# tmux-sessionizer is a bash script and requires ZSH specific variables to be reset so they are availible for the script
+TMUX_SESSIONIZER_PATHS=$TMUX_SESSIONIZER_PATHS tmux-sessionizer
+local tsessionizer_status=$?
+
+if [[ zle_status -eq 0 && tsessionizer_status -ge 0 ]]; then
+	if [[ tsessionizer_status -eq 1 ]]; then
+		printf "\n"
+	fi
+	zle reset-prompt
+fi

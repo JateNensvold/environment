@@ -17,7 +17,7 @@ let
         };
         overlays = [
           # import program overlays
-          (import ./programs)
+          (import ./packages)
           (import ./overlays/pinned.nix)
         ] ++ extraOverlays;
       };
@@ -32,9 +32,16 @@ let
         overlays = [ ];
       };
 
+      my-lib = nixpkgs.lib.extend (self: super: {
+        my = import ./lib {
+          inherit pkgs;
+          inputs = flakeInputs;
+          lib = self;
+        };
+      });
       extraArgs = {
         inherit pkgs stablePkgs flakeInputs isIso isHardware dotfiles
-          home-manager user hardware host system stateVersion;
+          home-manager user hardware host system stateVersion my-lib;
         hostname = host + "-" + hardware;
         isOther = !(isMacOS || isNixOS);
       };
