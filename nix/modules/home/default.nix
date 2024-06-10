@@ -55,6 +55,7 @@ in {
   imports = [
     # program and dotfile installation/setup
     (import ./files/default.nix { inherit dotfiles config; })
-    (import ./programs.nix { inherit config lib pkgs dotfiles; })
+    # (import ./programs.nix { inherit config lib pkgs dotfiles; })
+    (import ./programs.nix)
   ];
 }

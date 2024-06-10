@@ -1,6 +1,4 @@
-#!/usr/bin/env bash
-##zsh
-
+#!/usr/bin/env zsh
 # shellcheck disable=SC1071
 
 ### PATH

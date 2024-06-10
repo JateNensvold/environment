@@ -7,6 +7,7 @@ let
     removeSuffix;
   inherit (self.attrs) mapFilterAttrs;
 in rec {
+  # perform a map operation on all directory entries inside the provided directory path
   mapModules = dir: fn:
     mapFilterAttrs (n: v: v != null && !(hasPrefix "_" n)) (n: v:
       let path = "${toString dir}/${n}";
@@ -17,8 +18,11 @@ in rec {
       else
         nameValuePair "" null) (readDir dir);
 
-  mapModules' = dir: fn: attrValues (mapModules dir fn);
+  # mapModules and convert result to a list
+  mapModulesL = dir: fn: attrValues (mapModules dir fn);
 
+  # recursivly perform a map operation on all directory entries inside the provided
+  #  directory path, performing the operation again on any recursive directories
   mapModulesRec = dir: fn:
     mapFilterAttrs (n: v: v != null && !(hasPrefix "_" n)) (n: v:
       let path = "${toString dir}/${n}";
@@ -29,12 +33,13 @@ in rec {
       else
         nameValuePair "" null) (readDir dir);
 
-  mapModulesRec' = dir: fn:
+  # mapMudulesRec and convert result to a list
+  mapModulesRecL = dir: fn:
     let
       dirs = mapAttrsToList (k: _: "${dir}/${k}")
         (filterAttrs (n: v: v == "directory" && !(hasPrefix "_" n))
           (readDir dir));
       files = attrValues (mapModules dir id);
-      paths = files ++ concatLists (map (d: mapModulesRec' d id) dirs);
+      paths = files ++ concatLists (map (d: mapModulesRecL d id) dirs);
     in map fn paths;
 }

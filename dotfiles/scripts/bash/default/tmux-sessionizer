@@ -28,7 +28,6 @@ if [[ $# -eq 0 ]]; then
 			tmp_var=$(fd . "${tmp_path}" -H --min-depth=1 --max-depth="${tmux_sessionizer_depth:-2}" --type=directory)
 			mapfile -t -O "${#real_paths[@]}" real_paths <<<"$tmp_var"
 		fi
-
 	done
 
 	selected=$(printf "%s\n" "${real_paths[@]}" | fzf)
@@ -37,7 +36,7 @@ else
 fi
 
 if [[ -z $selected ]]; then
-	exit 0
+	exit 2
 fi
 
 selected_name=$(basename "$selected" | tr . _)
@@ -47,7 +46,7 @@ tmux_running=$(pgrep tmux)
 # create TMUX session if its not running
 if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
 	tmux new-session -s "$selected_name" -c "$selected"
-	exit 0
+	exit 1
 fi
 
 # create new daemonized tmux session if tmux is running
@@ -58,6 +57,7 @@ fi
 if [[ -z $TMUX ]]; then
 	# Not in tmux, attach to session
 	tmux attach -t "$selected_name"
+	exit 1
 else
 	# In tmux, switch to other session
 	tmux switch-client -t "$selected_name"

@@ -23,6 +23,7 @@ with pkgs;
   gnumake
   httpie
   jq
+  oh-my-posh
   ripgrep
   rustscan
   shellcheck
@@ -49,18 +50,19 @@ with pkgs;
   ruby
 
   # LSP servers
-  nil # nix
-  nodePackages.bash-language-server # bash, sh
+  ansible-language-server
   docker-compose-language-service # docker compose
   dockerfile-language-server-nodejs # dockerfile
-  sqls # sql
-  lua-language-server # lua
-  nodePackages.pyright # python
-  ansible-language-server
   htmx-lsp # htmx
-  nodePackages.typescript-language-server # js/ts
+  lua-language-server # lua
   markdownlint-cli # markdown
+  nil # nix
+  nodePackages.bash-language-server # bash, sh
   nodePackages.cspell # spelling
+  nodePackages.pyright # python
+  nodePackages.typescript-language-server # js/ts
+  sqls # sql
+  # taplo # toml
   vscode-langservers-extracted # html/css/json/ESLint
 
   # Formatters
@@ -76,4 +78,5 @@ with pkgs;
 ] ++ ([
   # custom packages
   pkgs.custom.cfn-lint
+  pkgs.custom.taplo
 ])

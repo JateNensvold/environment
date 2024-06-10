@@ -1,0 +1,5 @@
+#!/usr/bin/env zsh
+# shellcheck disable=SC1071
+
+local file_path=$(fd | fzf --header='[find:file]')
+change-location "$file_path"
