@@ -1,6 +1,6 @@
 { pkgs }:
 with pkgs;
-stdenv.mkDerivation {
+stdenv.mkDerivation rec {
   name = "aerospace";
   version = "v0.11.2-Beta";
   src = pkgs.fetchurl {
