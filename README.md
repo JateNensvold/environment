@@ -8,7 +8,32 @@ This is the repo that contains my environment setup scripts and dotfiles.
 Follow the below instructions on your desired operating system to run the environment
 setup scripts
 
-### Windows Setup
+### Dependencies
+
+Prerequisites
+
+1. Git
+1. bash
+1. curl
+
+### Linux/MacOS Installation
+
+Copy and run the following command to automate environment setup(Tested on ubuntu 22.04 and AL2)
+
+```bash
+bash -i <(curl -fsSL https://raw.githubusercontent.com/JateNensvold/environment/master/scripts/ubuntu/install.sh) setup
+```
+
+**Note**
+On some platforms the nixbld GID are taken already, in that case add the NIXBLD start ID to the setup command
+
+```bash
+# setup nixbld starting at ID 20000400
+bash -i <(curl -fsSL https://raw.githubusercontent.com/JateNensvold/environment/master/scripts/ubuntu/install.sh) setup 20000400
+
+```
+
+### Windows Installation
 
 Prerequisites
 
@@ -21,56 +46,54 @@ Copy and run the following command in Powershell 5 to setup windows 11
 Set-ExecutionPolicy Bypass -Scope Process -Force; iex (iwr https://raw.githubusercontent.com/JateNensvold/environment/master/windows-install.ps1 -Headers @{"Cache-Control" = "no-cache" }).Content
 ```
 
-### Linux Setup
+## Configuration
 
-#### Dependencies
+### Linux configuration
 
-Linux Dependencies
+Modify the below values to the desired Host configuration. See [flake.nix](./flake.nix) for supported values
 
-1. Git
-1. bash
-1. curl
-
-WSL Specific Dependencies
-
-1. vscode
-
-#### Setup
-
-Copy and run the following command to automate environment setup(Tested on ubuntu 22.04 and AL2)
-
-
-```bash
-bash -i <(curl -fsSL https://raw.githubusercontent.com/JateNensvold/environment/master/scripts/ubuntu/install.sh) setup
-```
-
-**Note**
-On some platforms the nixbld GID are taken already, in that case add the NIXBLD start ID to the setup command
-
-
-```bash
-# setup nixbld starting at ID 20000400
-bash -i <(curl -fsSL https://raw.githubusercontent.com/JateNensvold/environment/master/scripts/ubuntu/install.sh) setup 20000400
-
-```
-
-##### Home-manager configuration
-
-Modify the below values and rerun the home-manager switch command from `~/environment/nix` to change to the desire home-manager configuration. See [flake.nix](./nix/flake.nix) for supported values
-
-```bash
+```zsh
 # Example nix home-manager setup
 export NIX_HOST=home
 export HARDWARE=default
 export ARCH=x86_64-linux
-
-cd ~/environment/nix
-home-manager switch --flake ~/environment/nix/.#$USER-$NIX_HOST-$HARDWARE-$ARCH -b hm-backup
 ```
 
-#### Mac Setup
+Rerun the home-manager switch command from `~/environment/` to change to the desire home-manager configuration.
 
-WIP, check todo section
+```zsh
+reload
+```
+
+or
+
+```zsh
+cd ~/environment/
+home-manager switch --flake ~/environment/.#$USER-$NIX_HOST-$HARDWARE-$ARCH -b hm-backup
+```
+
+### MacOS configuration
+
+Change ARCH to darwin supported architecture and follow the same steps as in[Linux configuration](### linux-configuration)
+
+```zsh
+# Example nix darwin setup
+export NIX_HOST=home
+export HARDWARE=default
+export ARCH=x86_64-darwin
+# export ARCH=aarch64-darwin
+```
+
+```zsh
+reload
+```
+
+or
+
+```zsh
+cd ~/environment/
+darwin-rebuild switch --flake ~/environment/.#$USER-$NIX_HOST-$HARDWARE-$ARCH -b hm-backup
+```
 
 ## Current Functionality
 
@@ -108,43 +131,12 @@ WIP, check todo section
 
 ## Settings & Keybindings
 
-- Media Keys
+- Media Keys for Mode 65
   - Resume/Pause Music `fn + \`
   - Previous song `fn [`
   - Next song `fn ]`
   - Volume up `fn PgUp`
   - Volume down `fn PgDn`
-
-### VScode
-
-#### Custom VSCode Keybindings
-
-- Reopen Closed tab
-    `Ctrl + Shift + W`
-- Close Tab
-    `Ctrl + W`
-- New Terminal
-    `Ctrl + Shift + T`
-- Cycle Terminal
-    `Ctrl + Shift <Up/Down>`
-- Open/Close Terminal
-    `Ctrl + Shift + .`
-- Focus Terminal
-    `Ctrl + j`
-- Focus Editor
-    `Ctrl + k`
-
-#### VSCode Default Keybindings
-
-<https://github.com/codebling/vs-code-default-keybindings/tree/master>
-
-#### VSCode Default Settings
-
-These are the default settings filepaths on Linux, macOS, and Windows
-
-- Windows: `%APPDATA%\Code\User\settings.json`
-- macOS: `$HOME/Library/Application\ Support/Code/User/settings.json`
-- Linux: `$HOME/.config/Code/User/settings.json`
 
 ### Windows PowerToys
 
@@ -153,37 +145,15 @@ These are the default settings filepaths on Linux, macOS, and Windows
 - Focus Cursor
     `L-Ctrl` x2
 
-### Conemu
+### Wexterm
 
-- Focus window
-    `L-Ctrl + 1`
-- Open Settings
-    `Win + Alt + P`
 - New Terminal
-    `Ctrl + T`
+    `Ctrl + Shift + T`
 - Cycle Terminal
     `Ctrl + Tab`
 
-## Setup Development Environment
-
-1. Run the following commands to clone this repo
-
-    ```bash
-    git clone git@github.com:JateNensvold/environment.git
-
-    cd environment
-    git submodule init
-    git submodule update
-    ```
-
-To test new settings in the devcontainer edit the settings config at
-environment/.vscode/settings.json
-
 ## Todo
 
-- Remove dotfiles submodule
-  - Dotfiles repo may be out of place when bash files are more portable
-- Mac setup Script
 - Windows
   - Wallpaper engine[Not supported without [SteamCMD](https://www.digitalcitizen.life/steam-cmd-windows/)]
   - Pin programs to windows Taskbar
@@ -192,7 +162,3 @@ environment/.vscode/settings.json
       - Manual backup and restores of settings is available, latest settings should be
             stored in `environment/settings/powertoys/`, currently settings will be linked to the
             powertoys install directory but the user has to manually load them
-- Linux
-  - Install script for VSCode for non WSL environments
-  - rust toolchain?
-  - Python?
