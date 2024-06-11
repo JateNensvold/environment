@@ -3,6 +3,8 @@
 
 ### PATH
 # mnemonic: [C]hange [L]ocation
+# Changes directory location to target path. When a filepath is given the file
+# parent directy is used for the target location
 if [[ "$#" -eq 1 ]]; then
 	DIR_NAME=$1
 	if [[ -f $1 ]]; then

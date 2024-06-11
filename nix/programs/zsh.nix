@@ -1,18 +1,32 @@
-{ pkgs, lib, ... }: {
+{ pkgs, lib, ... }:
+let
+  oh_my_zsh_plugins = pkgs.fetchFromGitHub {
+    owner = "Aloxaf";
+    repo = "fzf-tab";
+    rev = "c2b4aa5ad2532cca91f23908ac7f00efb7ff09c9";
+    sha256 = "gvZp8P3quOtcy1Xtt1LAW1cfZ/zCtnAmnWqcwrKel6w=";
+  };
+in {
 
   programs = {
     zsh = {
       enable = true;
       enableCompletion = true;
-      autosuggestion = { enable = true; };
+      autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
       history = { share = true; };
+      zprof.enable = false;
 
       shellAliases = {
         lg = "lazygit";
         gau = "git add -u .";
         gc = "git commit -m";
+        ga = "git add";
         gd = "git diff";
+        grb = "git rebase -i";
+        gpl = "git pull";
+        gp = "git push";
+        gco = "git checkout";
         gds = "git diff --staged";
         gdt = "git difftool";
         gmt = "git mergetool";
@@ -49,29 +63,39 @@
       plugins = [
         {
           name = "fzf-tab";
-          src = pkgs.fetchFromGitHub {
-            owner = "Aloxaf";
-            repo = "fzf-tab";
-            rev = "c2b4aa5ad2532cca91f23908ac7f00efb7ff09c9";
-            sha256 = "gvZp8P3quOtcy1Xtt1LAW1cfZ/zCtnAmnWqcwrKel6w=";
-          };
+          src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
         }
         {
           name = "vi-mode";
           src = pkgs.zsh-vi-mode;
           file = "share/zsh-vi-mode/zsh-vi-mode.plugin.zsh";
         }
-      ];
+        {
+          name = "command-not-found";
+          src = "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/command-not-found";
+        }
+        {
+          name = "sudo-agent";
+          src = "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/sudo-agent";
+        }
+        {
+          name = "sudo";
+          src = "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/sudo";
+        }
+      ] ++ lib.optionals (!pkgs.stdenv.isDarwin) [{
+        name = "autojump";
+        src = "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/autojump";
+      }];
 
-      oh-my-zsh = {
-        enable = true;
-        plugins = [
-          "command-not-found"
-          # breaks ZSH TRAPINT
-          "ssh-agent"
-          "sudo"
-        ] ++ lib.optionals (!pkgs.stdenv.isDarwin) [ "autojump" ];
-      };
+      # oh-my-zsh = {
+      #   enable = true;
+      #   plugins = [
+      #     "command-not-found"
+      #     # breaks ZSH TRAPINT
+      #     "ssh-agent"
+      #     "sudo"
+      #   ] ++ lib.optionals (!pkgs.stdenv.isDarwin) [ "autojump" ];
+      # };
       # zsh sessionVariables allow for more variables types than home.sessionVariables which are restricted to only strings/integers
       sessionVariables = {
         # set list of strings to be parsed by tmux-sessionizer
@@ -84,10 +108,28 @@
       };
 
       initExtra = ''
-        # unset __HM_ZSH_SESS_VARS_SOURCED to allow .zshenv variables to get set
-        # https://github.com/nix-community/home-manager/issues/2751
-        unset __HM_ZSH_SESS_VARS_SOURCED
-        . ~/.zshenv
+
+        # oh-my-posh blocks zsh startup for ~1s on every call on darwin, the following code
+        # caches prompts for each hm generation so it only blocks the first time the prompt is generated
+        if [[ $(uname) == "Darwin" ]]; then
+          home_manager_generation=$(readlink ~/.local/state/nix/profiles/home-manager)
+
+          oh_my_posh_dir="~/.cache/oh-my-posh"
+          oh_my_posh_dir="''${oh_my_posh_dir/#\~/$HOME}"
+          oh_my_posh_cache="''${oh_my_posh_dir}/.zsh-cache-''${home_manager_generation}"
+          if [[ -f $oh_my_posh_cache ]]; then
+            oh_my_posh_config=$(<"$oh_my_posh_cache")
+            eval "$oh_my_posh_config"
+          else
+            mkdir -p $oh_my_posh_dir
+            oh_my_posh_config=$(${pkgs.oh-my-posh}/bin/oh-my-posh init zsh --config ~/.config/oh-my-posh/prompt.toml)
+            echo "$oh_my_posh_config" >"$oh_my_posh_cache"
+            eval "$oh_my_posh_config"
+          fi
+
+        else
+          eval "$(${pkgs.oh-my-posh}/bin/oh-my-posh init zsh --config ~/.config/oh-my-posh/prompt.toml)"
+        fi
 
         # Updates to ZSH function paths
         fpath=(

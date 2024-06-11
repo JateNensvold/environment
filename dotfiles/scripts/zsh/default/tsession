@@ -1,5 +1,4 @@
 #!/usr/bin/env zsh
-# shellcheck disable=SC1071
 
 zle
 local zle_status=$?
@@ -9,6 +8,12 @@ if [[ zle_status -eq 0 ]]; then
 	exec </dev/tty
 	exec <&1
 fi
+
+if [[ $1 = 'vim' && -z $TMUX ]]; then
+	echo "Unable to start tmux session from vim, reopen session in tmux window..."
+	return 1
+fi
+
 # tmux-sessionizer is a bash script and requires ZSH specific variables to be reset so they are availible for the script
 TMUX_SESSIONIZER_PATHS=$TMUX_SESSIONIZER_PATHS tmux-sessionizer
 local tsessionizer_status=$?

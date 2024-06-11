@@ -45,6 +45,7 @@ with pkgs;
   # Runtimes
   nodejs_22
   stablePkgs.python3
+  go
   rustup
   # Needed by brew
   ruby
@@ -59,8 +60,8 @@ with pkgs;
   nil # nix
   nodePackages.bash-language-server # bash, sh
   nodePackages.cspell # spelling
-  nodePackages.pyright # python
   nodePackages.typescript-language-server # js/ts
+  pyright # python
   sqls # sql
   # taplo # toml
   vscode-langservers-extracted # html/css/json/ESLint
