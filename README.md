@@ -18,14 +18,16 @@ Prerequisites
 
 ### Linux/MacOS Installation
 
-Copy and run the following command to automate environment setup(Tested on ubuntu 22.04 and AL2)
+Copy and run the following command to automate environment setup(Tested on
+ubuntu 22.04(WSL), AL2, MacOS 14.5(M2))
 
 ```bash
 bash -i <(curl -fsSL https://raw.githubusercontent.com/JateNensvold/environment/master/scripts/ubuntu/install.sh) setup
 ```
 
 **Note**
-On some platforms the nixbld GID are taken already, in that case add the NIXBLD start ID to the setup command
+On some platforms the nixbld GID are taken already, in that case add the NIXBLD
+start ID to the setup command
 
 ```bash
 # setup nixbld starting at ID 20000400
@@ -50,7 +52,8 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; iex (iwr https://raw.githubuse
 
 ### Linux configuration
 
-Modify the below values to the desired Host configuration. See [flake.nix](./flake.nix) for supported values
+Modify the below values to the desired Host configuration. See [flake.nix](
+./flake.nix) for supported values
 
 ```zsh
 # Example nix home-manager setup
@@ -59,7 +62,8 @@ export HARDWARE=default
 export ARCH=x86_64-linux
 ```
 
-Rerun the home-manager switch command from `~/environment/` to change to the desire home-manager configuration.
+Rerun the home-manager switch command from `~/environment/` to change to the
+desire home-manager configuration.
 
 ```zsh
 reload
@@ -74,7 +78,8 @@ home-manager switch --flake ~/environment/.#$USER-$NIX_HOST-$HARDWARE-$ARCH -b h
 
 ### MacOS configuration
 
-Change ARCH to darwin supported architecture and follow the same steps as in[Linux configuration](### linux-configuration)
+Change ARCH to darwin supported architecture and follow the same steps as in[
+Linux configuration](#linux-configuration)
 
 ```zsh
 # Example nix darwin setup
@@ -115,19 +120,10 @@ darwin-rebuild switch --flake ~/environment/.#$USER-$NIX_HOST-$HARDWARE-$ARCH -b
       - [Keybindings](settings/vscode/keybindings.json)
       - [Settings](settings/vscode/settings.json)
       - [Extensions](settings/vscode/global-extensions.json)
-- WSL2
+- WSL2/Linux/MacOS
+  - Nix
+  - Programs
   - Program Configs
-    - [Git](settings/dotfile_settings/.gitconfig)
-    - [ZSH](settings/dotfile_settings/.zhrc)
-  - VSCode
-    - WSL and Windows Settings and Keybindings sync with same Global Settings
-    - Extensions
-  - Install Program List
-    - ZSH
-    - Brew
-    - PowerLevel10k
-    - Docker(No Docker Desktop)
-    - ...
 
 ## Settings & Keybindings
 
