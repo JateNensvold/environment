@@ -4,11 +4,10 @@
 # mnemonic: [SCP] [F]older
 # transfer a remote folder(or file) to a local directory using ssh and tar
 
-if [ "$#" -lt 3 ]; then
+if [ "$#" -lt 2 ]; then
 	echo "Usage: scpf user@host <remote-path> <local-path>"
 	return 1
-fi
-if [ "$#" -eq 2 ]; then
+elif [ "$#" -eq 2 ]; then
 	local_path="."
 else
 	local_path=$3

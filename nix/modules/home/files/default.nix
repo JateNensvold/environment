@@ -15,6 +15,7 @@ in {
   home.file.".config/tmux".source = link "${dotfilePath}/tmux";
   home.file.".local/bin".source = link "${dotfilePath}/scripts/bash/default";
   home.file.".zfuncs".source = link "${dotfilePath}/scripts/zsh/default";
+  home.file.".config/oh-my-posh".source = link "${dotfilePath}/oh-my-posh/";
 
   home.file.".config/.cspell".source = link "${dotfilePath}/cspell";
 

@@ -14,24 +14,14 @@ end
 
 vim.filetype.add({
     extension = {
-        templ = "templ",
+        -- templ = "templ",
     },
     filename = {
-        ["docker-compose.yaml"] = "yaml.docker-compose",
-        ["docker-compose.yml"] = "yaml.docker-compose",
+        -- ["docker-compose.yaml"] = "yaml.docker-compose",
+        -- ["docker-compose.yml"] = "yaml.docker-compose",
     },
     pattern = {
         [".*yaml.ansible"] = "yaml.ansible",
-        [".*"] = {
-            priority = -math.huge,
-            ---@diagnostic disable-next-line: unused-local
-            function(path, bufnr)
-                local content = vim.filetype.getlines(bufnr, 1)
-                if vim.filetype.matchregex(content, [[^#!.*bash]]) then
-                    return 'bash'
-                end
-            end,
-        }
     }
 })
 

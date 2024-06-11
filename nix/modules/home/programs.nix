@@ -40,11 +40,12 @@ in {
       vimAlias = true;
     };
 
-    oh-my-posh = {
-      enable = true;
-      enableZshIntegration = true;
-      settings =
-        builtins.fromTOML (builtins.readFile ./${ohMyPoshPath}/prompt.toml);
-    };
+    # oh-my-posh blocks zsh startup for ~1s on every call on darwin, see zsh.nix for workaround
+    # oh-my-posh = {
+    #   enable = true;
+    #   enableZshIntegration = true;
+    #   settings =
+    #     builtins.fromTOML (builtins.readFile ./${ohMyPoshPath}/prompt.toml);
+    # };
   };
 }
