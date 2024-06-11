@@ -2,7 +2,7 @@
 
 version = 2
 final_space = true
-console_title_template = '{{ .Shell }} in {{ .Folder }}'
+console_title_template = '{{ .UserName }}@{{ .HostName }}'
 
 [palette]
   grey = '#6c6c6c'
@@ -17,6 +17,7 @@ console_title_template = '{{ .Shell }} in {{ .Folder }}'
   nix-shell = '200'
   time = '66'
   filler = 'p:time'
+  session = '180'
 
 [[blocks]]
   type = 'prompt'
@@ -80,6 +81,9 @@ console_title_template = '{{ .Shell }} in {{ .Folder }}'
     background = 'transparent'
     template = ' {{ .FormattedMs }}'
 
+    [blocks.segments.properties]
+      threshold = 1000
+
   [[blocks.segments]]
     type = 'text'
     style = 'plain'
@@ -87,8 +91,12 @@ console_title_template = '{{ .Shell }} in {{ .Folder }}'
     background = 'transparent'
     template = '{{ if .Env.DIRENV_DIR }} direnv{{end}}'
 
-    [blocks.segments.properties]
-      threshold = 1000
+  [[blocks.segments]]
+    type = 'session'
+    style = 'plain'
+    foreground = 'p:session'
+    background = 'transparent'
+    template = '{{ if .SSHSession }} {{ .UserName }}@{{ .HostName }}{{end}}'
 
   [[blocks.segments]]
     type = 'time'
