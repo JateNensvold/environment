@@ -1,12 +1,4 @@
-{ pkgs, lib, ... }:
-let
-  oh_my_zsh_plugins = pkgs.fetchFromGitHub {
-    owner = "Aloxaf";
-    repo = "fzf-tab";
-    rev = "c2b4aa5ad2532cca91f23908ac7f00efb7ff09c9";
-    sha256 = "gvZp8P3quOtcy1Xtt1LAW1cfZ/zCtnAmnWqcwrKel6w=";
-  };
-in {
+{ pkgs, lib, ... }: {
 
   programs = {
     zsh = {
@@ -18,6 +10,8 @@ in {
       zprof.enable = false;
 
       shellAliases = {
+        l = "ls -lah";
+        cm = "cmatrix";
         lg = "lazygit";
         gau = "git add -u .";
         gc = "git commit -m";
@@ -63,7 +57,12 @@ in {
       plugins = [
         {
           name = "fzf-tab";
-          src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
+          src = pkgs.fetchFromGitHub {
+            owner = "Aloxaf";
+            repo = "fzf-tab";
+            rev = "c2b4aa5ad2532cca91f23908ac7f00efb7ff09c9";
+            sha256 = "gvZp8P3quOtcy1Xtt1LAW1cfZ/zCtnAmnWqcwrKel6w=";
+          };
         }
         {
           name = "vi-mode";
@@ -75,8 +74,8 @@ in {
           src = "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/command-not-found";
         }
         {
-          name = "sudo-agent";
-          src = "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/sudo-agent";
+          name = "ssh-agent";
+          src = "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/ssh-agent";
         }
         {
           name = "sudo";
@@ -87,15 +86,6 @@ in {
         src = "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/autojump";
       }];
 
-      # oh-my-zsh = {
-      #   enable = true;
-      #   plugins = [
-      #     "command-not-found"
-      #     # breaks ZSH TRAPINT
-      #     "ssh-agent"
-      #     "sudo"
-      #   ] ++ lib.optionals (!pkgs.stdenv.isDarwin) [ "autojump" ];
-      # };
       # zsh sessionVariables allow for more variables types than home.sessionVariables which are restricted to only strings/integers
       sessionVariables = {
         # set list of strings to be parsed by tmux-sessionizer
