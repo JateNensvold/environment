@@ -3,6 +3,7 @@
 version = 2
 final_space = true
 console_title_template = '{{ .UserName }}@{{ .HostName }}'
+disable_notice = true
 
 [palette]
   grey = '#6c6c6c'
