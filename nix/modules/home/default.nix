@@ -37,6 +37,7 @@ in {
       HARDWARE = hardware;
       ARCH = system;
       EDITOR = "vim";
+      LESS = "-eirMX";
       RELOAD_PREFIX = "${reloadHomeManagerPrefix}";
       RELOAD_SUFFIX = "${reloadHomeManagerSuffix}";
     };
