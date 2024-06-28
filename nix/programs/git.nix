@@ -1,9 +1,20 @@
-{ ... }: {
+{ config, ... }:
+let
+  link = config.lib.file.mkOutOfStoreSymlink;
+  dotfilePath = "${config.home.homeDirectory}/environment/dotfiles";
+  excludesfilePath = "~/.config/git/personal/.gitignore";
+in {
+  home.file.".config/git/personal/.gitignore".source =
+    link "${dotfilePath}/git/personal/.gitignore";
+
   programs.git = {
     enable = true;
     extraConfig = {
-      user.personal.name = "Nate Jensvold";
-      user.personal.email = "jensvoldnate@gmail.com";
+      user.personal = {
+        name = "Nate Jensvold";
+        email = "jensvoldnate@gmail.com";
+        excludesfile = excludesfilePath;
+      };
 
       # extremely important, otherwise git will attempt to guess a default user identity. see `man git-config` for more details
       user.useConfigOnly = true;
