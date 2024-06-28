@@ -5,7 +5,7 @@ let
   excludesfilePath = "~/.config/git/personal/.gitignore";
 in {
   home.file.".config/git/personal/.gitignore".source =
-    link "${dotfilePath}/git/personal/.gitignore";
+    link "${dotfilePath}/git/personal/gitignore";
 
   programs.git = {
     enable = true;
