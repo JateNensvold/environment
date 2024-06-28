@@ -19,6 +19,7 @@ disable_notice = true
   time = '66'
   filler = 'p:time'
   session = '180'
+  pyenv = '37'
 
 [[blocks]]
   type = 'prompt'
@@ -84,6 +85,14 @@ disable_notice = true
 
     [blocks.segments.properties]
       threshold = 1000
+
+
+  [[blocks.segments]]
+    type = 'python'
+    style = 'plain'
+    foreground = 'p:pyenv'
+    background = 'transparent'
+    template = '{{ if .Error }}{{ .Error }}{{ else }}{{ if .Venv }} ({{ .Venv }} {{ .Major }}.{{.Minor}}){{ end }}{{ end }}'
 
   [[blocks.segments]]
     type = 'text'
