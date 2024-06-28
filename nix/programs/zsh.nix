@@ -116,7 +116,6 @@
             echo "$oh_my_posh_config" >"$oh_my_posh_cache"
             eval "$oh_my_posh_config"
           fi
-
         else
           eval "$(${pkgs.oh-my-posh}/bin/oh-my-posh init zsh --config ~/.config/oh-my-posh/prompt.toml)"
         fi
@@ -141,7 +140,6 @@
           bindkey -M vicmd 'L' vi-end-of-line
 
           bindkey '^F' tsession
-          # bindkey -s '^F' 'tsession\n'
           bindkey '^R' fzf-history-widget
           bindkey "^P" ff
         }
