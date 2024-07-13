@@ -1,15 +1,16 @@
 local M = require "utils.functions"
 return {
-	"davidmh/cspell.nvim",
-	enabled = false,
+	"JateNensvold/cspell.nvim",
+	-- "davidmh/cspell.nvim",
+	branch = "multi-config",
+	enabled = true,
 	dev = false,
 	dir = "~/projects/cspell.nvim/",
 	config = function()
 		local Job = require('plenary.job')
 		local config = {
 			cspell_config_dirs = {
-				"~/.config/",
-				-- "~/tmp/cspell"
+				"~/.config/.cspell",
 			},
 			encode_json = function(cspell_tbl)
 				local raw_json_string = vim.json.encode(cspell_tbl)
@@ -43,8 +44,8 @@ return {
 		}
 		local cspell = require('cspell')
 		require("null-ls").register({
-			cspell.diagnostics.with({ config = config }),
-			cspell.code_actions.with({ config = config }),
+			cspell.diagnostics.with({ config = config, disabled_filetypes = { "netrw", "NvimTree" } }),
+			cspell.code_actions.with({ config = config, disabled_filetypes = { "netrw", "NvimTree" } }),
 		})
 	end
 }
