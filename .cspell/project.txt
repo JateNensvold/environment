@@ -1,0 +1,7 @@
+devicons
+nowait
+noremap
+keybinds
+cmdheight
+DCMAKE
+Bbuild

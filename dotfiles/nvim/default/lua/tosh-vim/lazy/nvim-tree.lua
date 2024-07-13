@@ -34,10 +34,10 @@ return {
 
         -- Custom Mappings
         vim.keymap.set('n', "<leader>pv", function()
-            api.tree.toggle({ find_file = true, desc = 'nvim-tree: View directory' })
+            toggle_tree_repo_root({ find_file = true, desc = 'nvim-tree: View directory' })
         end)
         vim.keymap.set('n', "<leader>pp", function()
-            toggle_tree_repo_root({ find_file = true, desc = 'nvim-tree: View Project' })
+            api.tree.toggle({ find_file = true, desc = 'nvim-tree: View project' })
         end)
 
         require('nvim-tree').setup({
