@@ -3,8 +3,8 @@
   "language": "en",
   "dictionaryDefinitions": [
     {
-      "path": ".cspell/neovim.txt",
-      "name": "neovim",
+      "path": ".cspell/project.txt",
+      "name": "project-dictionary",
       "addWords": true
     },
     {
@@ -16,7 +16,7 @@
   "words": [],
   "version": "0.2",
   "dictionaries": [
-    "neovim",
+    "project-dictionary",
     "authors"
   ]
 }

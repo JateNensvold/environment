@@ -1,16 +1,19 @@
 {
   "globRoot": ".",
-  "language": "en",
-  "dictionaryDefinitions": [
-    {
-      "path": "neovim-dictionary.txt",
-      "name": "neovim",
-      "addWords": true
-    }
-  ],
-  "words": [],
   "version": "0.2",
   "dictionaries": [
     "neovim"
+  ],
+  "words": [
+    "filesize",
+    "iglob"
+  ],
+  "language": "en",
+  "dictionaryDefinitions": [
+    {
+      "name": "neovim",
+      "path": "neovim-dictionary.txt",
+      "addWords": true
+    }
   ]
 }
