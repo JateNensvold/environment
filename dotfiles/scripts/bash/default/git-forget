@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if [[ $# -ne 1 ]]; then
+	echo 'Error - Usage: git forget <file-path>'
+	exit 0
+fi
+
+git add --intent-to-add $1
+git update-index --assume-unchanged $1

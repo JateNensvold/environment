@@ -57,6 +57,7 @@ in {
           }
           f
       '';
+      forget = "! git-forget";
     };
   };
 }
