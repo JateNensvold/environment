@@ -4,3 +4,4 @@ keymap
 qfix
 qflist
 cclose
+netrw

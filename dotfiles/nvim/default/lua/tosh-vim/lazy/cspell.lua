@@ -43,9 +43,10 @@ return {
 			end
 		}
 		local cspell = require('cspell')
+		local disabled_filetypes = { "netrw", "NvimTree" };
 		require("null-ls").register({
-			cspell.diagnostics.with({ config = config, disabled_filetypes = { "netrw", "NvimTree" } }),
-			cspell.code_actions.with({ config = config, disabled_filetypes = { "netrw", "NvimTree" } }),
+			cspell.diagnostics.with({ config = config, disabled_filetypes = disabled_filetypes }),
+			cspell.code_actions.with({ config = config, disabled_filetypes = disabled_filetypes }),
 		})
 	end
 }
