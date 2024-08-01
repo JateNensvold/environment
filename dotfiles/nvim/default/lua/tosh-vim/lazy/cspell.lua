@@ -2,6 +2,7 @@ local M = require "utils.functions"
 return {
 	"JateNensvold/cspell.nvim",
 	-- "davidmh/cspell.nvim",
+	-- TODO: Add toggle to switch cspell between warnings and errors
 	branch = "multi-config",
 	enabled = true,
 	dev = false,
