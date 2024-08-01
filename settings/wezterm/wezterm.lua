@@ -51,7 +51,6 @@ config.window_background_image_hsb = {
 
 config.keys = {
     { key = "v", mods = "CTRL", action = wezterm.action({ PasteFrom = "Clipboard" }) },
-    { key = "c", mods = "CTRL", action = wezterm.action({ CopyTo = "Clipboard" }) },
     {
         key = "c",
         mods = "CTRL",
@@ -66,8 +65,6 @@ config.keys = {
         end),
     },
     { key = "c",          mods = "CTRL|SHIFT", action = wezterm.action({ SendKey = { key = "c", mods = "CTRL" } }) },
-    { key = "v",          mods = "CTRL",       action = wezterm.action({ PasteFrom = "Clipboard" }) },
-    { key = "v",          mods = "CTRL",       action = wezterm.action({ PasteFrom = "Clipboard" }) },
     { key = "v",          mods = "CTRL|SHIFT", action = wezterm.action({ SendKey = { key = "v", mods = "CTRL" } }) },
     -- allow terminal traversal using arrow keys
     { key = "LeftArrow",  mods = "OPT",       action = wezterm.action { SendString = "\x1bb" } },
