@@ -28,8 +28,6 @@ return {
 			local path = {}
 
 			path.data_dir = vim.fn.stdpath("cache") .. "/nvim-jdtls"
-
-            print(path.data_dir)
 			local jdtls_install = require("mason-registry").get_package("jdtls"):get_install_path()
 
 			path.java_agent = jdtls_install .. "/lombok.jar"

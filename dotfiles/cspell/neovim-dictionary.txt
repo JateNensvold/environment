@@ -5,3 +5,4 @@ qfix
 qflist
 cclose
 netrw
+nvim

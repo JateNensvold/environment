@@ -2,7 +2,7 @@
   "globRoot": ".",
   "version": "0.2",
   "dictionaries": [
-    "neovim"
+    "g-neovim"
   ],
   "words": [
     "filesize",
@@ -11,7 +11,7 @@
   "language": "en",
   "dictionaryDefinitions": [
     {
-      "name": "neovim",
+      "name": "g-neovim",
       "path": "neovim-dictionary.txt",
       "addWords": true
     }
