@@ -38,6 +38,9 @@
     },
     {
       "choco_name": "win32yank"
+    },
+    {
+      "choco_name": "thunderbird"
     }
   ]
 }

@@ -2,3 +2,5 @@ davidmh
 folke
 Jate
 Nensvold
+mrcjkb
+rustaceanvim
