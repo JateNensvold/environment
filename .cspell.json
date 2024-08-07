@@ -4,19 +4,13 @@
   "dictionaryDefinitions": [
     {
       "path": ".cspell/project.txt",
-      "name": "project-dictionary",
-      "addWords": true
-    },
-    {
-      "path": ".cspell/authors.txt",
-      "name": "authors",
+      "name": "project-vars",
       "addWords": true
     }
   ],
   "words": [],
   "version": "0.2",
   "dictionaries": [
-    "project-dictionary",
-    "authors"
+    "project-vars"
   ]
 }

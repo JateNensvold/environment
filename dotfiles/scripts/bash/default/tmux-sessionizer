@@ -24,7 +24,7 @@ if [[ $# -eq 0 ]]; then
 		code=$?
 
 		if [[ $code -eq 0 ]]; then
-			# TODO: Run fd in parrallel
+			# TODO: Run fd in parallel
 			tmp_var=$(fd . "${tmp_path}" -H --min-depth=1 --max-depth="${tmux_sessionizer_depth:-2}" --type=directory)
 			mapfile -t -O "${#real_paths[@]}" real_paths <<<"$tmp_var"
 		fi
@@ -45,13 +45,13 @@ tmux_running=$(pgrep tmux)
 
 # create TMUX session if its not running
 if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
-	tmux new-session -s "$selected_name" -c "$selected"
+	tmux new-session -s "$selected_name" -c "$selected" -e TMUX_SESSION_PATH="$selected"
 	exit 1
 fi
 
-# create new daemonized tmux session if tmux is running
+# create new background session if tmux is already running
 if ! tmux has-session -t="$selected_name" 2>/dev/null; then
-	tmux new-session -ds "$selected_name" -c "$selected"
+	tmux new-session -ds "$selected_name" -c "$selected" -e TMUX_SESSION_PATH="$selected"
 fi
 
 if [[ -z $TMUX ]]; then

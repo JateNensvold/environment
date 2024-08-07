@@ -4,3 +4,7 @@ Jate
 Nensvold
 mrcjkb
 rustaceanvim
+Jensvold
+Aloxaf
+Rethy
+jinh

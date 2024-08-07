@@ -47,8 +47,10 @@
         u = "utils";
         reload = "reload-home-manager-config && zx";
 
-        c = ''"$EDITOR" .'';
         ce = "cd ~/environment";
+        ch = ''cd "$TMUX_SESSION_PATH"'';
+
+        c = ''"$EDITOR" .'';
         ze = ''"$EDITOR" ~/environment'';
         zx = "source ~/.zshrc";
         zz = ''"$EDITOR" ~/.config/nvim'';

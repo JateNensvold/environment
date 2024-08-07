@@ -1,0 +1,16 @@
+mapfile
+realpath
+pgrep
+difftool
+mergetool
+cmatrix
+lazygit
+nixpkgs
+pkgs
+stdenv
+autojump
+readlink
+fpath
+zfuncs
+autoload
+unsetopt
