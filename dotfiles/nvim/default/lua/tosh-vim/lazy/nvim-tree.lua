@@ -19,6 +19,9 @@ return {
             vim.keymap.set('n', '?', api.tree.toggle_help, opts('Help'))
             -- vim.keymap.set('n', '<C-c>', api.tree.close, opts('Close'))
             -- vim.keymap.set('n', '<esc>', api.tree.close, opts('Close'))
+            --
+            -- move file
+            -- mark file with 'm', move marked files with 'bmv'
 
             -- Remove keybinds
             vim.keymap.del('n', 'D', { buffer = bufnr })
