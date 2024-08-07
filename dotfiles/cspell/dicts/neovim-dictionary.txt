@@ -1,0 +1,15 @@
+nvim
+bufnr
+keymap
+qfix
+qflist
+cclose
+netrw
+nvim
+neovim
+ftplugin
+nowait
+noremap
+keybinds
+vicmd
+bindkey

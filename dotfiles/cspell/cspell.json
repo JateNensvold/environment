@@ -2,17 +2,26 @@
   "globRoot": ".",
   "version": "0.2",
   "dictionaries": [
-    "g-neovim"
+    "g-neovim",
+    "authors",
+    "linux"
   ],
-  "words": [
-    "filesize",
-    "iglob"
-  ],
+  "words": [],
   "language": "en",
   "dictionaryDefinitions": [
     {
       "name": "g-neovim",
-      "path": "neovim-dictionary.txt",
+      "path": "dicts/neovim-dictionary.txt",
+      "addWords": true
+    },
+    {
+      "name": "authors",
+      "path": "dicts/authors.txt",
+      "addWords": true
+    },
+    {
+      "name": "linux",
+      "path": "dicts/linux.txt",
       "addWords": true
     }
   ]
