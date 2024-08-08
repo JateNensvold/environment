@@ -5,3 +5,13 @@ Bbuild
 sessionizer
 zprof
 tsession
+nixbld
+powertoys
+aarch
+lspconfig
+cmdline
+templ
+higroup
+CmpIntemAbbrMatch
+teej
+langservers

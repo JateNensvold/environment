@@ -42,8 +42,6 @@ autocmd({ "BufWritePre" }, {
     command = [[%s/\s\+$//e]],
 })
 
-
-
 ---@param key string
 ---@param direction "next"|"prev"
 ---@param severity string?
@@ -59,8 +57,6 @@ local function diagnostic_goto(key, direction, severity, bufnr)
     )
 end
 
-
-
 local function show_documentation()
     local filetype = vim.bo.filetype
     if vim.tbl_contains({ 'vim', 'help' }, filetype) then
@@ -73,7 +69,6 @@ local function show_documentation()
         vim.lsp.buf.hover()
     end
 end
-
 
 autocmd("LspAttach", {
     group = ToshGroup,
@@ -109,10 +104,9 @@ autocmd("LspAttach", {
         vim.keymap.set("i", "<C-h>", function()
             vim.lsp.buf.signature_help()
         end, opts)
-        diagnostic_goto("[d", "next", nil, e.bufnr)
-        diagnostic_goto("]d", "prev", nil, e.bufnr)
-        diagnostic_goto("[e", "next", vim.diagnostic.severity.ERROR, e.bufnr)
-        diagnostic_goto("]e", "prev", vim.diagnostic.severity.ERROR, e.bufnr)
+        diagnostic_goto("]d", "next", nil, e.bufnr)
+        diagnostic_goto("[d", "prev", nil, e.bufnr)
+        diagnostic_goto("]e", "next", vim.diagnostic.severity.ERROR, e.bufnr)
+        diagnostic_goto("[e", "prev", vim.diagnostic.severity.ERROR, e.bufnr)
     end,
 })
-

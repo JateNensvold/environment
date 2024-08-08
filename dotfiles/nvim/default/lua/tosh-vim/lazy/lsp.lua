@@ -42,6 +42,7 @@ return {
         },
         config = function()
             local lsp_zero = require("lsp-zero")
+            local Path = require("plenary.path")
             ---@diagnostic disable-next-line: unused-local
             lsp_zero.on_attach(function(client, bufnr)
                 -- see :help lsp-zero-keybindings
@@ -51,7 +52,7 @@ return {
 
             require("mason").setup()
             require("mason-lspconfig").setup {
-                -- only install JDLS with mason, everything else is managed by nix
+                -- only install JDTLS with mason, everything else is managed by nix
                 ensure_installed = { "jdtls" },
             }
             local cmp_lsp = require("cmp_nvim_lsp")
@@ -67,6 +68,15 @@ return {
             --Manually installed linters and formatters
             local null_ls = require("null-ls")
 
+            local dotfiles_path = Path:new("~/environment/dotfiles"):expand()
+            local markdownlint_path = Path:new(dotfiles_path):joinpath("markdownlint/markdownlint.yaml"):expand()
+            local markdownlint_config = {
+                extra_args = {
+                    "--config",
+                    markdownlint_path,
+                }
+            }
+
             null_ls.setup({
                 sources = {
                     -- formatters
@@ -76,9 +86,6 @@ return {
                     null_ls.builtins.formatting.nixfmt,
                     null_ls.builtins.formatting.black,
                     null_ls.builtins.formatting.yamlfmt,
-                    -- null_ls.builtins.formatting.prettierd.with({
-                    --     filetypes = { "htmldjango", "json", "markdown" }
-                    -- }),
                     null_ls.builtins.formatting.sqlfluff.with({
                         extra_args = {
                             "--dialect",
@@ -88,7 +95,7 @@ return {
                     null_ls.builtins.formatting.markdownlint,
                     -- linters
                     null_ls.builtins.diagnostics.ansiblelint,
-                    null_ls.builtins.diagnostics.markdownlint,
+                    null_ls.builtins.diagnostics.markdownlint.with(markdownlint_config),
                     null_ls.builtins.diagnostics.cfn_lint.with({
                         filetypes = { "yml", "yaml" },
                     }),
