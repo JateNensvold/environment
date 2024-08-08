@@ -4,7 +4,8 @@
   "dictionaries": [
     "g-neovim",
     "authors",
-    "linux"
+    "linux",
+    "applications"
   ],
   "words": [],
   "language": "en",
@@ -22,6 +23,11 @@
     {
       "name": "linux",
       "path": "dicts/linux.txt",
+      "addWords": true
+    },
+    {
+      "name": "applications",
+      "path": "dicts/applications.txt",
       "addWords": true
     }
   ]

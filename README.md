@@ -141,7 +141,7 @@ darwin-rebuild switch --flake ~/environment/.#$USER-$NIX_HOST-$HARDWARE-$ARCH -b
 - Focus Cursor
     `L-Ctrl` x2
 
-### Wexterm
+### Wezterm
 
 - New Terminal
     `Ctrl + Shift + T`

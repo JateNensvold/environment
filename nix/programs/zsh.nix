@@ -79,10 +79,10 @@
           name = "ssh-agent";
           src = "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/ssh-agent";
         }
-        {
-          name = "sudo";
-          src = "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/sudo";
-        }
+        # {
+        #   name = "sudo";
+        #   src = "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/sudo";
+        # }
       ] ++ lib.optionals (!pkgs.stdenv.isDarwin) [{
         name = "autojump";
         src = "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/autojump";

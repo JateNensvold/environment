@@ -13,3 +13,9 @@ noremap
 keybinds
 vicmd
 bindkey
+keymaps
+stdpath
+autocmd
+augroup
+cword
+joinpath

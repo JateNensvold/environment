@@ -8,3 +8,11 @@ Jensvold
 Aloxaf
 Rethy
 jinh
+ellisonleao
+plasticboy
+godlygeek
+echasnovski
+VonHeikemen
+williamboman
+nvimtools
+hrsh7th

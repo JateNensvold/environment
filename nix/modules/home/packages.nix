@@ -78,6 +78,5 @@ with pkgs;
   ansible-lint
 ] ++ ([
   # custom packages
-  pkgs.custom.cfn-lint
   pkgs.custom.taplo
 ])
