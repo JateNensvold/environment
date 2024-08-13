@@ -5,21 +5,44 @@ final_space = true
 console_title_template = '{{ .UserName }}@{{ .HostName }}'
 disable_notice = true
 
-[palette]
-  grey = '#6c6c6c'
-  green = 'green'
-  yellow = 'yellow'
-  git-modified = '178'
-  git-conflict = '196'
-  dark-blue = '31'
-  red = 'red'
-  exec-time = '101'
-  direnv = '178'
-  nix-shell = '200'
-  time = '66'
-  filler = 'p:time'
-  session = '180'
-  pyenv = '37'
+[palettes]
+  template = '{{ if gt (.Env.JOB_COUNT | int) 0 }}bg_proc{{ else }}no_bg_proc{{ end }}'
+
+  [palettes.list.bg_proc]
+    grey = '#6c6c6c'
+    teal = '66'
+    green = 'green'
+    yellow = 'yellow'
+    orange = '#e65100'
+    git-modified = '178'
+    git-conflict = '196'
+    dark-blue = '31'
+    red = 'red'
+    exec-time = '101'
+    direnv = '178'
+    nix-shell = '200'
+    time = 'p:teal'
+    session = '180'
+    pyenv = '37'
+    filler = 'p:orange'
+
+  [palettes.list.no_bg_proc]
+    grey = '#6c6c6c'
+    teal = '66'
+    green = 'green'
+    yellow = 'yellow'
+    orange = '#e65100'
+    git-modified = '178'
+    git-conflict = '196'
+    dark-blue = '31'
+    red = 'red'
+    exec-time = '101'
+    direnv = '178'
+    nix-shell = '200'
+    time = 'p:teal'
+    session = '180'
+    pyenv = '37'
+    filler = 'p:teal'
 
 [[blocks]]
   type = 'prompt'
@@ -49,11 +72,11 @@ disable_notice = true
       ' {{ .HEAD }}',
       '{{ if (gt .Ahead 0) }}<p:green,>+{{ .Ahead }}</>{{ end }}',
       '{{ if (gt .Behind 0) }}<p:git-conflict,>-{{ .Behind }}</>{{ end }}',
-      '{{ if or (.Working.Changed) (.Staging.Changed) }}<p:filler,>(</>{{ end }}',
+      '{{ if or (.Working.Changed) (.Staging.Changed) }}<p:teal,>(</>{{ end }}',
       '{{ if .Working.Changed }}<p:git-modified,>{{ .Working.String }}</>{{ end }}',
-      '{{ if and (.Working.Changed) (.Staging.Changed) }}<p:filler,>|</>{{ end }}',
+      '{{ if and (.Working.Changed) (.Staging.Changed) }}<p:teal,>|</>{{ end }}',
       '{{ if .Staging.Changed }}<p:green,>{{ .Staging.String }}</>{{ end }}',
-      '{{ if or (.Working.Changed) (.Staging.Changed) }}<p:filler,>)</>{{ end }}',
+      '{{ if or (.Working.Changed) (.Staging.Changed) }}<p:teal,>)</>{{ end }}',
       '{{ if gt .StashCount 0 }} *{{ .StashCount }}{{ end }}',
     ]
     templates_logic = 'join'
@@ -67,7 +90,7 @@ disable_notice = true
     type = 'text'
     style = 'plain'
     foreground = 'p:filler'
-    template = ' .'
+    template = '{{ if gt (.Env.JOB_COUNT | int) 0 }} [{{.Env.JOB_COUNT}}]{{ else }} .{{ end }}'
 
 
 [[blocks]]
@@ -85,7 +108,6 @@ disable_notice = true
 
     [blocks.segments.properties]
       threshold = 1000
-
 
   [[blocks.segments]]
     type = 'python'
@@ -116,6 +138,7 @@ disable_notice = true
 
     [blocks.segments.properties]
       time_format = '3:04:05 PM'
+
 
 [[blocks]]
   type = 'prompt'

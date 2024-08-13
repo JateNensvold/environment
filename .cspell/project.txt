@@ -15,3 +15,8 @@ higroup
 CmpIntemAbbrMatch
 teej
 langservers
+pyenv
+executiontime
+poshcontext
+rxvt
+neww

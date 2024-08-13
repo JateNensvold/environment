@@ -16,3 +16,6 @@ autoload
 unsetopt
 awscli
 Wezterm
+direnv
+Venv
+pwsh

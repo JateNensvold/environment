@@ -146,6 +146,10 @@
           bindkey "^P" ff
         }
 
+        function set_poshcontext() {
+          export JOB_COUNT=$(jobs | wc -l)
+        }
+
         # Disable annoying beep sound in terminal
         unsetopt beep
       '';
