@@ -147,7 +147,7 @@
         }
 
         function set_poshcontext() {
-          export JOB_COUNT=$(jobs | wc -l)
+          export JOB_COUNT=$(jobs | grep -v "pwd now:" | wc -l)
         }
 
         # Disable annoying beep sound in terminal
