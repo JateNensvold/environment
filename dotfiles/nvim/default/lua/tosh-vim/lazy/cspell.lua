@@ -1,12 +1,11 @@
 local M = require "utils.functions"
 return {
-	"JateNensvold/cspell.nvim",
-	-- "davidmh/cspell.nvim",
-	-- TODO: Add toggle to switch cspell between warnings and errors
-	branch = "multi-config",
+	"davidmh/cspell.nvim",
+	-- "JateNensvold/cspell.nvim",
+	-- branch = "multi-config",
+	-- dev = false,
+	-- dir = "~/projects/cspell.nvim/",
 	enabled = true,
-	dev = false,
-	dir = "~/projects/cspell.nvim/",
 	config = function()
 		local Job = require('plenary.job')
 		local cspell_config = {
