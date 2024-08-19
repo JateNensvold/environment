@@ -1,98 +1,100 @@
 # Reference: https://github.com/i3/i3/blob/next/etc/config
 
-enable-normalization-flatten-containers = false
-enable-normalization-opposite-orientation-for-nested-containers = false
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
 
+# Possible values: tiles|accordion
+default-root-container-layout = 'accordion'
+
+# Possible values: horizontal|vertical|auto
+# 'auto' means: wide monitor (anything wider than high) gets horizontal orientation,
+#               tall monitor (anything higher than wide) gets vertical orientation
+default-root-container-orientation = 'auto'
 [mode.main.binding]
-alt-h = 'focus left'
-alt-j = 'focus down'
-alt-k = 'focus up'
-alt-l = 'focus right'
+	alt-h = 'focus left'
+	alt-j = 'focus down'
+	alt-k = 'focus up'
+	alt-l = 'focus right'
 
-alt-shift-h = 'move left'
-alt-shift-j = 'move down'
-alt-shift-k = 'move up'
-alt-shift-l = 'move right'
+	# alt-shift-h = 'move left'
+	# alt-shift-j = 'move down'
+	# alt-shift-k = 'move up'
+	# alt-shift-l = 'move right'
 
-# alt-h = 'split horizontal'
-# alt-v = 'split vertical'
-# alt-f = 'fullscreen'
-#
-# alt-s = 'layout v_accordion' # 'layout stacking' in i3
-# alt-w = 'layout h_accordion' # 'layout tabbed' in i3
-# alt-e = 'layout tiles horizontal vertical' # 'layout toggle split' in i3
+	alt-shift-h = 'layout h_accordion'
+	alt-shift-j = 'layout floating'
+	alt-shift-k = 'fullscreen'
+	alt-shift-l = 'layout v_accordion'
+	alt-shift-f = [
+		'layout floating h_accordion',
+	] # Toggle between floating and tiling layout
 
-alt-shift-space = 'layout floating tiling' # 'floating toggle' in i3
+	alt-shift-space = 'layout floating h_accordion'    # 'floating toggle' in i3
+	alt-comma = 'layout accordion horizontal vertical'
 
-# `focus parent`/`focus child` are not yet supported, and it's not clear whether they
-# should be supported at all https://github.com/nikitabobko/AeroSpace/issues/5
-# alt-a = 'focus parent'
+	# `focus parent`/`focus child` are not yet supported, and it's not clear whether they
+	# should be supported at all https://github.com/nikitabobko/AeroSpace/issues/5
+	# alt-a = 'focus parent'
 
-cmd-1 = 'workspace 1'
-cmd-2 = 'workspace 2'
-cmd-3 = 'workspace 3'
-cmd-4 = 'workspace 4'
-cmd-5 = 'workspace 5'
-cmd-6 = 'workspace 6'
-cmd-7 = 'workspace 7'
-cmd-8 = 'workspace 8'
-cmd-9 = 'workspace 9'
-cmd-0 = 'workspace 10'
+	cmd-1 = 'workspace 1'
+	cmd-2 = 'workspace 2'
+	cmd-3 = 'workspace 3'
+	cmd-4 = 'workspace 4'
+	cmd-5 = 'workspace 5'
+	cmd-6 = 'workspace 6'
+	cmd-7 = 'workspace 7'
+	cmd-8 = 'workspace 8'
+	cmd-9 = 'workspace 9'
+	cmd-0 = 'workspace 10'
 
-alt-shift-1 = 'move-node-to-workspace 1'
-alt-shift-2 = 'move-node-to-workspace 2'
-alt-shift-3 = 'move-node-to-workspace 3'
-alt-shift-4 = 'move-node-to-workspace 4'
-alt-shift-5 = 'move-node-to-workspace 5'
-alt-shift-6 = 'move-node-to-workspace 6'
-alt-shift-7 = 'move-node-to-workspace 7'
-alt-shift-8 = 'move-node-to-workspace 8'
-alt-shift-9 = 'move-node-to-workspace 9'
-alt-shift-0 = 'move-node-to-workspace 10'
+	alt-shift-1 = 'move-node-to-workspace 1'
+	alt-shift-2 = 'move-node-to-workspace 2'
+	alt-shift-3 = 'move-node-to-workspace 3'
+	alt-shift-4 = 'move-node-to-workspace 4'
+	alt-shift-5 = 'move-node-to-workspace 5'
+	alt-shift-6 = 'move-node-to-workspace 6'
+	alt-shift-7 = 'move-node-to-workspace 7'
+	alt-shift-8 = 'move-node-to-workspace 8'
+	alt-shift-9 = 'move-node-to-workspace 9'
+	alt-shift-0 = 'move-node-to-workspace 10'
 
-alt-shift-c = 'reload-config'
+	alt-shift-c = 'reload-config'
 
-# alt-r = 'mode resize'
-# [mode.resize.binding]
-# h = 'resize width -50'
-# j = 'resize height +50'
-# k = 'resize height -50'
-# l = 'resize width +50'
-# enter = 'mode main'
-# esc = 'mode main'
-
-# work mbp workspace layouts
-[[on-window-detected]]
-# windows should default to floating
-check-further-callbacks = true
-run = 'layout floating'
+	# alt-r = 'mode resize'
+	# [mode.resize.binding]
+	# h = 'resize width -50'
+	# j = 'resize height +50'
+	# k = 'resize height -50'
+	# l = 'resize width +50'
+	# enter = 'mode main'
+	# esc = 'mode main'
 
 [[on-window-detected]]
-if.app-id = 'com.github.wez.wezterm'
-run = 'move-node-to-workspace 1'
+	if.app-id = 'com.github.wez.wezterm'
+	run = 'move-node-to-workspace 1'
 
 [[on-window-detected]]
-if.app-id = 'com.tinyspeck.slackmacgap'
-run = ['layout floating', 'move-node-to-workspace 2']
+	if.app-id = 'com.tinyspeck.slackmacgap'
+	run = ['layout floating', 'move-node-to-workspace 2']
 
 [[on-window-detected]]
-if.app-id = 'org.mozilla.firefox'
-run = ['layout floating', 'move-node-to-workspace 3']
+	if.app-id = 'org.mozilla.firefox'
+	run = ['move-node-to-workspace 3']
+	# run = ['layout floating', 'move-node-to-workspace 3']
 
 [[on-window-detected]]
-if.app-id = 'com.amazon.Amazon-Chime'
-# This should run in workspace 4, but popups should still show up in other workspaces
-run = ['layout floating', 'move-node-to-workspace 4']
+	if.app-id = 'com.amazon.Amazon-Chime'
+	# This should run in workspace 4, but popups should still show up in other workspaces
+	run = ['layout floating', 'move-node-to-workspace 4']
 
 [[on-window-detected]]
-if.app-id = 'com.microsoft.Outlook'
-run = ['layout floating', 'move-node-to-workspace 5']
+	if.app-id = 'com.microsoft.Outlook'
+	run = ['layout floating', 'move-node-to-workspace 5']
 
 [[on-window-detected]]
-if.app-id = 'com.spotify.client'
-run = ['move-node-to-workspace 6']
+	if.app-id = 'com.spotify.client'
+	run = ['move-node-to-workspace 6']
 
 [[on-window-detected]]
-if.app-id = 'md.obsidian'
-run = ['layout floating', 'move-node-to-workspace 7']
-
+	if.app-id = 'md.obsidian'
+	run = ['layout floating', 'move-node-to-workspace 7']

@@ -1,4 +1,4 @@
-{ lib, config, user, host, hardware, pkgs, stablePkgs, ... }:
+{ user, host, hardware, pkgs, stablePkgs, ... }:
 let
   modulePath = "./modules";
   hostPath = "./hosts";
@@ -37,10 +37,24 @@ in {
     settings.extra-nix-path = "nixpkgs=flake:nixpkgs";
   };
 
+  launchd = {
+    user = {
+      agents = {
+        aerospace = {
+          command = "Open ${pkgs.custom.aerospace}/Applications/Aerospace.app";
+          serviceConfig = {
+            KeepAlive = { Crashed = true; };
+            RunAtLoad = true;
+            StandardOutPath = "/tmp/aerospace.out.log";
+            StandardErrorPath = "/tmp/aerospace.err.log";
+          };
+        };
+      };
+    };
+  };
+
   environment.systemPackages = [ ]
     ++ (import ./${modulePath}/home/packages.nix { inherit pkgs stablePkgs; });
-
-  fonts.fontDir.enable = true;
 
   system.defaults = {
     dock = {
@@ -49,8 +63,6 @@ in {
       show-recents = false;
       # disable bottom right corner as MacOS hot corner
       wvous-br-corner = 1;
-      # config is only reloaded when dock is restarted
-      # - killall Dock
     };
     NSGlobalDomain = { "com.apple.swipescrolldirection" = false; };
     finder = { _FXShowPosixPathInTitle = true; };

@@ -16,3 +16,5 @@ VonHeikemen
 williamboman
 nvimtools
 hrsh7th
+slackmacgap
+tinyspeck

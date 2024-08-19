@@ -19,3 +19,9 @@ Wezterm
 direnv
 Venv
 pwsh
+Posix
+nixos
+osascript
+elif
+scpf
+GSSAPI

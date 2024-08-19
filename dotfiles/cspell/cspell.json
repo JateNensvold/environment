@@ -5,7 +5,8 @@
     "g-neovim",
     "authors",
     "linux",
-    "applications"
+    "applications",
+    "nix"
   ],
   "words": [],
   "language": "en",
@@ -28,6 +29,11 @@
     {
       "name": "applications",
       "path": "dicts/applications.txt",
+      "addWords": true
+    },
+    {
+      "name": "nix",
+      "path": "dicts/nix.txt",
       "addWords": true
     }
   ]

@@ -20,3 +20,12 @@ executiontime
 poshcontext
 rxvt
 neww
+autohide
+recents
+wvous
+swipescrolldirection
+clouddesk
+wssh
+brazilcli
+bemol
+fullscreen

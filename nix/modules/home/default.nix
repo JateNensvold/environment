@@ -1,6 +1,6 @@
 # Main user-level configuration
-{ config, lib, pkgs, user, host, hardware, system, dotfiles, stateVersion
-, isOther, ... }:
+{ config, pkgs, user, host, hardware, system, dotfiles, stateVersion, isOther
+, ... }:
 
 let
   homeDirectoryPrefix =
