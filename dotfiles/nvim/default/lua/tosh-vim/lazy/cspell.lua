@@ -3,7 +3,7 @@ return {
 	"davidmh/cspell.nvim",
 	-- "JateNensvold/cspell.nvim",
 	-- branch = "multi-config",
-	-- dev = false,
+	-- dev = true,
 	-- dir = "~/projects/cspell.nvim/",
 	enabled = true,
 	config = function()

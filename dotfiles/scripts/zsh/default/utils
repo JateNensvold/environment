@@ -23,6 +23,7 @@ gpl    [alias]                       git pull \${1} \${2}
 grb    [alias]                       git rebase \${1} \${2} -i
 gs     [alias]                       git status
 gl     [alias]                       git ls-files \${1} | xargs wc -l
+gi     [alias]                       git identity
 
 xt     [alias] view-files-recursive  eza -T
 x2     [alias]                       eza --tree --level=2

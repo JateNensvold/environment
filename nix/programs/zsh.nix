@@ -26,6 +26,9 @@
         gmt = "git mergetool";
         gs = "git status";
         gl = "git ls-files | xargs wc -l";
+        gi = "git identity";
+
+
         # Steam locomotive
         sl = "sl -ea";
 
