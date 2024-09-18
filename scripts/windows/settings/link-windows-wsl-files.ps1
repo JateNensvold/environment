@@ -42,5 +42,12 @@ $WSL_DOWNLOAD_PATH = (wsl wslpath $WINDOWS_DOWNLOAD_PATH)
 
 wsl ln -s $WSL_DOWNLOAD_PATH "~/downloads"
 
+# Link windows Documents directory into WSL as well
+$WINDOWS_DOCUMENTS_PATH = (get-item (New-Object -ComObject `
+            Shell.Application).NameSpace('shell:Documents').Self.Path).FullName.Replace("\", "\\")
+$WSL_DOCUMENTS_PATH = (wsl wslpath $WINDOWS_DOWNLOAD_PATH)
+
+wsl ln -s $WSL_DOCUMENTS_PATH "~/documents"
+
 # Setup WSL environment
 wsl bash -i <(curl -fsSL https://raw.githubusercontent.com/JateNensvold/environment/master/scripts/ubuntu/install.sh)
