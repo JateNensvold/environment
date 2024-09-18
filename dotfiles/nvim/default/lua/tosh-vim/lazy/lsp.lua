@@ -80,25 +80,25 @@ return {
             null_ls.setup({
                 sources = {
                     -- formatters
+                    null_ls.builtins.formatting.black,
+                    null_ls.builtins.formatting.markdownlint,
+                    null_ls.builtins.formatting.nixfmt,
                     null_ls.builtins.formatting.shfmt.with({
                         filetypes = { "zsh", "bash", "sh" },
                     }),
-                    null_ls.builtins.formatting.nixfmt,
-                    null_ls.builtins.formatting.black,
-                    null_ls.builtins.formatting.yamlfmt,
                     null_ls.builtins.formatting.sqlfluff.with({
                         extra_args = {
                             "--dialect",
                             "postgres",
                         },
                     }),
-                    null_ls.builtins.formatting.markdownlint,
+                    null_ls.builtins.formatting.yamlfmt,
                     -- linters
                     null_ls.builtins.diagnostics.ansiblelint,
-                    null_ls.builtins.diagnostics.markdownlint.with(markdownlint_config),
                     null_ls.builtins.diagnostics.cfn_lint.with({
                         filetypes = { "yml", "yaml" },
                     }),
+                    null_ls.builtins.diagnostics.markdownlint.with(markdownlint_config),
                 },
             })
 

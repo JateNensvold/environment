@@ -25,3 +25,5 @@ osascript
 elif
 scpf
 GSSAPI
+rubocop
+solargraph

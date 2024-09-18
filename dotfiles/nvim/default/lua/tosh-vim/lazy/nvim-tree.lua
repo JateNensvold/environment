@@ -1,4 +1,4 @@
-local M = require "utils.functions"
+local M = require("utils.functions")
 return {
     "nvim-tree/nvim-tree.lua",
     version = "*",

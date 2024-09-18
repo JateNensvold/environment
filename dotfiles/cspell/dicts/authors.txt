@@ -18,3 +18,4 @@ nvimtools
 hrsh7th
 slackmacgap
 tinyspeck
+antoinemadec

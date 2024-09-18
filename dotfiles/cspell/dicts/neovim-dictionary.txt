@@ -19,3 +19,9 @@ autocmd
 augroup
 cword
 joinpath
+autogroup
+expandtab
+neotest
+getcwd
+fnamemodify
+finddir

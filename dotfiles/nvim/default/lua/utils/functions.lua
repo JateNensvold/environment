@@ -38,4 +38,16 @@ function M.dump(o)
     end
 end
 
+--- Formats a string using a table of substitutions
+--- E.g. `M.format("Hello ${subject}", { subject = "world" })` returns 'Hello World'
+---
+--- @param str string The string to format
+--- @param tbl table k-v pairs of string substitutions
+--- @return string, number
+function M.format(str, tbl)
+    return str:gsub("$%b{}", function(param)
+        return (tbl[string.sub(param, 3, -2)] or param)
+    end)
+end
+
 return M

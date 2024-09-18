@@ -46,6 +46,7 @@ with pkgs;
   nodejs_22
   stablePkgs.python3
   go
+  rbenv
   rustup
   # Needed by brew
   ruby
