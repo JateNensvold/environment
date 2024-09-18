@@ -1,7 +1,7 @@
 return {
   'akinsho/git-conflict.nvim',
   version = "*",
-  config = true
+  config = function()
 
   -- default mappings
   --    vim.keymap.set('n', 'co', '<Plug>(git-conflict-ours)')
@@ -10,4 +10,7 @@ return {
   --    vim.keymap.set('n', 'c0', '<Plug>(git-conflict-none)')
   --    vim.keymap.set('n', '[x', '<Plug>(git-conflict-prev-conflict)')
   --    vim.keymap.set('n', ']x', '<Plug>(git-conflict-next-conflict)')
+    require('git-conflict').setup()
+    vim.keymap.set('n', '<leader>gq', '<Cmd>GitConflictListQf<CR>')
+  end
 }

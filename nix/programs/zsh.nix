@@ -27,7 +27,7 @@
         gs = "git status";
         gl = "git ls-files | xargs wc -l";
         gi = "git identity";
-
+        gbb = "git checkout -";
 
         # Steam locomotive
         sl = "sl -ea";
@@ -51,7 +51,8 @@
         reload = "reload-home-manager-config && zx";
 
         ce = "cd ~/environment";
-        ch = ''cd "$TMUX_SESSION_PATH"'';
+        ct = ''cd "$TMUX_SESSION_PATH"'';
+        cb = ''cd -'';
 
         c = ''"$EDITOR" .'';
         ze = ''"$EDITOR" ~/environment'';

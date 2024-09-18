@@ -1,8 +1,8 @@
 local M = require "utils.functions"
 return {
-	"davidmh/cspell.nvim",
-	-- "JateNensvold/cspell.nvim",
-	-- branch = "multi-config",
+	-- "davidmh/cspell.nvim",
+	"JateNensvold/cspell.nvim",
+	branch = "multi-config-fix",
 	-- dev = true,
 	-- dir = "~/projects/cspell.nvim/",
 	enabled = true,

@@ -33,7 +33,7 @@ return {
         },
         opt = {
             servers = {
-                tsserver = {
+                ts_ls = {
                     root_dir = function(...)
                         return require("lspconfig.util").root_pattern(".git")(...)
                     end,
@@ -119,7 +119,7 @@ return {
             lspconfig.dockerls.setup({})
 
             -- TypeScript
-            lspconfig.tsserver.setup({})
+            lspconfig.ts_ls.setup({})
 
             -- toml
             lspconfig.taplo.setup({

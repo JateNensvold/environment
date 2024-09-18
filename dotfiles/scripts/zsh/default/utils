@@ -24,6 +24,7 @@ grb    [alias]                       git rebase \${1} \${2} -i
 gs     [alias]                       git status
 gl     [alias]                       git ls-files \${1} | xargs wc -l
 gi     [alias]                       git identity
+gbb    [alias] git-branch-back       git checkout -
 
 xt     [alias] view-files-recursive  eza -T
 x2     [alias]                       eza --tree --level=2
@@ -42,6 +43,9 @@ u      [alias]                       utils
 reload [alias] reload-nix            $RELOAD_PREFIX $RELOAD_SUFFIX Current Config: \$USER=${USER} - \$NIX_HOST=${NIX_HOST} \$HARDWARE=${HARDWARE} \$ARCH=${ARCH}
 
 c      [alias]                       \$EDITOR .
+ct     [alias] change-tmux           cd "$TMUX_SESSION_PATH"
+cb     [alias] change-back           cd -
+
 vv     [alias]                       var=\$(fd | fzf --header='[vim:file]') && full_var=\$(realpath \$var) && change-location \$var && vim \$full_var
 ce     [alias]                       cd ~/environment
 ze     [alias]                       \$EDITOR ~/environment
