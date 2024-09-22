@@ -138,13 +138,14 @@
         # load zsh widgets for keybinds
         zle -N tsession
         zle -N ff
+        zle -N zsh_reset_line
 
         # VI-mode plugin will auto execute this
         function zvm_after_init() {
           bindkey -M vicmd '^F' tsession
           bindkey -M vicmd 'H' vi-digit-or-beginning-of-line
           bindkey -M vicmd 'L' vi-end-of-line
-          zvm_bindkey vicmd '^C' zvm_vi_delete
+          zvm_bindkey vicmd '^C' zsh_reset_line
 
           bindkey '^F' tsession
           bindkey '^R' fzf-history-widget
