@@ -144,6 +144,7 @@
           bindkey -M vicmd '^F' tsession
           bindkey -M vicmd 'H' vi-digit-or-beginning-of-line
           bindkey -M vicmd 'L' vi-end-of-line
+          zvm_bindkey vicmd '^C' zvm_vi_delete
 
           bindkey '^F' tsession
           bindkey '^R' fzf-history-widget
@@ -153,6 +154,16 @@
         function set_poshcontext() {
           export JOB_COUNT=$(jobs | grep -v "pwd now:" | wc -l)
         }
+
+        precmd() {
+          # Set SIGINT to ctrl-e while editing a command
+          stty intr \^E
+        }
+        preexec() {
+          # Now set it to ctrl-c when a command is running
+          stty intr \^C
+        }
+        ZVM_VI_INSERT_ESCAPE_BINDKEY=^C
 
         # Disable annoying beep sound in terminal
         unsetopt beep

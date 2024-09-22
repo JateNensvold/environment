@@ -26,3 +26,5 @@ rustscan
 shellcheck
 tealdeer
 wslpath
+traefik
+corepack
