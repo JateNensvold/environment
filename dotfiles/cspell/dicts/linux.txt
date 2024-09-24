@@ -27,3 +27,4 @@ scpf
 GSSAPI
 rubocop
 solargraph
+envrc

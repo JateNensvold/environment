@@ -17,5 +17,8 @@ in {
 
   home.packages = [ ]
     ++ (import ./${modulePath}/home/packages.nix { inherit pkgs stablePkgs; })
-    ++ (with pkgs; [ custom.unocss-lsp ]);
+    ++ (with pkgs; [
+      custom.unocss
+      custom.unocss-lsp
+    ]);
 }

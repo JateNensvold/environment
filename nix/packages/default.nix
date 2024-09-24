@@ -7,6 +7,7 @@ final: prev: {
     wezterm = prev.callPackage ./pkgs/wezterm { };
     aerospace = prev.callPackage ./pkgs/aerospace { };
     unocss-lsp = prev.callPackage ./pkgs/unocss-lsp { };
+    unocss = prev.callPackage ./pkgs/unocss-utils/unocss.nix { };
     cfn-lint = prev.python3.pkgs.callPackage ./pkgs/cfn-lint { };
     taplo = prev.callPackage ./pkgs/taplo { };
 

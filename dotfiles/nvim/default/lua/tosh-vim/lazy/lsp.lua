@@ -103,29 +103,34 @@ return {
             })
 
             --Manually installed LSP servers
-            lspconfig.nil_ls.setup({})
-            lspconfig.htmx.setup({})
+            -- ansible
+            lspconfig.ansiblels.setup({})
+            -- bash
             lspconfig.bashls.setup({
                 filetypes = {
                     "bash",
                     "zsh",
                 },
             })
-            lspconfig.docker_compose_language_service.setup({})
-            lspconfig.ansiblels.setup({})
-            lspconfig.pyright.setup({
-                capabilities = capabilities,
-            })
+            -- docker
             lspconfig.dockerls.setup({})
-
-            -- TypeScript
-            lspconfig.ts_ls.setup({})
-
-            -- toml
-            lspconfig.taplo.setup({
-                cmd = { 'taplo', 'lsp', '--config', vim.fn.expand('~/environment/dotfiles/taplo/taplo.toml'), 'stdio' }
+            -- docker-compose
+            lspconfig.docker_compose_language_service.setup({})
+            -- html
+            local html_capabilities = vim.lsp.protocol.make_client_capabilities()
+            html_capabilities.textDocument.completion.completionItem.snippetSupport = true
+            lspconfig.html.setup({
+                capabilities = capabilities,
+                configurationSection = { "html", "css", "javascript" },
+                embeddedLanguages = {
+                    css = true,
+                    javascript = true
+                },
+                provideFormatter = true
             })
-
+            -- htmx
+            -- lspconfig.htmx.setup({})
+            -- lua
             lspconfig.lua_ls.setup({
                 capabilities = capabilities,
                 settings = {
@@ -136,10 +141,23 @@ return {
                     },
                 },
             })
-            lspconfig.unocss.setup {}
-
+            -- nix
+            lspconfig.nil_ls.setup({})
+            -- python
+            lspconfig.pyright.setup({
+                capabilities = capabilities,
+            })
+            -- toml
+            lspconfig.taplo.setup({
+                cmd = { 'taplo', 'lsp', '--config', vim.fn.expand('~/environment/dotfiles/taplo/taplo.toml'), 'stdio' }
+            })
+            -- TypeScript
+            lspconfig.ts_ls.setup({})
+            -- unocss
+            lspconfig.unocss.setup({})
+            -- json
             local jsonls_capabilities = vim.lsp.protocol.make_client_capabilities()
-            capabilities.textDocument.completion.completionItem.snippetSupport = true
+            jsonls_capabilities.textDocument.completion.completionItem.snippetSupport = true
             lspconfig.jsonls.setup {
                 capabilities = jsonls_capabilities
             }
@@ -147,7 +165,6 @@ return {
             -- Setup lsp autocompletion
             local cmp = require("cmp")
             local cmp_select = { behavior = cmp.SelectBehavior.Select }
-
             cmp.setup({
                 snippet = {
                     expand = function(args)
@@ -165,9 +182,9 @@ return {
                 sources = cmp.config.sources({
                     { name = "nvim_lua" },
                     { name = "nvim_lsp", trigger_characters = { '-' } },
-                }, {
                     { name = "path" },
                     { name = "crates" },
+                }, {
                     { name = "buffer", keyword_length = 5 },
                 }, {
                 }),

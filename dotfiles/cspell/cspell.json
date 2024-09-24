@@ -1,15 +1,4 @@
 {
-  "globRoot": ".",
-  "version": "0.2",
-  "dictionaries": [
-    "g-neovim",
-    "authors",
-    "linux",
-    "applications",
-    "nix"
-  ],
-  "words": [],
-  "language": "en",
   "dictionaryDefinitions": [
     {
       "name": "g-neovim",
@@ -36,5 +25,17 @@
       "path": "dicts/nix.txt",
       "addWords": true
     }
-  ]
+  ],
+  "words": [
+  ],
+  "dictionaries": [
+    "g-neovim",
+    "authors",
+    "linux",
+    "applications",
+    "nix"
+  ],
+  "language": "en",
+  "version": "0.2",
+  "globRoot": "."
 }

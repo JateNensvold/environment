@@ -1,2 +1,2 @@
 #!/usr/bin/env zsh
-zvm_kill_line && zvm_enter_insert_mode
+zvm_kill_whole_line && zvm_enter_insert_mode

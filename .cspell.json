@@ -1,16 +1,20 @@
 {
-  "globRoot": ".",
+  "dictionaries": [
+    "project-vars"
+  ],
   "language": "en",
   "dictionaryDefinitions": [
     {
+      "addWords": true,
       "path": ".cspell/project.txt",
-      "name": "project-vars",
-      "addWords": true
+      "name": "project-vars"
     }
   ],
-  "words": [],
+  "globRoot": ".",
   "version": "0.2",
-  "dictionaries": [
-    "project-vars"
+  "words": [
+    "prefech",
+    "flakify",
+    "dedupe"
   ]
 }
