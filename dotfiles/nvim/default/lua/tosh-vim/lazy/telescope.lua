@@ -38,7 +38,11 @@ return {
         telescope.setup({
             defaults = {
                 preview = {
-                    filesize_limit = 0.2, -- MB
+                    filesize_hook = function(filepath, bufnr, opts)
+                        local max_bytes = 10000
+                        local cmd = { "head", "-c", max_bytes, filepath }
+                        require('telescope.previewers.utils').job_maker(cmd, bufnr, opts)
+                    end
                 },
                 mappings = {
                     n = {

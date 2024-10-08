@@ -31,6 +31,7 @@ with pkgs;
   sqlite
   tealdeer
   tmux
+  unzip
   xclip
   zip
   #Nvim plugins
@@ -68,12 +69,13 @@ with pkgs;
   vscode-langservers-extracted # html/css/json/ESLint
 
   # Formatters
-  shfmt # bash, sh
-  nixfmt-classic # nix
-  sqlfluff # sql
   black # python
-  yamlfmt # yaml
+  djlint # template files
+  nixfmt-classic # nix
   prettierd # html/js/css
+  shfmt # bash, sh
+  sqlfluff # sql
+  yamlfmt # yaml
 
   # Linters
   ansible-lint

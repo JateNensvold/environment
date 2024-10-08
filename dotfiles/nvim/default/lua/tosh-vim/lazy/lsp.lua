@@ -81,8 +81,10 @@ return {
                 sources = {
                     -- formatters
                     null_ls.builtins.formatting.black,
+                    null_ls.builtins.formatting.djlint,
                     null_ls.builtins.formatting.markdownlint,
                     null_ls.builtins.formatting.nixfmt,
+                    null_ls.builtins.formatting.prettierd,
                     null_ls.builtins.formatting.shfmt.with({
                         filetypes = { "zsh", "bash", "sh" },
                     }),
@@ -98,6 +100,7 @@ return {
                     null_ls.builtins.diagnostics.cfn_lint.with({
                         filetypes = { "yml", "yaml" },
                     }),
+                    null_ls.builtins.diagnostics.djlint,
                     null_ls.builtins.diagnostics.markdownlint.with(markdownlint_config),
                 },
             })

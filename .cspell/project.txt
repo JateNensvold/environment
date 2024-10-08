@@ -30,3 +30,5 @@ brazilcli
 bemol
 fullscreen
 devcontainers
+htmldjango
+djlint
