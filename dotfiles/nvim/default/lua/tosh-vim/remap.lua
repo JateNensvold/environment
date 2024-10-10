@@ -56,8 +56,8 @@ vim.keymap.set("n", "<leader>m", "<cmd>:bnext<CR>")
 vim.keymap.set("n", "<leader>n", "<cmd>:bprev<CR>")
 vim.keymap.set("n", "<leader>d", "<cmd>:bdelete<CR>")
 
-vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
-vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
+vim.keymap.set("n", "]q", "<cmd>cnext<CR>zz")
+vim.keymap.set("n", "[q", "<cmd>cprev<CR>zz")
 vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
 vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
 

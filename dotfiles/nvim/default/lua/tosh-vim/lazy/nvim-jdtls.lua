@@ -155,7 +155,7 @@ return {
 				"-Declipse.product=org.eclipse.jdt.ls.core.product",
 				"-Dlog.protocol=true",
 				-- "-Dlog.level=ALL",
-                "-Dlog.level=ERROR",
+				"-Dlog.level=ERROR",
 				"-javaagent:" .. path.java_agent,
 				"-Xms4g",
 				-- "--add-modules=ALL-SYSTEM",
@@ -208,7 +208,7 @@ return {
 					format = {
 						enabled = true,
 						settings = {
-						 url = "~/.config/jdtls/java_settings.xml"
+							url = "~/.config/jdtls/java_settings.xml"
 						},
 					},
 				},

@@ -32,3 +32,4 @@ fullscreen
 devcontainers
 htmldjango
 djlint
+undotree
