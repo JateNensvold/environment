@@ -50,7 +50,7 @@ config.window_background_image_hsb = {
 }
 
 config.keys = {
-    { key = "v", mods = "CTRL", action = wezterm.action({ PasteFrom = "Clipboard" }) },
+    { key = "v",          mods = "CTRL",       action = wezterm.action({ PasteFrom = "Clipboard" }) },
     {
         key = "c",
         mods = "CTRL",
@@ -67,11 +67,23 @@ config.keys = {
     { key = "c",          mods = "CTRL|SHIFT", action = wezterm.action({ SendKey = { key = "c", mods = "CTRL" } }) },
     { key = "v",          mods = "CTRL|SHIFT", action = wezterm.action({ SendKey = { key = "v", mods = "CTRL" } }) },
     -- allow terminal traversal using arrow keys
-    { key = "LeftArrow",  mods = "OPT",       action = wezterm.action { SendString = "\x1bb" } },
-    { key = "RightArrow", mods = "OPT",       action = wezterm.action { SendString = "\x1bf" } },
-    { key = "LeftArrow",  mods = "CMD",       action = wezterm.action { SendString = "\x1bOH" } },
-    { key = "RightArrow", mods = "CMD",       action = wezterm.action { SendString = "\x1bOF" } },
+    { key = "LeftArrow",  mods = "OPT",        action = wezterm.action { SendString = "\x1bb" } },
+    { key = "RightArrow", mods = "OPT",        action = wezterm.action { SendString = "\x1bf" } },
+    { key = "LeftArrow",  mods = "CMD",        action = wezterm.action { SendString = "\x1bOH" } },
+    { key = "RightArrow", mods = "CMD",        action = wezterm.action { SendString = "\x1bOF" } },
 }
+
+config.visual_bell = {
+    fade_in_function = 'EaseIn',
+    fade_in_duration_ms = 150,
+    fade_out_function = 'EaseOut',
+    fade_out_duration_ms = 150,
+}
+config.colors = {
+    visual_bell = '#202020',
+}
+
+config.audible_bell = "Disabled"
 
 -- and finally, return the configuration to wezterm
 return config

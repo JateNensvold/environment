@@ -28,3 +28,4 @@ tealdeer
 wslpath
 traefik
 corepack
+truenas
