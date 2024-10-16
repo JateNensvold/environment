@@ -33,3 +33,4 @@ devcontainers
 htmldjango
 djlint
 undotree
+macbook

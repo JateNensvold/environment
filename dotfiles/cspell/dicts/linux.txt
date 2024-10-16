@@ -30,3 +30,4 @@ solargraph
 envrc
 filesize
 iglob
+dockutil

@@ -65,7 +65,7 @@ with pkgs;
   nodePackages.typescript-language-server # js/ts
   pyright # python
   sqls # sql
-  # taplo # toml
+  taplo # toml
   vscode-langservers-extracted # html/css/json/ESLint
 
   # Formatters
@@ -81,5 +81,4 @@ with pkgs;
   ansible-lint
 ] ++ ([
   # custom packages
-  pkgs.custom.taplo
 ])

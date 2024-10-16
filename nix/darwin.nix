@@ -1,4 +1,4 @@
-{ user, host, hardware, pkgs, stablePkgs, ... }:
+{ user, host, hardware, pkgs, stablePkgs, stateVersion, ... }:
 let
   modulePath = "./modules";
   hostPath = "./hosts";
@@ -56,16 +56,20 @@ in {
   environment.systemPackages = [ ]
     ++ (import ./${modulePath}/home/packages.nix { inherit pkgs stablePkgs; });
 
-  system.defaults = {
-    dock = {
-      orientation = "left";
-      autohide = false;
-      show-recents = false;
-      # disable bottom right corner as MacOS hot corner
-      wvous-br-corner = 1;
+  system = {
+    # Controls nixbld GID when upgrading nix-darwin. 4 means to keep previous GID
+    stateVersion = 4;
+    defaults = {
+      dock = {
+        orientation = "left";
+        autohide = false;
+        show-recents = false;
+        # disable bottom right corner as MacOS hot corner
+        wvous-br-corner = 1;
+      };
+      NSGlobalDomain = { "com.apple.swipescrolldirection" = false; };
+      finder = { _FXShowPosixPathInTitle = true; };
     };
-    NSGlobalDomain = { "com.apple.swipescrolldirection" = false; };
-    finder = { _FXShowPosixPathInTitle = true; };
   };
 
   # https://github.com/zmre/mac-nix-simple-example
