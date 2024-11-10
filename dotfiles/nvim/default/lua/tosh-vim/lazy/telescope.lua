@@ -34,7 +34,7 @@ return {
         end
         local_actions = transform_mod(local_actions)
         local qfix = actions.send_to_qflist + local_actions.open_qfix
-
+        -- setup media file previews
         telescope.setup({
             defaults = {
                 preview = {
@@ -42,7 +42,34 @@ return {
                         local max_bytes = 10000
                         local cmd = { "head", "-c", max_bytes, filepath }
                         require('telescope.previewers.utils').job_maker(cmd, bufnr, opts)
+                    end,
+                    msg_bg_fillchar = " ",
+                    mime_hook = function(filepath, bufnr, opts)
+                        local is_image = function(file_path)
+                            local image_extensions = { "png", "webp", "jpg", "jpeg", "ico" } -- Supported image formats
+                            local split_path = vim.split(file_path:lower(), '.', { plain = true })
+                            local extension = split_path[#split_path]
+                            return vim.tbl_contains(image_extensions, extension)
+                        end
+                        if is_image(filepath) then
+                            local term = vim.api.nvim_open_term(bufnr, {})
+                            local function send_output(_, data, _)
+                                for _, d in ipairs(data) do
+                                    vim.api.nvim_chan_send(term, d .. '\r\n')
+                                end
+                            end
+                            vim.fn.jobstart(
+                                {
+                                    'chafa', filepath -- Terminal image viewer command
+                                },
+                                { on_stdout = send_output, stdout_buffered = true, pty = true })
+                        else
+                            require("telescope.previewers.utils").set_preview_message(bufnr, opts.winid,
+                                "Binary cannot be previewed")
+                        end
                     end
+
+
                 },
                 mappings = {
                     n = {
@@ -66,7 +93,6 @@ return {
                 },
             },
         })
-
         require("telescope").load_extension("live_grep_args")
 
         local live_grep_args = telescope.extensions.live_grep_args

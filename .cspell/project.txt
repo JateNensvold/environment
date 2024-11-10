@@ -34,3 +34,12 @@ htmldjango
 djlint
 undotree
 macbook
+prefech
+flakify
+dedupe
+lualine
+tabline
+fillchar
+jobstart
+chafa
+winid

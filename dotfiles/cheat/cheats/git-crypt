@@ -1,2 +1,8 @@
 # Check file encryption status
 git crypt status
+
+# Enable git crypt in repository
+git-crypt init
+
+# Specify files to encrypt by creating a .gitattributes file:
+<file path> filter=git-crypt diff=git-crypt

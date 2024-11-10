@@ -68,3 +68,14 @@ vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 vim.keymap.set("n", "<leader><leader>", function()
     vim.cmd("so")
 end)
+
+-- pane splits
+--      c-w v : vertical split
+--      c-w s : horizontal split
+-- close all panes but current focus
+--      c-o : only
+-- close single pane
+--      c-w q : quit split
+-- switch panes
+--      c-w c-w : cycle pane
+--      c-w <hjkl> : move between panes

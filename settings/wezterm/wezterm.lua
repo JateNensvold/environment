@@ -82,6 +82,7 @@ config.visual_bell = {
 config.colors = {
     visual_bell = '#202020',
 }
+config.window_background_opacity = 0.7
 
 config.audible_bell = "Disabled"
 

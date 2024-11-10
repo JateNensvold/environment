@@ -5,6 +5,7 @@ with pkgs;
   # Tools
   ansible
   autojump
+  chafa
   cheat
   # add realpath for darwin systems
   coreutils
