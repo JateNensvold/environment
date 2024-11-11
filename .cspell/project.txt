@@ -43,3 +43,4 @@ fillchar
 jobstart
 chafa
 winid
+tokyonight

@@ -37,12 +37,8 @@ return {
         -- setup media file previews
         telescope.setup({
             defaults = {
+                -- winblend = 10,
                 preview = {
-                    filesize_hook = function(filepath, bufnr, opts)
-                        local max_bytes = 10000
-                        local cmd = { "head", "-c", max_bytes, filepath }
-                        require('telescope.previewers.utils').job_maker(cmd, bufnr, opts)
-                    end,
                     msg_bg_fillchar = " ",
                     mime_hook = function(filepath, bufnr, opts)
                         local is_image = function(file_path)
@@ -68,8 +64,6 @@ return {
                                 "Binary cannot be previewed")
                         end
                     end
-
-
                 },
                 mappings = {
                     n = {
@@ -93,6 +87,7 @@ return {
                 },
             },
         })
+        vim.api.nvim_set_hl(0, "TelescopeNormal", { bg = "none" })
         require("telescope").load_extension("live_grep_args")
 
         local live_grep_args = telescope.extensions.live_grep_args
