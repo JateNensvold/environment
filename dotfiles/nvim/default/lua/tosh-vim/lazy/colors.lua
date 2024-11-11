@@ -35,6 +35,7 @@ return {
         "rose-pine/neovim",
         name = "rose-pine",
         config = function()
+            local palette = require("rose-pine.palette")
             require('rose-pine').setup({
                 styles = { transparency = true },
                 -- https://github.com/neovim/neovim/issues/18576
@@ -44,7 +45,8 @@ return {
                 --     vim.api.nvim_set_hl(0, "NormalNC", { bg ="none", blend=40 })
                 dim_inactive_windows = true,
                 highlight_groups = {
-                    NormalNC = { inherit = true, blend = 10 }
+                    NormalNC = { inherit = true, blend = 10 },
+                    Visual = { bg = palette.overlay, bold=true }
                 }
             })
 
