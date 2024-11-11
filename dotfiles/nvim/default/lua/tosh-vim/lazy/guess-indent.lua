@@ -4,7 +4,8 @@ return { -- using packer.nvim
 		local guess_indent = require('guess-indent')
 		guess_indent.setup({
 			filetype_exclude = {
-				"java"
+				"java",
+				"kotlin"
 			}
 		})
 	end,

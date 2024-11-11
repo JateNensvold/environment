@@ -29,3 +29,5 @@ wslpath
 traefik
 corepack
 truenas
+setuptools
+dockutil

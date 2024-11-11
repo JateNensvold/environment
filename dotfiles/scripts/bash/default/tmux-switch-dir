@@ -25,7 +25,7 @@ tmux_dir=$(tmux display-message -p '#{pane_current_path}')
 
 # create new session in background if a session of $tmux_name does not exist yet
 if ! tmux has-session -t="$tmux_name" 2>/dev/null; then
-	tmux new-session -ds "$tmux_name" -c "$tmux_dir"
+	tmux new-session -ds "$tmux_name" -c "$tmux_dir" -e TMUX_SESSION_PATH="$tmux_dir"
 fi
 
 # In tmux, switch to other session
