@@ -89,6 +89,6 @@ in {
   };
 
   system.activationScripts.postUserActivation.text = ''
-    osascript -e 'tell application "Finder" to set desktop picture to POSIX file "/Users/${user}/environment/settings/wezterm/backgrounds/smoke-1178319.jpg"'
+    osascript -e 'tell application "Finder" to set desktop picture to POSIX file "/Users/${user}/environment/settings/wezterm/backgrounds/water-background.png"'
   '';
 }
