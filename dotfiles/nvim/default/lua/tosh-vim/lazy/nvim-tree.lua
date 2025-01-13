@@ -37,7 +37,7 @@ return {
 
         -- Custom Mappings
         vim.keymap.set('n', "<leader>pv", function()
-            toggle_tree_repo_root({ find_file = true, desc = 'nvim-tree: View directory' })
+            toggle_tree_repo_root({ find_file = true, update_root=true, focus=true, desc = 'nvim-tree: View directory' })
         end)
         vim.keymap.set('n', "<leader>pp", function()
             api.tree.toggle({ find_file = true, desc = 'nvim-tree: View project' })
