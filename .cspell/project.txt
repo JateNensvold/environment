@@ -87,3 +87,5 @@ flakify
 dedupe
 Dorg
 shiftwidth
+autocommand
+diffview

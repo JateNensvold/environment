@@ -1,16 +1,17 @@
 {
-  "version": "0.2",
-  "language": "en",
-  "dictionaries": [
-    "project-vars"
-  ],
-  "words": [],
   "dictionaryDefinitions": [
     {
+      "addWords": true,
       "name": "project-vars",
-      "path": ".cspell/project.txt",
-      "addWords": true
+      "path": ".cspell/project.txt"
     }
   ],
-  "globRoot": "."
+  "globRoot": ".",
+  "words": [
+  ],
+  "language": "en",
+  "version": "0.2",
+  "dictionaries": [
+    "project-vars"
+  ]
 }
