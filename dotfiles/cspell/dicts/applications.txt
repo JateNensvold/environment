@@ -31,3 +31,4 @@ corepack
 truenas
 setuptools
 dockutil
+clangd

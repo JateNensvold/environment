@@ -165,6 +165,9 @@ return {
                 capabilities = jsonls_capabilities
             }
 
+            -- c++
+            lspconfig.clangd.setup({})
+
             -- Setup lsp autocompletion
             local cmp = require("cmp")
             local cmp_select = { behavior = cmp.SelectBehavior.Select }

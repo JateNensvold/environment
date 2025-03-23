@@ -5,6 +5,8 @@ with pkgs;
   # Tools
   ansible
   autojump
+  # generates .cache and compile_commands.json files required by clangd
+  bear
   chafa
   cheat
   # add realpath for darwin systems
@@ -68,6 +70,7 @@ with pkgs;
   sqls # sql
   taplo # toml
   vscode-langservers-extracted # html/css/json/ESLint
+  clang-tools # c++ lsp
 
   # Formatters
   black # python
