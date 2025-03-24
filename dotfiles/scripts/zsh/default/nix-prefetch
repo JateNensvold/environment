@@ -1,0 +1,10 @@
+#!/usr/bin/env zsh
+# shellcheck disable=SC1071
+
+if [ "$#" -lt 3 ]; then
+	echo "Usage: nix-prefetch <project-owner> <project-name> <tag>";
+	return 1
+fi
+
+nix-prefetch-github $1 $2 --rev $3
+

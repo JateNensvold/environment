@@ -4,13 +4,13 @@
 ### UTILS
 # show utils commands and custom aliases
 
-local helptxt="fp     [find:path]
+local help_txt="fp     [find:path]
 kp     [kill:process]
 ks     [kill:server]
 bcp    [B]rew [C]lean [P]lugin]      Uninstall brew program
 bip    [B]rew [I]nstall [P]lugin]    Install brew program
 bup    [B]rew [U]pdate [P]lugin]     Update brew program
-scpf   [S]cp [F]older                Copy folder over ssh conection
+scpf   [S]cp [F]older                Copy folder over ssh connection
 
 ga     [alias]                       git add .
 gc     [alias]                       git commit -m \${1}
@@ -36,9 +36,12 @@ ff     [alias] find-file             var=\$(fd | fzf --header='[find:file]') && 
 sf     [alias] search-file           rg -g '!.git' --hidden
 sa     [alias] search-alias          alias | fzf
 se     [alias] search-env            env | fzf \${FZF_DEFAULT_OPTS} -m --header='[find:env]'
-sp     [alias] search-packages       home-manager packges | fzf
+sp     [alias] search-packages       home-manager packages | fzf
 
 nv     [alias] nix-version           nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'
+np     [alias] nix-prefetch          nix-prefetch-github <project-owner> <project-name> --rev <tag>
+
+
 u      [alias]                       utils
 reload [alias] reload-nix            $RELOAD_PREFIX $RELOAD_SUFFIX Current Config: \$USER=${USER} - \$NIX_HOST=${NIX_HOST} \$HARDWARE=${HARDWARE} \$ARCH=${ARCH}
 
@@ -53,7 +56,7 @@ zx     [alias]                       source ~/.zshrc
 zz     [alias]                       \$EDITOR ~/.config/nvim
 "
 
-local cmd=$(echo $helptxt | eval "fzf ${FZF_DEFAULT_OPTS} --header='[utils:show]'" | awk '{print $1}')
+local cmd=$(echo $help_txt | eval "fzf ${FZF_DEFAULT_OPTS} --header='[utils:show]'" | awk '{print $1}')
 
 if [[ -n $cmd ]]; then
 	eval ${cmd}

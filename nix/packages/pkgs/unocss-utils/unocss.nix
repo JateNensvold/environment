@@ -1,22 +1,30 @@
 { lib, stdenv, fetchFromGitHub, pnpm_9, nodejs, makeBinaryWrapper }:
 
-stdenv.mkDerivation (finalAttrs: {
+stdenv.mkDerivation rec {
   pname = "unocss";
   version = "0.62.4";
 
   src = fetchFromGitHub {
     owner = "unocss";
     repo = "unocss";
-    rev = "v${finalAttrs.version}";
+    rev = "v${version}";
     hash = "sha256-bY51oSBAZKRcMdwT//PI6iHljSJ0OkTYCt93cHhbKXA=";
   };
 
   pnpmDeps = pnpm_9.fetchDeps {
-    inherit (finalAttrs) pname version src;
-    hash = "sha256-EqYXvcbVxeJ7IF3aKGlyV2vPY0j3O++bR5Wi3zkpssc=";
+    inherit pname version src;
+    # hash = "sha256-N5/42kvcNNd9j2CacPFy98pB6eho3nNayQRGgWb+24g=";
+    hash = "sha256-N5/42kvcNNd9j2CacPFy98pB6eho3nNayQRGgWb+24g=";
   };
 
   nativeBuildInputs = [ nodejs pnpm_9.configHook makeBinaryWrapper ];
+
+  # The following links are missing after building unocss, disabling the broken symlink check
+  # /lib/unocss/docs
+  # /lib/unocss/interactive
+  # /lib/unocss/playground
+  # /lib/unocss/test/fixtures/vite-legacy-chunks
+  dontCheckForBrokenSymlinks = true;
 
   prePnpmInstall = ''
     pnpm config set dedupe-peer-dependents false
@@ -53,4 +61,4 @@ stdenv.mkDerivation (finalAttrs: {
     mainProgram = "unocss";
     platforms = platforms.all;
   };
-})
+}

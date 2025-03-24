@@ -47,6 +47,7 @@
         sp = "home-manager packages | fzf --header='[search:packages]'";
 
         nv = "nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'";
+        np = "nix-prefetch";
         u = "utils";
         reload = "reload-home-manager-config && zx";
 

@@ -1,144 +1,152 @@
-#:schema https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
-
-version = 2
-final_space = true
 console_title_template = '{{ .UserName }}@{{ .HostName }}'
-disable_notice = true
+version = 3
+final_space = true
 
 [palettes]
   template = '{{ if gt (.Env.JOB_COUNT | int) 0 }}bg_proc{{ else }}no_bg_proc{{ end }}'
 
-  [palettes.list.bg_proc]
-    grey = '#6c6c6c'
-    teal = '66'
-    green = 'green'
-    yellow = 'yellow'
-    orange = '#e65100'
-    git-modified = '178'
-    git-conflict = '196'
-    dark-blue = '31'
-    red = 'red'
-    exec-time = '101'
-    direnv = '178'
-    nix-shell = '200'
-    time = 'p:teal'
-    session = '180'
-    pyenv = '37'
-    filler = 'p:orange'
+  [palettes.list]
+    [palettes.list.bg_proc]
+      dark-blue = '31'
+      direnv = '178'
+      exec-time = '101'
+      filler = 'p:orange'
+      git-conflict = '196'
+      git-modified = '178'
+      green = 'green'
+      grey = '#6c6c6c'
+      nix-shell = '200'
+      orange = '#e65100'
+      pyenv = '37'
+      red = 'red'
+      session = '180'
+      teal = '66'
+      time = 'p:teal'
+      yellow = 'yellow'
 
-  [palettes.list.no_bg_proc]
-    grey = '#6c6c6c'
-    teal = '66'
-    green = 'green'
-    yellow = 'yellow'
-    orange = '#e65100'
-    git-modified = '178'
-    git-conflict = '196'
-    dark-blue = '31'
-    red = 'red'
-    exec-time = '101'
-    direnv = '178'
-    nix-shell = '200'
-    time = 'p:teal'
-    session = '180'
-    pyenv = '37'
-    filler = 'p:teal'
+    [palettes.list.no_bg_proc]
+      dark-blue = '31'
+      direnv = '178'
+      exec-time = '101'
+      filler = 'p:teal'
+      git-conflict = '196'
+      git-modified = '178'
+      green = 'green'
+      grey = '#6c6c6c'
+      nix-shell = '200'
+      orange = '#e65100'
+      pyenv = '37'
+      red = 'red'
+      session = '180'
+      teal = '66'
+      time = 'p:teal'
+      yellow = 'yellow'
+
+[secondary_prompt]
+  template = '>> '
+  background = 'transparent'
+  foreground_templates = ['{{if gt .Code 0}}p:red{{end}}', '{{if eq .Code 0}}p:green{{end}}']
+
+[transient_prompt]
+  template = '> '
+  background = 'transparent'
+  foreground_templates = ['{{if gt .Code 0}}p:red{{end}}', '{{if eq .Code 0}}p:green{{end}}']
 
 [[blocks]]
   type = 'prompt'
   alignment = 'left'
 
   [[blocks.segments]]
+    template = '{{ .Path }}'
+    foreground = 'p:dark-blue'
+    background = 'transparent'
     type = 'path'
     style = 'plain'
-    background = 'transparent'
-    foreground = 'p:dark-blue'
-    template = '{{ .Path }}'
 
     [blocks.segments.properties]
+      cache_duration = 'none'
       style = 'full'
 
   [[blocks.segments]]
+    foreground = 'p:green'
+    templates_logic = 'join'
+    background = 'transparent'
     type = 'git'
     style = 'plain'
-    foreground = 'p:green'
-    background = 'transparent'
-    foreground_templates = [
-      "{{ if or (.Working.Changed) (.Staging.Changed) }}p:git-modified{{ end }}",
-      "{{ if or (.Merge) (.Rebase) }}p:git-conflict{{ end }}",
-      "{{ if .Detached }}p:grey{{ end }}",
-    ]
-    templates = [
-      ' {{ .HEAD }}',
-      '{{ if (gt .Ahead 0) }}<p:green,>+{{ .Ahead }}</>{{ end }}',
-      '{{ if (gt .Behind 0) }}<p:git-conflict,>-{{ .Behind }}</>{{ end }}',
-      '{{ if or (.Working.Changed) (.Staging.Changed) }}<p:teal,>(</>{{ end }}',
-      '{{ if .Working.Changed }}<p:git-modified,>{{ .Working.String }}</>{{ end }}',
-      '{{ if and (.Working.Changed) (.Staging.Changed) }}<p:teal,>|</>{{ end }}',
-      '{{ if .Staging.Changed }}<p:green,>{{ .Staging.String }}</>{{ end }}',
-      '{{ if or (.Working.Changed) (.Staging.Changed) }}<p:teal,>)</>{{ end }}',
-      '{{ if gt .StashCount 0 }} *{{ .StashCount }}{{ end }}',
-    ]
-    templates_logic = 'join'
+    foreground_templates = ['{{ if or (.Working.Changed) (.Staging.Changed) }}p:git-modified{{ end }}', '{{ if or (.Merge) (.Rebase) }}p:git-conflict{{ end }}', '{{ if .Detached }}p:grey{{ end }}']
+    templates = [' {{ .HEAD }}', '{{ if (gt .Ahead 0) }}<p:green,>+{{ .Ahead }}</>{{ end }}', '{{ if (gt .Behind 0) }}<p:git-conflict,>-{{ .Behind }}</>{{ end }}', '{{ if or (.Working.Changed) (.Staging.Changed) }}<p:teal,>(</>{{ end }}', '{{ if .Working.Changed }}<p:git-modified,>{{ .Working.String }}</>{{ end }}', '{{ if and (.Working.Changed) (.Staging.Changed) }}<p:teal,>|</>{{ end }}', '{{ if .Staging.Changed }}<p:green,>{{ .Staging.String }}</>{{ end }}', '{{ if or (.Working.Changed) (.Staging.Changed) }}<p:teal,>)</>{{ end }}', '{{ if gt .StashCount 0 }} *{{ .StashCount }}{{ end }}']
 
     [blocks.segments.properties]
       branch_icon = ''
+      cache_duration = 'none'
       commit_icon = ''
       fetch_status = true
 
   [[blocks.segments]]
+    template = '{{ if gt (.Env.JOB_COUNT | int) 0 }} [{{.Env.JOB_COUNT}}]{{ else }} .{{ end }}'
+    foreground = 'p:filler'
     type = 'text'
     style = 'plain'
-    foreground = 'p:filler'
-    template = '{{ if gt (.Env.JOB_COUNT | int) 0 }} [{{.Env.JOB_COUNT}}]{{ else }} .{{ end }}'
 
+    [blocks.segments.properties]
+      cache_duration = 'none'
 
 [[blocks]]
   type = 'prompt'
-  overflow = 'hide'
   alignment = 'right'
   filler = '<p:filler,>.</>'
+  overflow = 'hide'
 
   [[blocks.segments]]
-    type = 'executiontime'
-    style = 'plain'
+    template = ' {{ .FormattedMs }}'
     foreground = 'p:exec-time'
     background = 'transparent'
-    template = ' {{ .FormattedMs }}'
+    type = 'executiontime'
+    style = 'plain'
 
     [blocks.segments.properties]
+      cache_duration = 'none'
       threshold = 1000
 
   [[blocks.segments]]
-    type = 'python'
-    style = 'plain'
+    template = '{{ if .Error }}{{ .Error }}{{ else }}{{ if .Venv }} ({{ .Venv }} {{ .Major }}.{{.Minor}}){{ end }}{{ end }}'
     foreground = 'p:pyenv'
     background = 'transparent'
-    template = '{{ if .Error }}{{ .Error }}{{ else }}{{ if .Venv }} ({{ .Venv }} {{ .Major }}.{{.Minor}}){{ end }}{{ end }}'
-
-  [[blocks.segments]]
-    type = 'text'
+    type = 'python'
     style = 'plain'
-    foreground = 'p:direnv'
-    background = 'transparent'
-    template = '{{ if .Env.DIRENV_DIR }} direnv{{end}}'
-
-  [[blocks.segments]]
-    type = 'session'
-    style = 'plain'
-    foreground = 'p:session'
-    background = 'transparent'
-    template = '{{ if .SSHSession }} {{ .UserName }}@{{ .HostName }}{{end}}'
-
-  [[blocks.segments]]
-    type = 'time'
-    style = 'plain'
-    foreground = 'p:time'
-    background = 'transparent'
 
     [blocks.segments.properties]
-      time_format = '3:04:05 PM'
+      cache_duration = 'none'
 
+  [[blocks.segments]]
+    template = '{{ if .Env.DIRENV_DIR }} direnv{{end}}'
+    foreground = 'p:direnv'
+    background = 'transparent'
+    type = 'text'
+    style = 'plain'
+
+    [blocks.segments.properties]
+      cache_duration = 'none'
+
+  [[blocks.segments]]
+    template = '{{ if .SSHSession }} {{ .UserName }}@{{ .HostName }}{{end}}'
+    foreground = 'p:session'
+    background = 'transparent'
+    type = 'session'
+    style = 'plain'
+
+    [blocks.segments.properties]
+      cache_duration = 'none'
+
+  [[blocks.segments]]
+    foreground = 'p:time'
+    background = 'transparent'
+    type = 'time'
+    style = 'plain'
+
+    [blocks.segments.properties]
+      cache_duration = 'none'
+      time_format = '3:04:05 PM'
 
 [[blocks]]
   type = 'prompt'
@@ -146,34 +154,21 @@ disable_notice = true
   newline = true
 
   [[blocks.segments]]
-    type = 'text'
-    style = 'plain'
+    template = '{{ if .Env.IN_NIX_SHELL }}[nix-shell] {{end}}'
     foreground = 'p:nix-shell'
     background = 'transparent'
-    template = '{{ if .Env.IN_NIX_SHELL }}[nix-shell] {{end}}'
-
-  [[blocks.segments]]
     type = 'text'
     style = 'plain'
-    foreground_templates = [
-      "{{if gt .Code 0}}p:red{{end}}",
-      "{{if eq .Code 0}}p:green{{end}}",
-    ]
-    background = 'transparent'
+
+    [blocks.segments.properties]
+      cache_duration = 'none'
+
+  [[blocks.segments]]
     template = '>'
+    background = 'transparent'
+    type = 'text'
+    style = 'plain'
+    foreground_templates = ['{{if gt .Code 0}}p:red{{end}}', '{{if eq .Code 0}}p:green{{end}}']
 
-[transient_prompt]
-  foreground_templates = [
-    "{{if gt .Code 0}}p:red{{end}}",
-    "{{if eq .Code 0}}p:green{{end}}",
-  ]
-  background = 'transparent'
-  template = '> '
-
-[secondary_prompt]
-  foreground_templates = [
-    "{{if gt .Code 0}}p:red{{end}}",
-    "{{if eq .Code 0}}p:green{{end}}",
-  ]
-  background = 'transparent'
-  template = '>> '
+    [blocks.segments.properties]
+      cache_duration = 'none'
