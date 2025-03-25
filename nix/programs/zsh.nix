@@ -50,6 +50,7 @@
         np = "nix-prefetch";
         u = "utils";
         reload = "reload-home-manager-config && zx";
+        ng = "nix-collect-garbage -d";
 
         ce = "cd ~/environment";
         ct = ''cd "$TMUX_SESSION_PATH"'';
