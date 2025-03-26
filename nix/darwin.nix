@@ -1,4 +1,4 @@
-{ user, host, hardware, pkgs, stablePkgs, stateVersion, ... }:
+{ user, host, hardware, pkgs, stablePkgs, ... }:
 let
   modulePath = "./modules";
   hostPath = "./hosts";
@@ -30,9 +30,8 @@ in {
     backupFileExtension = "hm-backup";
   };
 
-  services.nix-daemon.enable = true;
-
   nix = {
+    enable = true;
     settings.experimental-features = "nix-command flakes";
     settings.extra-nix-path = "nixpkgs=flake:nixpkgs";
   };
