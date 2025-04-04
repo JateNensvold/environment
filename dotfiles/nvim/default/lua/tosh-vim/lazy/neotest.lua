@@ -19,13 +19,14 @@ return {
 		end, {})
 
 		neotest.setup({
-		-- 	adapters = {
-		-- 		-- require("neotest-java")({
-		-- 		-- 	ignore_wrapper = false, -- whether to ignore maven/gradle wrapper
-		-- 		-- 	junit_jar = nil,
-		-- 		-- 	-- default: .local/share/nvim/neotest-java/junit-platform-console-standalone-[version].jar
-		-- 		-- })
-		-- 	}
+			adapters = {
+				-- require("neotest-java")({
+				-- 	ignore_wrapper = false, -- whether to ignore maven/gradle wrapper
+				-- 	junit_jar = nil,
+				-- 	-- default: .local/share/nvim/neotest-java/junit-platform-console-standalone-[version].jar
+				-- })
+				require('rustaceanvim.neotest')
+			}
 		})
 	end,
 }
