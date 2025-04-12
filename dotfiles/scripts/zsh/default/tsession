@@ -14,7 +14,7 @@ if [[ $1 = 'vim' && -z $TMUX ]]; then
 	return 1
 fi
 
-# tmux-sessionizer is a bash script and requires ZSH specific variables to be reset so they are availible for the script
+# tmux-sessionizer is a bash script and requires ZSH specific variables to be reset so they are available for the script
 TMUX_SESSIONIZER_PATHS=$TMUX_SESSIONIZER_PATHS tmux-sessionizer
 local tsessionizer_status=$?
 

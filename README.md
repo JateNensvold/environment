@@ -52,8 +52,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; iex (iwr https://raw.githubuse
 
 ### Linux configuration
 
-Modify the below values to the desired Host configuration. See [flake.nix](
-./flake.nix) for supported values
+Modify the below values to the desired Host configuration. See [flake.nix](./flake.nix) for supported values
 
 ```zsh
 # Example nix home-manager setup
@@ -79,7 +78,7 @@ home-manager switch --flake ~/environment/.#$USER-$NIX_HOST-$HARDWARE-$ARCH -b h
 ### MacOS configuration
 
 Change ARCH to darwin supported architecture and follow the same steps as in[
-Linux configuration](#linux-configuration)
+[Linux configuration](#linux-configuration)
 
 ```zsh
 # Example nix darwin setup
@@ -108,7 +107,7 @@ darwin-rebuild switch --flake ~/environment/.#$USER-$NIX_HOST-$HARDWARE-$ARCH -b
   - Disable Windows Settings
     - StickyKeys
   - Update Windows(WIP)
-  - Install Program list [[Full List Found Here]](scripts/windows/windows-tools.json)
+  - Install Program list [Full List Found Here](scripts/windows/windows-tools.json)
     - FireFox
     - VSCode
     - Spotify
@@ -137,16 +136,16 @@ darwin-rebuild switch --flake ~/environment/.#$USER-$NIX_HOST-$HARDWARE-$ARCH -b
 ### Windows PowerToys
 
 - Run program
-    `Win + Space`
+  `Win + Space`
 - Focus Cursor
-    `L-Ctrl` x2
+  `L-Ctrl` x2
 
 ### Wezterm
 
 - New Terminal
-    `Ctrl + Shift + T`
+  `Ctrl + Shift + T`
 - Cycle Terminal
-    `Ctrl + Tab`
+  `Ctrl + Tab`
 
 ## Todo
 
@@ -154,7 +153,7 @@ darwin-rebuild switch --flake ~/environment/.#$USER-$NIX_HOST-$HARDWARE-$ARCH -b
   - Wallpaper engine[Not supported without [SteamCMD](https://www.digitalcitizen.life/steam-cmd-windows/)]
   - Pin programs to windows Taskbar
   - powertoys
-    - Settings[[Not Support currently]](https://github.com/microsoft/PowerToys/issues/4649)
+    - Settings([Not Support currently](https://github.com/microsoft/PowerToys/issues/4649))
       - Manual backup and restores of settings is available, latest settings should be
-            stored in `environment/settings/powertoys/`, currently settings will be linked to the
-            powertoys install directory but the user has to manually load them
+        stored in `environment/settings/powertoys/`, currently settings will be linked to the
+        powertoys install directory but the user has to manually load them

@@ -1,34 +1,37 @@
 {
-  "globRoot": ".",
+  "language": "en",
+  "version": "0.2",
   "dictionaryDefinitions": [
     {
-      "path": "dicts/neovim-dictionary.txt",
       "name": "g-neovim",
-      "addWords": true
+      "addWords": true,
+      "path": "dicts/neovim-dictionary.txt"
     },
     {
-      "path": "dicts/authors.txt",
       "name": "authors",
-      "addWords": true
+      "addWords": true,
+      "path": "dicts/authors.txt"
     },
     {
-      "path": "dicts/linux.txt",
       "name": "linux",
-      "addWords": true
+      "addWords": true,
+      "path": "dicts/linux.txt"
     },
     {
-      "path": "dicts/applications.txt",
       "name": "applications",
-      "addWords": true
+      "addWords": true,
+      "path": "dicts/applications.txt"
     },
     {
-      "path": "dicts/nix.txt",
       "name": "nix",
-      "addWords": true
+      "addWords": true,
+      "path": "dicts/nix.txt"
     }
   ],
+  "globRoot": ".",
   "words": [
-    "fulfillable"
+    "fulfillable",
+    "justfile"
   ],
   "dictionaries": [
     "g-neovim",
@@ -36,7 +39,5 @@
     "linux",
     "applications",
     "nix"
-  ],
-  "version": "0.2",
-  "language": "en"
+  ]
 }
