@@ -28,7 +28,7 @@ gbb    [alias] git-branch-back       git checkout -
 
 git id [alias] git-identity			 Configure git identity for current repository
 git who								 Print git identity for current repository
-git forget                           Erase git identity for current repository
+git forget                           Add a file to be ignored by the local git index
 
 xt     [alias] view-files-recursive  eza -T
 x2     [alias]                       eza --tree --level=2
