@@ -38,6 +38,11 @@ return {
                         return require("lspconfig.util").root_pattern(".git")(...)
                     end,
                 }
+            },
+            diagnostics = {
+                virtual_text = {
+                    source = true
+                }
             }
         },
         config = function()
