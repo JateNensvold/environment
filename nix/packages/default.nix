@@ -9,7 +9,7 @@ final: prev: {
     unocss-lsp = prev.callPackage ./pkgs/unocss-lsp { };
     unocss = prev.callPackage ./pkgs/unocss-utils/unocss.nix { };
     cfn-lint = prev.python3.pkgs.callPackage ./pkgs/cfn-lint { };
-    taplo = prev.callPackage ./pkgs/taplo { };
+    # taplo = prev.callPackage ./pkgs/taplo { };
 
     # get sha256 using nix-prefetch-url or nix-prefech-github
   };

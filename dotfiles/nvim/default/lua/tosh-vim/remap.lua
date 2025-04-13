@@ -48,7 +48,7 @@ vim.keymap.set({ "n", "v" }, "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<C
 -- Format current file
 vim.keymap.set({ "n", "v" }, "<leader>f", function()
     vim.lsp.buf.format()
-    vim.diagnostic.enable(0)
+    vim.diagnostic.enable(true)
 end)
 
 -- buffer movement
