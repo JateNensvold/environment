@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+# claude-sandbox.sh — Rootless sandbox for Claude Code
+#
+# Isolates: filesystem, PID, IPC, UTS, user
+# Shares:   host network (simple, reliable, no slirp4netns)
+#
+# Visible inside sandbox:
+#   /nix/store       — read-only
+#   /workspace       — read-write (current directory)
+#   /home/claude/.claude — read-write (persistent global config)
+#   /proc /dev /tmp /run — essentials
+#   /etc/{resolv.conf,ssl,passwd,group} — networking & identity
+# Everything else (home, usr, etc, other projects, docker socket) — gone
+
+set -euo pipefail
+
+WORKSPACE="$(pwd)"
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --workspace) WORKSPACE="$2"; shift 2 ;;
+        -*)          echo "Unknown option: $1" >&2; exit 1 ;;
+        *)           WORKSPACE="$1"; shift ;;
+    esac
+done
+
+WORKSPACE="$(realpath "$WORKSPACE")"
+[[ -d "$WORKSPACE" ]] || { echo "ERROR: Workspace '$WORKSPACE' not found" >&2; exit 1; }
+
+resolve_bin() {
+    local path
+    path="$(command -v "$1" 2>/dev/null)" || { echo "ERROR: '$1' not found" >&2; exit 1; }
+    readlink -f "$path"
+}
+
+BWRAP="$(resolve_bin bwrap)"
+BASH="$(resolve_bin bash)"
+CLAUDE="$(resolve_bin claude)"
+NODE="$(resolve_bin node)"
+IP="$(resolve_bin ip)"
+CAT="$(resolve_bin cat)"
+
+# Build deduplicated PATH from resolved binary directories
+declare -A SEEN
+SANDBOX_PATH=""
+for bin in "$CLAUDE" "$NODE" "$BASH" "$IP" "$CAT"; do
+    dir="$(dirname "$bin")"
+    if [[ -z "${SEEN[$dir]:-}" ]]; then
+        SEEN[$dir]=1
+        SANDBOX_PATH="${SANDBOX_PATH:+$SANDBOX_PATH:}$dir"
+    fi
+done
+
+# Resolve resolv.conf (may be symlink under systemd-resolved)
+RESOLV="$(readlink -f /etc/resolv.conf)"
+
+# Pass through API keys if set
+ENV_ARGS=()
+for var in ANTHROPIC_API_KEY CLAUDE_API_KEY GITHUB_TOKEN; do
+    [[ -n "${!var:-}" ]] && ENV_ARGS+=(--setenv "$var" "${!var}")
+done
+
+# Ensure ~/.claude exists for bind mount
+mkdir -p "$HOME/.claude"
+
+# Optional: MCP server config lives at ~/.claude.json (outside ~/.claude/)
+MCP_ARGS=()
+[[ -f "$HOME/.claude.json" ]] && MCP_ARGS=(--bind "$HOME/.claude.json" /home/claude/.claude.json)
+
+echo "[sandbox] workspace: $WORKSPACE"
+echo "[sandbox] starting claude..."
+
+exec "$BWRAP" \
+    --unshare-user \
+    --unshare-pid \
+    --unshare-ipc \
+    --unshare-uts \
+    --hostname claude-sandbox \
+    --ro-bind /nix/store /nix/store \
+    --bind "$WORKSPACE" /workspace \
+    --proc /proc \
+    --dev /dev \
+    --tmpfs /tmp \
+    --tmpfs /run \
+    --tmpfs /home/claude \
+    --bind "$HOME/.claude" /home/claude/.claude \
+    --ro-bind "$RESOLV" /etc/resolv.conf \
+    --ro-bind /etc/ssl /etc/ssl \
+    --ro-bind /etc/passwd /etc/passwd \
+    --ro-bind /etc/group /etc/group \
+    --chdir /workspace \
+    --setenv HOME /home/claude \
+    --setenv TERM "${TERM:-xterm-256color}" \
+    --setenv PATH "$SANDBOX_PATH" \
+    --setenv LANG "${LANG:-en_US.UTF-8}" \
+    --setenv NIX_SSL_CERT_FILE /etc/ssl/certs/ca-certificates.crt \
+    "${ENV_ARGS[@]}" \
+    "${MCP_ARGS[@]}" \
+    -- "$CLAUDE"
