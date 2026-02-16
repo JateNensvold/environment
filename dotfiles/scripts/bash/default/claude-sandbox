@@ -7,7 +7,7 @@
 # Visible inside sandbox:
 #   /nix/store       — read-only
 #   /workspace       — read-write (current directory)
-#   /home/claude/.claude — read-write (persistent global config)
+#   /home/$USER/.claude — read-write (persistent global config)
 #   /proc /dev /tmp /run — essentials
 #   /etc/{resolv.conf,ssl,passwd,group} — networking & identity
 # Everything else (home, usr, etc, other projects, docker socket) — gone
@@ -60,12 +60,9 @@ for var in ANTHROPIC_API_KEY CLAUDE_API_KEY GITHUB_TOKEN; do
     [[ -n "${!var:-}" ]] && ENV_ARGS+=(--setenv "$var" "${!var}")
 done
 
-# Ensure ~/.claude exists for bind mount
+# Ensure ~/.claude and ~/.claude.json exist for bind mounts
 mkdir -p "$HOME/.claude"
-
-# Optional: MCP server config lives at ~/.claude.json (outside ~/.claude/)
-MCP_ARGS=()
-[[ -f "$HOME/.claude.json" ]] && MCP_ARGS=(--bind "$HOME/.claude.json" /home/claude/.claude.json)
+touch "$HOME/.claude.json"
 
 echo "[sandbox] workspace: $WORKSPACE"
 echo "[sandbox] starting claude..."
@@ -82,18 +79,19 @@ exec "$BWRAP" \
     --dev /dev \
     --tmpfs /tmp \
     --tmpfs /run \
-    --tmpfs /home/claude \
-    --bind "$HOME/.claude" /home/claude/.claude \
+    --tmpfs "/home/$USER" \
+    --bind "$HOME/.claude" "/home/$USER/.claude" \
+    --bind "$HOME/.claude.json" "/home/$USER/.claude.json" \
     --ro-bind "$RESOLV" /etc/resolv.conf \
     --ro-bind /etc/ssl /etc/ssl \
     --ro-bind /etc/passwd /etc/passwd \
     --ro-bind /etc/group /etc/group \
     --chdir /workspace \
-    --setenv HOME /home/claude \
+    --setenv HOME "/home/$USER" \
+    --setenv SHELL "$BASH" \
     --setenv TERM "${TERM:-xterm-256color}" \
     --setenv PATH "$SANDBOX_PATH" \
     --setenv LANG "${LANG:-en_US.UTF-8}" \
     --setenv NIX_SSL_CERT_FILE /etc/ssl/certs/ca-certificates.crt \
     "${ENV_ARGS[@]}" \
-    "${MCP_ARGS[@]}" \
     -- "$CLAUDE"
