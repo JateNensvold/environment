@@ -32,6 +32,9 @@
         # Steam locomotive
         sl = "sl -ea";
 
+        # claude code
+        cs = "claude-sandbox";
+
         xt = "eza -T";
         x2 = "eza --tree --level=2";
         x3 = "eza --tree --level=3";
@@ -105,7 +108,7 @@
         ];
       };
 
-      initExtra = ''
+      initContent = ''
 
         # oh-my-posh blocks zsh startup for ~1s on every call on darwin, the following code
         # caches prompts for each hm generation so it only blocks the first time the prompt is generated

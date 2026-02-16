@@ -7,6 +7,8 @@ with pkgs;
   autojump
   # generates .cache and compile_commands.json files required by clangd
   bear
+  bubblewrap
+  claude-code
   chafa
   cheat
   # add realpath for darwin systems
@@ -15,7 +17,7 @@ with pkgs;
   cmake
   cmatrix # hacker man
   delta
-  dogdns
+  doggo
   erdtree
   fzf
   fd
@@ -31,10 +33,12 @@ with pkgs;
   rustscan
   shellcheck
   sl
+  slirp4netns
   sqlite
   tealdeer
   tmux
   unzip
+  util-linux
   xclip
   zip
   #Nvim plugins
@@ -56,9 +60,8 @@ with pkgs;
   ruby
 
   # LSP servers
-  ansible-language-server
   docker-compose-language-service # docker compose
-  dockerfile-language-server-nodejs # dockerfile
+  dockerfile-language-server # dockerfile
   htmx-lsp # htmx
   lua-language-server # lua
   markdownlint-cli # markdown
@@ -75,7 +78,7 @@ with pkgs;
   # Formatters
   black # python
   djlint # template files
-  nixfmt-classic # nix
+  nixfmt # nix
   prettierd # html/js/css
   shfmt # bash, sh
   sqlfluff # sql

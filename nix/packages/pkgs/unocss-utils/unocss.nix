@@ -1,4 +1,5 @@
-{ lib, stdenv, fetchFromGitHub, pnpm_9, nodejs, makeBinaryWrapper }:
+{ lib, stdenv, fetchFromGitHub, fetchPnpmDeps, pnpmConfigHook, nodejs
+, makeBinaryWrapper, pnpm }:
 
 stdenv.mkDerivation rec {
   pname = "unocss";
@@ -11,13 +12,13 @@ stdenv.mkDerivation rec {
     hash = "sha256-bY51oSBAZKRcMdwT//PI6iHljSJ0OkTYCt93cHhbKXA=";
   };
 
-  pnpmDeps = pnpm_9.fetchDeps {
+  pnpmDeps = fetchPnpmDeps {
     inherit pname version src;
-    # hash = "sha256-N5/42kvcNNd9j2CacPFy98pB6eho3nNayQRGgWb+24g=";
-    hash = "sha256-N5/42kvcNNd9j2CacPFy98pB6eho3nNayQRGgWb+24g=";
+    hash = "sha256-9UigZ7dGq3lFw5/vtQMZifHv4Ro/9LwG//aYTeBWodg=";
+    fetcherVersion = 2;
   };
 
-  nativeBuildInputs = [ nodejs pnpm_9.configHook makeBinaryWrapper ];
+  nativeBuildInputs = [ nodejs pnpmConfigHook makeBinaryWrapper pnpm ];
 
   # The following links are missing after building unocss, disabling the broken symlink check
   # /lib/unocss/docs

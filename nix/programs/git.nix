@@ -9,7 +9,25 @@ in {
 
   programs.git = {
     enable = true;
-    extraConfig = {
+    settings = {
+      # This is optional, as `git identity` will call the `git-identity` script by itself, however
+      # setting it up explicitly as an alias gives you autocomplete
+      aliases = {
+        identity = "! git-identity";
+        id = "! git-identity";
+        who = ''
+          !f() {
+              user=$(git config user.name)
+              email=$(git config user.email)
+
+              echo "User=[$user]"
+              echo "Email=[$email]"
+            }
+            f
+        '';
+        forget = "! git-forget";
+      };
+
       user.personal = {
         name = "Nate Jensvold";
         email = "jensvoldnate@gmail.com";
@@ -40,24 +58,6 @@ in {
       init = { defaultBranch = "master"; };
       pull = { rebase = "true"; };
       url."git@github.com:" = { insteadOf = "https://github.com/"; };
-    };
-
-    # This is optional, as `git identity` will call the `git-identity` script by itself, however
-    # setting it up explicitly as an alias gives you autocomplete
-    aliases = {
-      identity = "! git-identity";
-      id = "! git-identity";
-      who = ''
-        !f() {
-            user=$(git config user.name)
-            email=$(git config user.email)
-
-            echo "User=[$user]"
-            echo "Email=[$email]"
-          }
-          f
-      '';
-      forget = "! git-forget";
     };
   };
 }
