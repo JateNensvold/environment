@@ -7,12 +7,13 @@ in {
   # have to enable zsh in darwin config due to some weird darwin bug
   programs.zsh.enable = true;
 
-  imports = [ ./${hostPath}/${host}/darwin ];
+  #imports = [ ./${hostPath}/${host}/darwin ];
 
   # nix-darwin configuration
   users.users.${user} = {
     name = "${user}";
     home = "/Users/${user}";
+    shell = pkgs.zsh;
   };
 
   # home-manager configuration
@@ -35,6 +36,8 @@ in {
     settings.experimental-features = "nix-command flakes";
     settings.extra-nix-path = "nixpkgs=flake:nixpkgs";
   };
+
+  ids.gids.nixbld = 350;
 
   launchd = {
     user = {
@@ -84,10 +87,20 @@ in {
     #
     # nix shell nixpkgs#mas
     # mas search <app name>
-    masApps = { "amphetamine" = 937984704; };
+    masApps = {
+      # "amphetamine" = 937984704;
+    };
   };
 
+  # Set desktop background and enable extended keypress in vscode
   system.activationScripts.postUserActivation.text = ''
     osascript -e 'tell application "Finder" to set desktop picture to POSIX file "/Users/${user}/environment/settings/wezterm/backgrounds/water-background.png"'
+
+    defaults write com.facebook.vscode ApplePressAndHoldEnabled -bool false
+    defaults write com.facebook.fbvscode ApplePressAndHoldEnabled -bool false
+    defaults write com.facebook.fbvscode-insiders ApplePressAndHoldEnabled -bool false
+    defaults write com.facebook.fbvscode-dev ApplePressAndHoldEnabled -bool false
+    defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
+    defaults write com.visualstudio.code.oss ApplePressAndHoldEnabled -bool false
   '';
 }
