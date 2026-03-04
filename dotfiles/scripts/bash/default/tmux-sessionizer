@@ -9,7 +9,9 @@ if [[ $# -eq 0 ]]; then
 		tmp_var=$(echo "${raw_tmux_sessionizer_var}" | tr ':' '\n')
 
 		tmux_sessionizer_vars=()
-		mapfile -t tmux_sessionizer_vars <<<"$tmp_var"
+		while IFS= read -r line; do
+			tmux_sessionizer_vars+=("$line")
+		done <<<"$tmp_var"
 
 		raw_tmux_sessionizer_path=${tmux_sessionizer_vars[0]}
 		tmux_sessionizer_depth=${tmux_sessionizer_vars[1]}
@@ -20,13 +22,12 @@ if [[ $# -eq 0 ]]; then
 		if [[ "${tmp_path: -1}" != "/" ]]; then
 			tmp_path="${tmp_path}/"
 		fi
-		_out=$(realpath -e -q "${tmp_path}")
-		code=$?
-
-		if [[ $code -eq 0 ]]; then
+		if [[ -d "${tmp_path}" ]]; then
 			# TODO: Run fd in parallel
 			tmp_var=$(fd . "${tmp_path}" -H --min-depth=1 --max-depth="${tmux_sessionizer_depth:-2}" --type=directory)
-			mapfile -t -O "${#real_paths[@]}" real_paths <<<"$tmp_var"
+			while IFS= read -r line; do
+				[[ -n "$line" ]] && real_paths+=("$line")
+			done <<<"$tmp_var"
 		fi
 	done
 
