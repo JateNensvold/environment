@@ -38,3 +38,5 @@ rcasia
 mfussenegger
 rcarriga
 saecki
+nvim-hlslens
+lukas-reineke

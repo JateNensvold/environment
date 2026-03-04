@@ -29,6 +29,7 @@ with pkgs;
   httpie
   jq
   oh-my-posh
+  pstree
   ripgrep
   rustscan
   shellcheck

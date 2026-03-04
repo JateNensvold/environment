@@ -15,6 +15,7 @@ Prerequisites
 1. Git
 1. bash
 1. curl
+1. SSH Symetric Key
 
 ### Linux/MacOS Installation
 

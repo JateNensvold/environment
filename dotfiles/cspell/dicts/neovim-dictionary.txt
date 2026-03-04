@@ -26,3 +26,4 @@ getcwd
 fnamemodify
 finddir
 autopairs
+gitsigns

@@ -5,7 +5,6 @@ let
 in {
 
   # Static files
-  home.file.".p10k.zsh".source = "${dotfiles}/dotfile_settings/.p10k.zsh";
   home.file.".config/cheat/conf.yml".source = "${dotfiles}/cheat/conf.yml";
   home.file.".inputrc".source = "${dotfiles}/dotfile_settings/.inputrc";
 

@@ -1,17 +1,19 @@
 {
-  "dictionaryDefinitions": [
-    {
-      "addWords": true,
-      "name": "project-vars",
-      "path": ".cspell/project.txt"
-    }
-  ],
-  "globRoot": ".",
-  "words": [
-  ],
   "language": "en",
-  "version": "0.2",
   "dictionaries": [
     "project-vars"
-  ]
+  ],
+  "dictionaryDefinitions": [
+    {
+      "name": "project-vars",
+      "path": ".cspell/project.txt",
+      "addWords": true
+    }
+  ],
+  "version": "0.2",
+  "words": [
+    "fbvscode",
+    "keypress"
+  ],
+  "globRoot": "."
 }
