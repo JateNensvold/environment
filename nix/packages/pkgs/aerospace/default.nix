@@ -2,11 +2,11 @@
 with pkgs;
 stdenv.mkDerivation rec {
   name = "aerospace";
-  version = "v0.14.2-Beta";
+  version = "v0.18.2-Beta";
   src = pkgs.fetchurl {
     url =
       "https://github.com/nikitabobko/AeroSpace/releases/download/${version}/AeroSpace-${version}.zip";
-    sha256 = "07ww0aikjk1bjiz54rm1ynbk6qr4c27451mh8nykqh85b7khzqn4";
+    sha256 = "sha256-ljw4S+FnOSH/da6p0uRzevp6j8iAnB8BxT/LYKKW6ew=";
   };
 
   nativeBuildInputs = [ unzip ];
