@@ -1,4 +1,5 @@
 return {
+    -- Replace with snacks.nvim
     "stevearc/dressing.nvim",
     opts = {},
     config = function()
