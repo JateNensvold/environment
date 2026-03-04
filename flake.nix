@@ -65,6 +65,11 @@
           extraOverlays = [ ];
           extraModules = [ ];
         }
+        {
+          host = "meta-laptop";
+          extraOverlays = [ ];
+          extraModules = [ ];
+        }
       ];
 
       hardwares = [
