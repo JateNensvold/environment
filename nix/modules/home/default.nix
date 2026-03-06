@@ -14,7 +14,7 @@ let
     _reloadHomeManagerSuffix;
 
   reloadHomeManagerPrefix =
-    if pkgs.stdenv.isDarwin then "darwin-rebuild" else "home-manager";
+    if pkgs.stdenv.isDarwin then "sudo darwin-rebuild" else "home-manager";
 in {
 
   home = {

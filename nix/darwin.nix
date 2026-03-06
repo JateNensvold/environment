@@ -9,6 +9,9 @@ in {
 
   #imports = [ ./${hostPath}/${host}/darwin ];
 
+  # Set the primary user for options that require it (dock, homebrew, launchd, etc.)
+  system.primaryUser = user;
+
   # nix-darwin configuration
   users.users.${user} = {
     name = "${user}";
@@ -93,14 +96,14 @@ in {
   };
 
   # Set desktop background and enable extended keypress in vscode
-  system.activationScripts.postUserActivation.text = ''
-    osascript -e 'tell application "Finder" to set desktop picture to POSIX file "/Users/${user}/environment/settings/wezterm/backgrounds/water-background.png"'
+  system.activationScripts.postActivation.text = ''
+    sudo -u ${user} osascript -e 'tell application "Finder" to set desktop picture to POSIX file "/Users/${user}/environment/settings/wezterm/backgrounds/water-background.png"'
 
-    defaults write com.facebook.vscode ApplePressAndHoldEnabled -bool false
-    defaults write com.facebook.fbvscode ApplePressAndHoldEnabled -bool false
-    defaults write com.facebook.fbvscode-insiders ApplePressAndHoldEnabled -bool false
-    defaults write com.facebook.fbvscode-dev ApplePressAndHoldEnabled -bool false
-    defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
-    defaults write com.visualstudio.code.oss ApplePressAndHoldEnabled -bool false
+    sudo -u ${user} defaults write com.facebook.vscode ApplePressAndHoldEnabled -bool false
+    sudo -u ${user} defaults write com.facebook.fbvscode ApplePressAndHoldEnabled -bool false
+    sudo -u ${user} defaults write com.facebook.fbvscode-insiders ApplePressAndHoldEnabled -bool false
+    sudo -u ${user} defaults write com.facebook.fbvscode-dev ApplePressAndHoldEnabled -bool false
+    sudo -u ${user} defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
+    sudo -u ${user} defaults write com.visualstudio.code.oss ApplePressAndHoldEnabled -bool false
   '';
 }
