@@ -1,4 +1,5 @@
-{ pkgs, lib, ... }: {
+{ pkgs, lib, ... }:
+{
 
   programs = {
     zsh = {
@@ -6,7 +7,9 @@
       enableCompletion = true;
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
-      history = { share = true; };
+      history = {
+        share = true;
+      };
       zprof.enable = false;
 
       shellAliases = {
@@ -32,17 +35,13 @@
         # Steam locomotive
         sl = "sl -ea";
 
-        # claude code
-        cs = "claude-sandbox";
-
         xt = "eza -T";
         x2 = "eza --tree --level=2";
         x3 = "eza --tree --level=3";
         x4 = "eza --tree --level=4";
         x = "x2";
 
-        vv =
-          "var=$(fd | fzf --header='[vim:file]') && full_var=$(realpath $var) && change-location $var && vim $full_var ";
+        vv = "var=$(fd | fzf --header='[vim:file]') && full_var=$(realpath $var) && change-location $var && vim $full_var ";
         fe = "export | fzf --header='[find:env]'";
 
         sf = "rg -g '!.git' --hidden";
@@ -57,12 +56,16 @@
 
         ce = "cd ~/environment";
         ct = ''cd "$TMUX_SESSION_PATH"'';
-        cb = ''cd -'';
+        cb = "cd -";
 
         c = ''"$EDITOR" .'';
         ze = ''"$EDITOR" ~/environment'';
         zx = "source ~/.zshrc";
         zz = ''"$EDITOR" ~/.config/nvim'';
+        # claude code (claude-sandbox requires bubblewrap, linux-only)
+      }
+      // lib.optionalAttrs pkgs.stdenv.isLinux {
+        cs = "claude-sandbox";
       };
 
       plugins = [
@@ -92,10 +95,13 @@
         #   name = "sudo";
         #   src = "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/sudo";
         # }
-      ] ++ lib.optionals (!pkgs.stdenv.isDarwin) [{
-        name = "autojump";
-        src = "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/autojump";
-      }];
+      ]
+      ++ lib.optionals (!pkgs.stdenv.isDarwin) [
+        {
+          name = "autojump";
+          src = "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/autojump";
+        }
+      ];
 
       # zsh sessionVariables allow for more variables types than home.sessionVariables which are restricted to only strings/integers
       sessionVariables = {

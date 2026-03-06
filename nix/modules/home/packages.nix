@@ -7,7 +7,6 @@ with pkgs;
   autojump
   # generates .cache and compile_commands.json files required by clangd
   bear
-  bubblewrap
   claude-code
   chafa
   cheat
@@ -34,13 +33,10 @@ with pkgs;
   rustscan
   shellcheck
   sl
-  slirp4netns
   sqlite
   tealdeer
   tmux
   unzip
-  util-linux
-  xclip
   zip
   #Nvim plugins
   vimPlugins.telescope-fzf-native-nvim
@@ -87,6 +83,13 @@ with pkgs;
 
   # Linters
   ansible-lint
-] ++ ([
+]
+++ lib.optionals stdenv.isLinux [
+  bubblewrap
+  slirp4netns
+  util-linux
+  xclip
+]
+++ ([
   # custom packages
 ])
