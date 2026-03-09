@@ -7,7 +7,7 @@ in {
   # have to enable zsh in darwin config due to some weird darwin bug
   programs.zsh.enable = true;
 
-  #imports = [ ./${hostPath}/${host}/darwin ];
+  imports = [ ./${hostPath}/${host}/darwin ];
 
   # Set the primary user for options that require it (dock, homebrew, launchd, etc.)
   system.primaryUser = user;
@@ -90,9 +90,7 @@ in {
     #
     # nix shell nixpkgs#mas
     # mas search <app name>
-    masApps = {
-      # "amphetamine" = 937984704;
-    };
+    masApps = { };
   };
 
   # Set desktop background and enable extended keypress in vscode
