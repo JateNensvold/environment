@@ -40,16 +40,23 @@ NODE="$(resolve_bin node)"
 IP="$(resolve_bin ip)"
 CAT="$(resolve_bin cat)"
 
-# Build deduplicated PATH from resolved binary directories
+# Resolve nix profile bin directory — all nix-installed programs live here as
+# symlinks into /nix/store (which is already ro-mounted), so a single PATH
+# entry gives the sandbox access to everything installed via nix/home-manager.
+NIX_PROFILE_BIN="$(readlink -f "$HOME/.nix-profile/bin")"
+[[ -d "$NIX_PROFILE_BIN" ]] || { echo "ERROR: nix profile bin not found at $NIX_PROFILE_BIN" >&2; exit 1; }
+
+# Build deduplicated PATH from hard dependencies + nix profile
 declare -A SEEN
 SANDBOX_PATH=""
-for bin in "$CLAUDE" "$NODE" "$BASH" "$IP" "$CAT"; do
-    dir="$(dirname "$bin")"
+for entry in "$CLAUDE" "$NODE" "$BASH" "$IP" "$CAT"; do
+    dir="$(dirname "$entry")"
     if [[ -z "${SEEN[$dir]:-}" ]]; then
         SEEN[$dir]=1
         SANDBOX_PATH="${SANDBOX_PATH:+$SANDBOX_PATH:}$dir"
     fi
 done
+SANDBOX_PATH="${SANDBOX_PATH:+$SANDBOX_PATH:}$NIX_PROFILE_BIN"
 
 # Resolve resolv.conf (may be symlink under systemd-resolved)
 RESOLV="$(readlink -f /etc/resolv.conf)"
