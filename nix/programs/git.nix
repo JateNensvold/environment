@@ -12,7 +12,7 @@ in {
     settings = {
       # This is optional, as `git identity` will call the `git-identity` script by itself, however
       # setting it up explicitly as an alias gives you autocomplete
-      aliases = {
+      alias = {
         identity = "! git-identity";
         id = "! git-identity";
         who = ''
@@ -43,7 +43,10 @@ in {
         colorMoved = "default";
       };
 
-      merge = { tool = "nvim"; };
+      merge = {
+        tool = "nvim";
+        conflictstyle = "diff3";
+      };
       mergetool = {
         prompt = false;
         "nvim" = { cmd = "nvim -f -c GitConflictListQf"; };
@@ -54,7 +57,6 @@ in {
         navigate = "true";
         light = "false";
       };
-      merge = { conflictstyle = "diff3"; };
       init = { defaultBranch = "master"; };
       pull = { rebase = "true"; };
       url."git@github.com:" = { insteadOf = "https://github.com/"; };
