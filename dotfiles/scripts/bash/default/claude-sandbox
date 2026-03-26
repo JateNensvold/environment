@@ -15,12 +15,12 @@
 set -euo pipefail
 
 WORKSPACE="$(pwd)"
+CLAUDE_ARGS=()
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --workspace) WORKSPACE="$2"; shift 2 ;;
-        -*)          echo "Unknown option: $1" >&2; exit 1 ;;
-        *)           WORKSPACE="$1"; shift ;;
+        *)           CLAUDE_ARGS+=("$1"); shift ;;
     esac
 done
 
@@ -81,12 +81,12 @@ exec "$BWRAP" \
     --unshare-uts \
     --hostname claude-sandbox \
     --ro-bind /nix/store /nix/store \
-    --bind "$WORKSPACE" "$WORKSPACE" \
     --proc /proc \
     --dev /dev \
     --tmpfs /tmp \
     --tmpfs /run \
     --tmpfs "/home/$USER" \
+    --bind "$WORKSPACE" "$WORKSPACE" \
     --bind "$HOME/.claude" "/home/$USER/.claude" \
     --bind "$HOME/.claude.json" "/home/$USER/.claude.json" \
     --ro-bind "$RESOLV" /etc/resolv.conf \
@@ -101,4 +101,4 @@ exec "$BWRAP" \
     --setenv LANG "${LANG:-en_US.UTF-8}" \
     --setenv NIX_SSL_CERT_FILE /etc/ssl/certs/ca-certificates.crt \
     "${ENV_ARGS[@]}" \
-    -- "$CLAUDE"
+    -- "$CLAUDE" "${CLAUDE_ARGS[@]}"
