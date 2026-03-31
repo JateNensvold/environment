@@ -11,9 +11,11 @@ if [[ $? -eq 0 ]]; then
 	# that prevent tmux from accessing /dev/tty.
 	_tsession_precmd() {
 		precmd_functions=(${precmd_functions:#_tsession_precmd})
+		printf '\033[A\33[2K\r'
 		TMUX_SESSIONIZER_PATHS=$TMUX_SESSIONIZER_PATHS tmux-sessionizer
 	}
 	precmd_functions+=(_tsession_precmd)
+	BUFFER=""
 	zle accept-line
 else
 	TMUX_SESSIONIZER_PATHS=$TMUX_SESSIONIZER_PATHS tmux-sessionizer
