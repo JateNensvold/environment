@@ -2,7 +2,7 @@
 cur="$1"
 tmux ls | cut -d ':' -f 1 | while read s; do
     if [ "$s" = "$cur" ]; then
-        echo -n "#[bg=green,fg=black,bold] $s #[default] "
+        echo -n "#[bg=green,fg=black,bold] [$s] #[default] "
     else
         echo -n "#[fg=white] $s #[default] "
     fi
