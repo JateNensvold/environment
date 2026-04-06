@@ -62,10 +62,9 @@
         ze = ''"$EDITOR" ~/environment'';
         zx = "source ~/.zshrc";
         zz = ''"$EDITOR" ~/.config/nvim'';
-        # claude code (claude-sandbox requires bubblewrap, linux-only)
-      }
-      // lib.optionalAttrs pkgs.stdenv.isLinux {
-        cs = "claude-sandbox";
+        # claude-sandbox is the real sandboxed binary on Linux (requires bubblewrap);
+        # on macOS/work devices alias it to plain claude.
+        claude-sandbox = "claude";
       };
 
       plugins = [
