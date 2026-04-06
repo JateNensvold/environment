@@ -5,7 +5,6 @@ return {
         branch = "v3.x",
         lazy = true,
         config = false,
-        disable = vim.g.vscode
     },
     -- Setup LSP integration with nvim
     {

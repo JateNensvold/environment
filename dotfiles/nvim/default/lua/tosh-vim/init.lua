@@ -1,8 +1,5 @@
 require("tosh-vim.remap")
--- Disable neovim plugins when running inside vscode
-if not vim.g.vscode then
-    require("tosh-vim.lazy_init")
-end
+require("tosh-vim.lazy_init")
 require("tosh-vim.set")
 
 local augroup = vim.api.nvim_create_augroup

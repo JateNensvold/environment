@@ -52,16 +52,9 @@ vim.keymap.set({ "n", "v" }, "<leader>f", function()
 end)
 
 -- buffer movement
-if not vim.g.vscode then
-    -- Disable buffer commands when running inside vscode
-    vim.keymap.set("n", "<leader>m", "<cmd>:bnext<CR>")
-    vim.keymap.set("n", "<leader>n", "<cmd>:bprev<CR>")
-    vim.keymap.set("n", "<leader>d", "<cmd>:bdelete<CR>")
-else
-    vim.keymap.set("n", "<leader>m", "<cmd>Tabnext<CR>")
-    vim.keymap.set("n", "<leader>n", "<cmd>Tabprevious<CR>")
-    vim.keymap.set("n", "<leader>d", "<cmd>:Tabclose<CR>")
-end
+vim.keymap.set("n", "<leader>m", "<cmd>:bnext<CR>")
+vim.keymap.set("n", "<leader>n", "<cmd>:bprev<CR>")
+vim.keymap.set("n", "<leader>d", "<cmd>:bdelete<CR>")
 
 vim.keymap.set("n", "]q", "<cmd>cnext<CR>zz")
 vim.keymap.set("n", "[q", "<cmd>cprev<CR>zz")
