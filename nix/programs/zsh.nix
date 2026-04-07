@@ -62,9 +62,8 @@
         ze = ''"$EDITOR" ~/environment'';
         zx = "source ~/.zshrc";
         zz = ''"$EDITOR" ~/.config/nvim'';
-        # claude-sandbox is the real sandboxed binary on Linux (requires bubblewrap);
-        # on macOS/work devices alias it to plain claude.
-        claude-sandbox = "claude";
+        # claude-sandbox alias is set per-host in work device configs;
+        # on the home host the real sandboxed script lives on PATH.
       };
 
       plugins = [

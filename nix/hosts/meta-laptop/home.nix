@@ -4,6 +4,7 @@
     # setup file links specific to this host
     ./files/default.nix
   ];
+  programs.zsh.shellAliases.claude-sandbox = "claude";
   home.packages = with pkgs;
     [
       # packages only for this host
