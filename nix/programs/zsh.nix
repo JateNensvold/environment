@@ -46,6 +46,8 @@
 
         sf = "rg -g '!.git' --hidden";
         sa = "alias | fzf --header='[search:alias]'";
+        se = "env | fzf --header='[search:env]'";
+
         sp = "home-manager packages | fzf --header='[search:packages]'";
 
         nv = "nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'";
