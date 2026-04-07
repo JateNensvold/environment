@@ -56,16 +56,6 @@
         }
         # Work devices
         {
-          host = "amazon-clouddesk";
-          extraOverlays = [ ];
-          extraModules = [ ];
-        }
-        {
-          host = "amazon-laptop";
-          extraOverlays = [ ];
-          extraModules = [ ];
-        }
-        {
           host = "meta-laptop";
           extraOverlays = [ ];
           extraModules = [ ];
