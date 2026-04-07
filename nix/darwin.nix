@@ -81,17 +81,9 @@ in {
   security.pam.services.sudo_local.touchIdAuth = true;
 
   # Allow passwordless darwin-rebuild for the primary user
-  security.sudo.extraRules = [
-    {
-      users = [ user ];
-      commands = [
-        {
-          command = "/run/current-system/sw/bin/darwin-rebuild";
-          options = [ "NOPASSWD" ];
-        }
-      ];
-    }
-  ];
+  security.sudo.extraConfig = ''
+    ${user} ALL=(ALL) NOPASSWD: /run/current-system/sw/bin/darwin-rebuild
+  '';
 
   # https://github.com/zmre/mac-nix-simple-example
   homebrew = {
