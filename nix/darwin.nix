@@ -6,6 +6,7 @@ in {
 
   # have to enable zsh in darwin config due to some weird darwin bug
   programs.zsh.enable = true;
+  programs.zsh.enableCompletion = false;
 
   imports = [ ./${hostPath}/${host}/darwin ];
 
@@ -82,7 +83,7 @@ in {
 
   # Allow passwordless darwin-rebuild for the primary user
   security.sudo.extraConfig = ''
-    ${user} ALL=(ALL) NOPASSWD: /run/current-system/sw/bin/darwin-rebuild
+    ${user} ALL=(ALL) NOPASSWD: /nix/store/*-darwin-rebuild/bin/darwin-rebuild
   '';
 
   # https://github.com/zmre/mac-nix-simple-example
