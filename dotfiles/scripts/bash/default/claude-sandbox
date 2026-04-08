@@ -34,7 +34,7 @@ resolve_bin() {
 }
 
 BWRAP="$(resolve_bin bwrap)"
-BASH="$(resolve_bin bash)"
+SANDBOX_SHELL="$(resolve_bin "${SHELL##*/}")"
 CLAUDE="$(resolve_bin claude)"
 NODE="$(resolve_bin node)"
 IP="$(resolve_bin ip)"
@@ -49,7 +49,7 @@ NIX_PROFILE_BIN="$(readlink -f "$HOME/.nix-profile/bin")"
 # Build deduplicated PATH from hard dependencies + nix profile
 declare -A SEEN
 SANDBOX_PATH=""
-for entry in "$CLAUDE" "$NODE" "$BASH" "$IP" "$CAT"; do
+for entry in "$CLAUDE" "$NODE" "$SANDBOX_SHELL" "$IP" "$CAT"; do
     dir="$(dirname "$entry")"
     if [[ -z "${SEEN[$dir]:-}" ]]; then
         SEEN[$dir]=1
@@ -95,7 +95,7 @@ exec "$BWRAP" \
     --ro-bind /etc/group /etc/group \
     --chdir "$WORKSPACE" \
     --setenv HOME "/home/$USER" \
-    --setenv SHELL "$BASH" \
+    --setenv SHELL "$SANDBOX_SHELL" \
     --setenv TERM "${TERM:-xterm-256color}" \
     --setenv PATH "$SANDBOX_PATH" \
     --setenv LANG "${LANG:-en_US.UTF-8}" \
