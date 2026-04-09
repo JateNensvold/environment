@@ -2,7 +2,8 @@
 let
   link = config.lib.file.mkOutOfStoreSymlink;
   dotfilePath = "${config.home.homeDirectory}/environment/dotfiles";
-in {
+in
+{
 
   # Static files
   home.file.".config/cheat/conf.yml".source = "${dotfiles}/cheat/conf.yml";
@@ -16,6 +17,7 @@ in {
   home.file.".zfuncs".source = link "${dotfilePath}/scripts/zsh/default";
   home.file.".config/oh-my-posh".source = link "${dotfilePath}/oh-my-posh/";
   home.file.".claude/CLAUDE.md".source = link "${dotfilePath}/claude/CLAUDE.md";
+  home.file.".claude/commands".source = link "${dotfilePath}/claude/commands";
 
   home.file.".config/.cspell".source = link "${dotfilePath}/cspell";
 
