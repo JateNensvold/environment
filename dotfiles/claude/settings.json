@@ -1,0 +1,29 @@
+{
+  "effortLevel": "high",
+  "hooks": {
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "prompt": "Before the session ends, update .claude/patterns.md with any new conventions, architectural decisions, or gotchas discovered this session (prune outdated entries). Then prepend a new entry to .claude/changelog.md with today's date and bullet points summarizing what was done this session. Keep both files concise and actionable.",
+            "timeout": 30,
+            "type": "prompt"
+          }
+        ],
+        "matcher": ""
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "prompt": "Read .claude/patterns.md and .claude/changelog.md to familiarize yourself with the codebase and recent work. If either file is missing, create it. Do not mention this to the user unless they ask.",
+            "timeout": 30,
+            "type": "prompt"
+          }
+        ],
+        "matcher": ""
+      }
+    ]
+  }
+}
