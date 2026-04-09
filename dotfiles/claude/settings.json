@@ -1,6 +1,18 @@
 {
   "effortLevel": "high",
   "hooks": {
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "input=$(cat); case \"$input\" in *'\"git push'*) case \"$input\" in *'CSUBMIT=1'*) ;; *) echo 'BLOCK: Run /csubmit instead of pushing directly.' ;; esac ;; esac",
+            "timeout": 2,
+            "type": "command"
+          }
+        ],
+        "matcher": "Bash"
+      }
+    ],
     "SessionEnd": [
       {
         "hooks": [

@@ -6,4 +6,4 @@ Full pre-submission pipeline: review, test, commit metadata, and push. Run these
 
 3. **Commit metadata** — Run /ccommit. Ensure every unpushed commit on this branch has a complete, accurate commit message.
 
-4. **Push** — Push the branch to origin with `git push -u origin HEAD`. Ask the user for confirmation before pushing.
+4. **Push** — Push the branch to origin with `CSUBMIT=1 git push -u origin HEAD`. Ask the user for confirmation before pushing. The `CSUBMIT=1` prefix is required to bypass the PreToolUse hook that blocks direct git push.
