@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+# codex-sandbox.sh — Rootless sandbox for Codex CLI
+#
+# Isolates: filesystem, PID, IPC, UTS, user
+# Shares:   host network (simple, reliable, no slirp4netns)
+#
+# Visible inside sandbox:
+#   /nix/store       — read-only
+#   $WORKSPACE       — read-write (original path preserved)
+#   /home/$USER/.codex — read-write (persistent global config)
+#   /proc /dev /tmp /run — essentials
+#   /etc/{resolv.conf,ssl,passwd,group} — networking & identity
+# Everything else (home, usr, etc, other projects, docker socket) — gone
+
+set -euo pipefail
+
+WORKSPACE="$(pwd)"
+CODEX_ARGS=()
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --workspace) WORKSPACE="$2"; shift 2 ;;
+        *)           CODEX_ARGS+=("$1"); shift ;;
+    esac
+done
+
+WORKSPACE="$(realpath "$WORKSPACE")"
+[[ -d "$WORKSPACE" ]] || { echo "ERROR: Workspace '$WORKSPACE' not found" >&2; exit 1; }
+
+resolve_bin() {
+    local path
+    path="$(command -v "$1" 2>/dev/null)" || { echo "ERROR: '$1' not found" >&2; exit 1; }
+    readlink -f "$path"
+}
+
+BWRAP="$(resolve_bin bwrap)"
+SANDBOX_SHELL="$(resolve_bin "${SHELL##*/}")"
+CODEX="$(resolve_bin codex)"
+NODE="$(resolve_bin node)"
+IP="$(resolve_bin ip)"
+CAT="$(resolve_bin cat)"
+
+# Resolve nix profile bin directory — all nix-installed programs live here as
+# symlinks into /nix/store (which is already ro-mounted), so a single PATH
+# entry gives the sandbox access to everything installed via nix/home-manager.
+NIX_PROFILE_BIN="$(readlink -f "$HOME/.nix-profile/bin")"
+[[ -d "$NIX_PROFILE_BIN" ]] || { echo "ERROR: nix profile bin not found at $NIX_PROFILE_BIN" >&2; exit 1; }
+
+# Build deduplicated PATH from hard dependencies + nix profile
+declare -A SEEN
+SANDBOX_PATH=""
+for entry in "$CODEX" "$NODE" "$SANDBOX_SHELL" "$IP" "$CAT"; do
+    dir="$(dirname "$entry")"
+    if [[ -z "${SEEN[$dir]:-}" ]]; then
+        SEEN[$dir]=1
+        SANDBOX_PATH="${SANDBOX_PATH:+$SANDBOX_PATH:}$dir"
+    fi
+done
+SANDBOX_PATH="${SANDBOX_PATH:+$SANDBOX_PATH:}$NIX_PROFILE_BIN"
+
+# Resolve resolv.conf (may be symlink under systemd-resolved)
+RESOLV="$(readlink -f /etc/resolv.conf)"
+
+# Pass through API keys if set
+ENV_ARGS=()
+for var in OPENAI_API_KEY GITHUB_TOKEN; do
+    [[ -n "${!var:-}" ]] && ENV_ARGS+=(--setenv "$var" "${!var}")
+done
+
+# Ensure ~/.codex exists for bind mount
+mkdir -p "$HOME/.codex"
+
+echo "[sandbox] workspace: $WORKSPACE"
+echo "[sandbox] starting codex..."
+
+exec "$BWRAP" \
+    --unshare-user \
+    --unshare-pid \
+    --unshare-ipc \
+    --unshare-uts \
+    --hostname codex-sandbox \
+    --ro-bind /nix/store /nix/store \
+    --proc /proc \
+    --dev /dev \
+    --tmpfs /tmp \
+    --tmpfs /run \
+    --tmpfs "/home/$USER" \
+    --bind "$WORKSPACE" "$WORKSPACE" \
+    --bind "$HOME/.codex" "/home/$USER/.codex" \
+    --ro-bind "$RESOLV" /etc/resolv.conf \
+    --ro-bind /etc/ssl /etc/ssl \
+    --ro-bind /etc/passwd /etc/passwd \
+    --ro-bind /etc/group /etc/group \
+    --chdir "$WORKSPACE" \
+    --setenv HOME "/home/$USER" \
+    --setenv SHELL "$SANDBOX_SHELL" \
+    --setenv TERM "${TERM:-xterm-256color}" \
+    --setenv PATH "$SANDBOX_PATH" \
+    --setenv LANG "${LANG:-en_US.UTF-8}" \
+    --setenv NIX_SSL_CERT_FILE /etc/ssl/certs/ca-certificates.crt \
+    "${ENV_ARGS[@]}" \
+    -- "$CODEX" "${CODEX_ARGS[@]}"

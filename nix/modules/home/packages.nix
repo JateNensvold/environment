@@ -8,6 +8,7 @@ with pkgs;
   # generates .cache and compile_commands.json files required by clangd
   bear
   claude-code
+  codex
   chafa
   cheat
   # add realpath for darwin systems
