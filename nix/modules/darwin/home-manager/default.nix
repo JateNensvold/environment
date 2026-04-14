@@ -18,22 +18,5 @@ in {
 
       '';
 
-    merge-claude-settings =
-      lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        claude_dir="$HOME/.claude"
-        settings="$claude_dir/settings.json"
-        dotfile_settings="${dotfilePath}/claude/settings.json"
-
-        if [ -f "$dotfile_settings" ]; then
-          mkdir -p "$claude_dir"
-          if [ -f "$settings" ]; then
-            # Deep merge dotfile settings into existing settings (dotfile values win on conflict)
-            ${pkgs.jq}/bin/jq -s '.[0] * .[1]' "$settings" "$dotfile_settings" > "$settings.tmp" \
-              && mv "$settings.tmp" "$settings"
-          else
-            cp "$dotfile_settings" "$settings"
-          fi
-        fi
-      '';
   };
 }
