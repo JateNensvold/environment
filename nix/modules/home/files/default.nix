@@ -1,25 +1,20 @@
-{ dotfiles, config, ... }:
-let
-  link = config.lib.file.mkOutOfStoreSymlink;
-  dotfilePath = "${config.home.homeDirectory}/environment/dotfiles";
-in
+{ dotfiles, ... }:
 {
 
   # Static files
   home.file.".config/cheat/conf.yml".source = "${dotfiles}/cheat/conf.yml";
   home.file.".inputrc".source = "${dotfiles}/dotfile_settings/.inputrc";
 
-  # Dynamic File (needs to link to a full path to remain pure https://github.com/nix-community/home-manager/issues/2085)
-  # see ../../modules/nix.nix for util function
-  home.file.".config/nvim".source = link "${dotfilePath}/nvim/default";
-  home.file.".config/tmux".source = link "${dotfilePath}/tmux";
-  home.file.".local/bin".source = link "${dotfilePath}/scripts/bash/default";
-  home.file.".zfuncs".source = link "${dotfilePath}/scripts/zsh/default";
-  home.file.".config/oh-my-posh".source = link "${dotfilePath}/oh-my-posh/";
-  home.file.".claude/CLAUDE.md".source = link "${dotfilePath}/claude/CLAUDE.md";
-  home.file.".claude/commands".source = link "${dotfilePath}/claude/commands";
+  # Install from the flake source (in-store) to avoid "outside $HOME" errors during build.
+  home.file.".config/nvim".source = "${dotfiles}/nvim/default";
+  home.file.".config/tmux".source = "${dotfiles}/tmux";
+  home.file.".local/bin".source = "${dotfiles}/scripts/bash/default";
+  home.file.".zfuncs".source = "${dotfiles}/scripts/zsh/default";
+  home.file.".config/oh-my-posh".source = "${dotfiles}/oh-my-posh";
+  home.file.".claude/CLAUDE.md".source = "${dotfiles}/claude/CLAUDE.md";
+  home.file.".claude/commands".source = "${dotfiles}/claude/commands";
 
-  home.file.".config/.cspell".source = link "${dotfilePath}/cspell";
+  home.file.".config/.cspell".source = "${dotfiles}/cspell";
 
   home.file.".config/cheat/cheatsheets/community".source = builtins.fetchGit {
     url = "https://github.com/cheat/cheatsheets";
