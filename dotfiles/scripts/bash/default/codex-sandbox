@@ -33,12 +33,30 @@ resolve_bin() {
     readlink -f "$path"
 }
 
+add_path_dir() {
+    local dir="$1"
+    [[ -d "$dir" ]] || return 0
+
+    if [[ -z "${SEEN[$dir]:-}" ]]; then
+        SEEN[$dir]=1
+        SANDBOX_PATH="${SANDBOX_PATH:+$SANDBOX_PATH:}$dir"
+    fi
+}
+
+resolve_current_bash() {
+    [[ -n "${BASH:-}" ]] || { echo "ERROR: BASH is not set" >&2; exit 1; }
+    readlink -f "$BASH"
+}
+
 BWRAP="$(resolve_bin bwrap)"
-SANDBOX_SHELL="$(resolve_bin "${SHELL##*/}")"
+SANDBOX_SHELL="$(resolve_bin "$(basename "${SHELL:-zsh}")")"
+SANDBOX_SHELL_NAME="$(basename "$SANDBOX_SHELL")"
 CODEX="$(resolve_bin codex)"
 NODE="$(resolve_bin node)"
-IP="$(resolve_bin ip)"
 CAT="$(resolve_bin cat)"
+ENV_BIN="$(resolve_bin env)"
+BASH_BIN="$(resolve_current_bash)"
+SH_BIN="$BASH_BIN"
 
 # Resolve nix profile bin directory — all nix-installed programs live here as
 # symlinks into /nix/store (which is already ro-mounted), so a single PATH
@@ -46,17 +64,27 @@ CAT="$(resolve_bin cat)"
 NIX_PROFILE_BIN="$(readlink -f "$HOME/.nix-profile/bin")"
 [[ -d "$NIX_PROFILE_BIN" ]] || { echo "ERROR: nix profile bin not found at $NIX_PROFILE_BIN" >&2; exit 1; }
 
-# Build deduplicated PATH from hard dependencies + nix profile
+# Build deduplicated PATH from hard dependencies, host PATH entries that resolve
+# into /nix/store, and the nix profile bin.
 declare -A SEEN
 SANDBOX_PATH=""
-for entry in "$CODEX" "$NODE" "$SANDBOX_SHELL" "$IP" "$CAT"; do
-    dir="$(dirname "$entry")"
-    if [[ -z "${SEEN[$dir]:-}" ]]; then
-        SEEN[$dir]=1
-        SANDBOX_PATH="${SANDBOX_PATH:+$SANDBOX_PATH:}$dir"
-    fi
+
+for entry in "$CODEX" "$NODE" "$SANDBOX_SHELL" "$CAT" "$ENV_BIN" "$BASH_BIN" "$SH_BIN"; do
+    add_path_dir "$(dirname "$entry")"
 done
-SANDBOX_PATH="${SANDBOX_PATH:+$SANDBOX_PATH:}$NIX_PROFILE_BIN"
+
+IFS=':' read -r -a HOST_PATH_ENTRIES <<< "${PATH:-}"
+for entry in "${HOST_PATH_ENTRIES[@]}"; do
+    [[ -n "$entry" && -d "$entry" ]] || continue
+    resolved="$(readlink -f "$entry" 2>/dev/null || true)"
+    [[ -d "$resolved" ]] || continue
+
+    case "$resolved" in
+        /nix/store/*) add_path_dir "$resolved" ;;
+    esac
+done
+
+add_path_dir "$NIX_PROFILE_BIN"
 
 # Resolve resolv.conf (may be symlink under systemd-resolved)
 RESOLV="$(readlink -f /etc/resolv.conf)"
@@ -85,6 +113,16 @@ exec "$BWRAP" \
     --tmpfs /tmp \
     --tmpfs /run \
     --tmpfs "/home/$USER" \
+    --dir "/home/$USER/.nix-profile" \
+    --dir /usr \
+    --dir /usr/bin \
+    --dir /bin \
+    --ro-bind "$NIX_PROFILE_BIN" "/home/$USER/.nix-profile/bin" \
+    --ro-bind "$SANDBOX_SHELL" "/home/$USER/.nix-profile/bin/$SANDBOX_SHELL_NAME" \
+    --ro-bind "$ENV_BIN" /usr/bin/env \
+    --ro-bind "$BASH_BIN" /bin/bash \
+    --ro-bind "$SH_BIN" /bin/sh \
+    --ro-bind "$SANDBOX_SHELL" "/bin/$SANDBOX_SHELL_NAME" \
     --bind "$WORKSPACE" "$WORKSPACE" \
     --bind "$HOME/.codex" "/home/$USER/.codex" \
     --ro-bind "$RESOLV" /etc/resolv.conf \
@@ -93,10 +131,14 @@ exec "$BWRAP" \
     --ro-bind /etc/group /etc/group \
     --chdir "$WORKSPACE" \
     --setenv HOME "/home/$USER" \
-    --setenv SHELL "$SANDBOX_SHELL" \
+    --setenv SHELL "/home/$USER/.nix-profile/bin/$SANDBOX_SHELL_NAME" \
     --setenv TERM "${TERM:-xterm-256color}" \
-    --setenv PATH "$SANDBOX_PATH" \
+    --setenv PATH "/home/$USER/.nix-profile/bin:$SANDBOX_PATH" \
     --setenv LANG "${LANG:-en_US.UTF-8}" \
     --setenv NIX_SSL_CERT_FILE /etc/ssl/certs/ca-certificates.crt \
     "${ENV_ARGS[@]}" \
     -- "$CODEX" "${CODEX_ARGS[@]}"
+    # -- "zsh" "-c" "ls"
+    # -- "ls" "-la" "$SHELL"
+     # -- "cat" "../.codex/auth.json"
+    # -- "ls" "-la" "../.codex"
