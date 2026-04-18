@@ -38,6 +38,9 @@ in {
       enable = true;
       viAlias = true;
       vimAlias = true;
+      # nixpkgs 26.05+ changed the defaults; set explicitly to avoid warnings.
+      withRuby = true;
+      withPython3 = true;
     };
 
     # oh-my-posh blocks zsh startup for ~1s on every call on darwin, see zsh.nix for workaround
