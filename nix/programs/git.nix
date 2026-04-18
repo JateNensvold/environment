@@ -1,14 +1,14 @@
-{ config, ... }:
+{ dotfiles, ... }:
 let
-  link = config.lib.file.mkOutOfStoreSymlink;
-  dotfilePath = "${config.home.homeDirectory}/environment/dotfiles";
   excludesFilePath = "~/.config/git/personal/.gitignore";
 in {
   home.file.".config/git/personal/.gitignore".source =
-    link "${dotfilePath}/git/personal/gitignore";
+    "${dotfiles}/git/personal/gitignore";
 
   programs.git = {
     enable = true;
+    # nixpkgs 25.05+ changed the default; set explicitly to silence the warning.
+    signing.format = "openpgp";
     settings = {
       # This is optional, as `git identity` will call the `git-identity` script by itself, however
       # setting it up explicitly as an alias gives you autocomplete
