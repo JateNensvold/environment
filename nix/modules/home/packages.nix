@@ -64,9 +64,9 @@ with pkgs;
   lua-language-server # lua
   markdownlint-cli # markdown
   nil # nix
-  nodePackages.bash-language-server # bash, sh
-  nodePackages.cspell # spelling
-  nodePackages.typescript-language-server # js/ts
+  bash-language-server # bash, sh
+  cspell # spelling
+  typescript-language-server # js/ts
   pyright # python
   sqls # sql
   taplo # toml
