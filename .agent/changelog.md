@@ -25,6 +25,15 @@
 - Tightened the shared `ccommit` workflow and `ctest` validation notes so multiple functional
   areas now default to multiple commits, including cases where all current changes are still
   uncommitted
+- Added `.agent/ccommit-groups.md` with repo-local defaults for splitting workflow and memory
+  changes away from runtime or tooling behavior changes
+- Updated the `claude-sandbox` and `codex-sandbox` wrappers to bind `~/.agents` read-only so
+  shared workflow docs stay available inside sandboxed sessions
+- Ran a targeted `cprep` validation pass with `markdownlint`, `shellcheck`, and `bash -n` on
+  the changed workflow, memory, and sandbox files
+- Reordered the shared `cprep` and `csubmit` workflows so `.agent/patterns.md` and
+  `.agent/changelog.md` are updated before `ccommit`, letting commit grouping and commit
+  messages account for those memory-file changes
 
 ## 2026-04-19
 
