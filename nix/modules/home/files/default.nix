@@ -23,6 +23,7 @@
   home.file.".codex/skills/cprep".source = "${dotfiles}/codex/skills/cprep";
   home.file.".codex/skills/cexplore".source = "${dotfiles}/codex/skills/cexplore";
   home.file.".codex/skills/creview".source = "${dotfiles}/codex/skills/creview";
+  home.file.".codex/skills/creviewcommit".source = "${dotfiles}/codex/skills/creviewcommit";
   home.file.".codex/skills/csubmit".source = "${dotfiles}/codex/skills/csubmit";
   home.file.".codex/skills/ctest".source = "${dotfiles}/codex/skills/ctest";
 
