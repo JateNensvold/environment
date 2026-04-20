@@ -6,8 +6,8 @@
   `.agent/settings.local.json` and removing the duplicate directory
 - Removed the Codex `Stop` hook after confirming it runs at the end of each prompt rather than
   once per session
-- Deleted the unused `dotfiles/codex/hooks/stop_update_context.py` path and removed its Home
-  Manager install entry
+- Deleted the unused `dotfiles/agents/codex/hooks/stop_update_context.py` path and removed
+  its Home Manager install entry
 - Updated the Codex hook merge logic to deduplicate array entries so repeated `reload` runs do
   not append duplicate hook definitions
 - Fixed the `merge-codex-config` Home Manager activation snippet so its Python heredoc
@@ -48,9 +48,10 @@
 - Trimmed stop-hook memory updates to curated same-day notes instead of appending another
   duplicate `2026-04-19` block
 - Investigated broken Codex hooks and confirmed the repo now contains
-  `dotfiles/codex/hooks.json` plus the missing hook scripts under `dotfiles/codex/hooks/`
+  `dotfiles/agents/codex/hooks.json` plus the missing hook scripts under
+  `dotfiles/agents/codex/hooks/`
 - Confirmed Home Manager installs live Codex hook files into `~/.codex/hooks/` and merges
-  `dotfiles/codex/hooks.json` into `~/.codex/hooks.json`
+  `dotfiles/agents/codex/hooks.json` into `~/.codex/hooks.json`
 - Identified the likely failure mode as a partial Home Manager activation:
   `~/.codex/hooks.json` was active while `~/.codex/hooks/*.py` were missing, which blocks
   agent shell commands before execution
@@ -70,15 +71,15 @@
   includes `SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PostToolUse`, and `Stop`, but
   not a true `SessionEnd` hook
 - Added `cprep` as a dry-run companion to `csubmit`
-- Added the Claude command at `dotfiles/claude/commands/cprep.md`
-- Added the Codex skill at `dotfiles/codex/skills/cprep/`
+- Added the Claude command at `dotfiles/agents/claude/commands/cprep.md`
+- Added the Codex skill at `dotfiles/agents/codex/skills/cprep/`
 - Updated the Home Manager file map so `cprep` is installed with the other Codex skills
 - Recorded that `.agent/` is the canonical repo memory location and that stop-hook memory
   updates should stay deduplicated
 - Updated both `cprep` and `csubmit` so they refresh repo memory files immediately after
   `ccommit`
 - Moved the `cprep` and `csubmit` workflow notes out of repo memory into a new global Codex
-  file at `dotfiles/codex/AGENTS.md`
+  file at `dotfiles/agents/codex/AGENTS.md`
 - Added Home Manager support for a global `~/.codex/AGENTS.md` and updated the Codex
   session-start context to include it
 - Recorded the convention that cross-repo Codex workflow policy belongs in global `AGENTS.md`,

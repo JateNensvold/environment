@@ -14,8 +14,7 @@ overrides them.
 
 ## Repo Examples
 
-- If a patch updates `.agent/`, `dotfiles/agents/`, `dotfiles/claude/`, or `dotfiles/codex/`
-  and also updates `dotfiles/nvim/`, prefer separate commits unless one side is only
-  mechanical fallout from the other.
+- If a patch updates `.agent/` or `dotfiles/agents/` and also updates `dotfiles/nvim/`,
+  prefer separate commits unless one side is only mechanical fallout from the other.
 - A workflow or agent-fix commit and a Neovim or plugin-fix commit should usually be separate
   commits.

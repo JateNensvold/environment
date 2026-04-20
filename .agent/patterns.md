@@ -11,10 +11,11 @@
 - Claude commands and Codex skills in this repo are installed from flake-managed files, so new
   command or skill definitions in the repo are not live until a human runs the normal
   `reload`
-- Global Codex instructions are managed in `dotfiles/codex/AGENTS.md` and installed to
-  `~/.codex/AGENTS.md`, parallel to the global Claude file at `dotfiles/claude/CLAUDE.md`
+- Global Codex instructions are managed in `dotfiles/agents/codex/AGENTS.md` and installed
+  to `~/.codex/AGENTS.md`, parallel to the global Claude file at
+  `dotfiles/agents/claude/CLAUDE.md`
 - Put cross-repo Codex workflow policy such as `cprep` and `csubmit` guidance in the global
-  `dotfiles/codex/AGENTS.md`; keep `.agent/` focused on repo-local memory
+  `dotfiles/agents/codex/AGENTS.md`; keep `.agent/` focused on repo-local memory
 - Local Codex command execution depends on the configured `PreToolUse` hook path existing; if
   `~/.codex/hooks/pre_tool_use_guard.py` is missing, even basic repo inspection commands fail
   before execution

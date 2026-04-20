@@ -63,7 +63,7 @@ in
   home.activation.merge-claude-settings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     claude_dir="$HOME/.claude"
     settings="$claude_dir/settings.json"
-    dotfile_settings="${dotfilePath}/claude/settings.json"
+    dotfile_settings="${dotfilePath}/agents/claude/settings.json"
 
     if [ -f "$dotfile_settings" ]; then
       mkdir -p "$claude_dir"
@@ -109,7 +109,7 @@ in
   home.activation.merge-codex-hooks = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         codex_dir="$HOME/.codex"
         hooks="$codex_dir/hooks.json"
-        dotfile_hooks="${dotfilePath}/codex/hooks.json"
+        dotfile_hooks="${dotfilePath}/agents/codex/hooks.json"
 
         if [ -f "$dotfile_hooks" ]; then
           mkdir -p "$codex_dir"

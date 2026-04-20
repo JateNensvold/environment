@@ -11,21 +11,22 @@
   home.file.".local/bin".source = "${dotfiles}/scripts/bash/default";
   home.file.".zfuncs".source = "${dotfiles}/scripts/zsh/default";
   home.file.".config/oh-my-posh".source = "${dotfiles}/oh-my-posh";
-  home.file.".claude/CLAUDE.md".source = "${dotfiles}/claude/CLAUDE.md";
-  home.file.".claude/commands".source = "${dotfiles}/claude/commands";
+  home.file.".claude/CLAUDE.md".source = "${dotfiles}/agents/claude/CLAUDE.md";
+  home.file.".claude/commands".source = "${dotfiles}/agents/claude/commands";
   home.file.".agents/workflows".source = "${dotfiles}/agents/workflows";
-  home.file.".codex/AGENTS.md".source = "${dotfiles}/codex/AGENTS.md";
+  home.file.".codex/AGENTS.md".source = "${dotfiles}/agents/codex/AGENTS.md";
   home.file.".codex/hooks/agent_memory_common.py".source =
-    "${dotfiles}/codex/hooks/agent_memory_common.py";
+    "${dotfiles}/agents/codex/hooks/agent_memory_common.py";
   home.file.".codex/hooks/session_start_context.py".source =
-    "${dotfiles}/codex/hooks/session_start_context.py";
-  home.file.".codex/skills/ccommit".source = "${dotfiles}/codex/skills/ccommit";
-  home.file.".codex/skills/cprep".source = "${dotfiles}/codex/skills/cprep";
-  home.file.".codex/skills/cexplore".source = "${dotfiles}/codex/skills/cexplore";
-  home.file.".codex/skills/creview".source = "${dotfiles}/codex/skills/creview";
-  home.file.".codex/skills/creviewcommit".source = "${dotfiles}/codex/skills/creviewcommit";
-  home.file.".codex/skills/csubmit".source = "${dotfiles}/codex/skills/csubmit";
-  home.file.".codex/skills/ctest".source = "${dotfiles}/codex/skills/ctest";
+    "${dotfiles}/agents/codex/hooks/session_start_context.py";
+  home.file.".codex/skills/ccommit".source = "${dotfiles}/agents/codex/skills/ccommit";
+  home.file.".codex/skills/cprep".source = "${dotfiles}/agents/codex/skills/cprep";
+  home.file.".codex/skills/cexplore".source = "${dotfiles}/agents/codex/skills/cexplore";
+  home.file.".codex/skills/creview".source = "${dotfiles}/agents/codex/skills/creview";
+  home.file.".codex/skills/creviewcommit".source =
+    "${dotfiles}/agents/codex/skills/creviewcommit";
+  home.file.".codex/skills/csubmit".source = "${dotfiles}/agents/codex/skills/csubmit";
+  home.file.".codex/skills/ctest".source = "${dotfiles}/agents/codex/skills/ctest";
 
   home.file.".config/.cspell".source = "${dotfiles}/cspell";
 
