@@ -34,15 +34,17 @@
   only has staged or working-tree changes, `ccommit` should create the commit before
   summarizing readiness
 - The shared `~/.agents/workflows/*.md` files are the source of truth for `creview`, `ctest`,
-  `ccommit`, `cprep`, and `csubmit`; the Codex and Claude command text should read those
-  workflow files first instead of encoding the workflow separately
+  `ccommit`, `cprep`, `creviewcommit`, and `csubmit`; the Codex and Claude command text
+  should read those workflow files first instead of encoding the workflow separately
 - In `cprep` and `csubmit`, update `.agent/patterns.md` and `.agent/changelog.md` before
   running `ccommit` so those memory-file edits can land in the intended commit group and be
   reflected in the commit message
+- `creviewcommit` is the quick branch-prep workflow: it runs `creview` and `ccommit`, returns
+  control between stages, and intentionally skips validation and memory-update stages
 - Sandbox wrappers that launch Codex or Claude should expose `~/.agents` read-only so the
   shared workflow markdown remains available inside sandboxed sessions
-- `cprep` and `csubmit` enforce stage order, but each stage should return control to the agent
-  for context-heavy reasoning before the next stage runs
+- `cprep`, `creviewcommit`, and `csubmit` enforce stage order, but each stage should return
+  control to the agent for context-heavy reasoning before the next stage runs
 
 ## Commit grouping
 

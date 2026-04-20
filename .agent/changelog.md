@@ -34,6 +34,10 @@
 - Reordered the shared `cprep` and `csubmit` workflows so `.agent/patterns.md` and
   `.agent/changelog.md` are updated before `ccommit`, letting commit grouping and commit
   messages account for those memory-file changes
+- Added a shared `creviewcommit` workflow plus matching Claude and Codex entry points for the
+  quick `creview` -> `ccommit` path
+- Wired the new `creviewcommit` Codex skill into Home Manager and updated the workflow docs to
+  list it with the other submission commands
 
 ## 2026-04-19
 

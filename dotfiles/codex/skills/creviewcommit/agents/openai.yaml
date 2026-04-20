@@ -1,0 +1,7 @@
+interface:
+  display_name: "Creviewcommit"
+  short_description: "Run the review-and-commit branch workflow"
+  default_prompt: "Use $creviewcommit to review the current branch and prepare the local commit stack without running tests or pushing."
+
+policy:
+  allow_implicit_invocation: false
