@@ -31,20 +31,6 @@ return {
             { "hrsh7th/cmp-path" },
             { "hrsh7th/cmp-cmdline" },
         },
-        opt = {
-            servers = {
-                ts_ls = {
-                    root_dir = function(...)
-                        return require("lspconfig.util").root_pattern(".git")(...)
-                    end,
-                }
-            },
-            diagnostics = {
-                virtual_text = {
-                    source = true
-                }
-            }
-        },
         config = function()
             local lsp_zero = require("lsp-zero")
             local Path = require("plenary.path")
@@ -67,8 +53,6 @@ return {
                 vim.lsp.protocol.make_client_capabilities(),
                 cmp_lsp.default_capabilities()
             )
-
-            local lspconfig = require("lspconfig")
 
             --Manually installed linters and formatters
             local null_ls = require("null-ls")
@@ -110,24 +94,28 @@ return {
                 },
             })
 
+            local function setup_server(name, config)
+                vim.lsp.config(name, config or {})
+            end
+
             --Manually installed LSP servers
             -- ansible
-            lspconfig.ansiblels.setup({})
+            setup_server("ansiblels")
             -- bash
-            lspconfig.bashls.setup({
+            setup_server("bashls", {
                 filetypes = {
                     "bash",
                     "zsh",
                 },
             })
             -- docker
-            lspconfig.dockerls.setup({})
+            setup_server("dockerls")
             -- docker-compose
-            lspconfig.docker_compose_language_service.setup({})
+            setup_server("docker_compose_language_service")
             -- html
             local html_capabilities = vim.lsp.protocol.make_client_capabilities()
             html_capabilities.textDocument.completion.completionItem.snippetSupport = true
-            lspconfig.html.setup({
+            setup_server("html", {
                 capabilities = capabilities,
                 configurationSection = { "html", "css", "javascript" },
                 embeddedLanguages = {
@@ -137,9 +125,9 @@ return {
                 provideFormatter = true
             })
             -- htmx
-            -- lspconfig.htmx.setup({})
+            -- setup_server("htmx")
             -- lua
-            lspconfig.lua_ls.setup({
+            setup_server("lua_ls", {
                 capabilities = capabilities,
                 settings = {
                     Lua = {
@@ -150,28 +138,44 @@ return {
                 },
             })
             -- nix
-            lspconfig.nil_ls.setup({})
+            setup_server("nil_ls")
             -- python
-            lspconfig.pyright.setup({
+            setup_server("pyright", {
                 capabilities = capabilities,
             })
             -- toml
-            lspconfig.taplo.setup({
+            setup_server("taplo", {
                 cmd = { 'taplo', 'lsp', '--config', vim.fn.expand('~/environment/dotfiles/taplo/taplo.toml'), 'stdio' }
             })
             -- TypeScript
-            lspconfig.ts_ls.setup({})
+            setup_server("ts_ls")
             -- unocss
-            lspconfig.unocss.setup({})
+            setup_server("unocss")
             -- json
             local jsonls_capabilities = vim.lsp.protocol.make_client_capabilities()
             jsonls_capabilities.textDocument.completion.completionItem.snippetSupport = true
-            lspconfig.jsonls.setup {
+            setup_server("jsonls", {
                 capabilities = jsonls_capabilities
-            }
+            })
 
             -- c++
-            lspconfig.clangd.setup({})
+            setup_server("clangd")
+
+            vim.lsp.enable({
+                "ansiblels",
+                "bashls",
+                "dockerls",
+                "docker_compose_language_service",
+                "html",
+                "lua_ls",
+                "nil_ls",
+                "pyright",
+                "taplo",
+                "ts_ls",
+                "unocss",
+                "jsonls",
+                "clangd",
+            })
 
             -- Setup lsp autocompletion
             local cmp = require("cmp")

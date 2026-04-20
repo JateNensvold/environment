@@ -1,0 +1,7 @@
+interface:
+  display_name: "Csubmit"
+  short_description: "Run the full pre-submit branch workflow"
+  default_prompt: "Use $csubmit to review, test, verify commit metadata, and prepare this branch for push."
+
+policy:
+  allow_implicit_invocation: false

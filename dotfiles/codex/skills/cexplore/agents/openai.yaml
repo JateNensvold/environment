@@ -1,0 +1,7 @@
+interface:
+  display_name: "Cexplore"
+  short_description: "Deep review of a codebase area"
+  default_prompt: "Use $cexplore to deeply review this repository area and report the highest-signal risks and architecture notes."
+
+policy:
+  allow_implicit_invocation: false

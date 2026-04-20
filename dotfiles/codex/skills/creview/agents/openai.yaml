@@ -1,0 +1,7 @@
+interface:
+  display_name: "Creview"
+  short_description: "Pre-submit review of current branch changes"
+  default_prompt: "Use $creview to review the current branch, including uncommitted changes and unpushed commits, and report concrete findings."
+
+policy:
+  allow_implicit_invocation: false

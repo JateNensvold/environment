@@ -30,6 +30,9 @@ return {
 			highlight = {
 				-- `false` will disable the whole extension
 				enable = true,
+				-- Neovim 0.12 markdown injections can throw runtime errors when
+				-- highlighting fenced code blocks, so keep markdown on regex syntax.
+				disable = { "markdown", "markdown_inline" },
 
 				-- Setting this to true will run `:h syntax` and tree-sitter at the same time.
 				-- Set this to `true` if you depend on "syntax" being enabled (like for indentation).

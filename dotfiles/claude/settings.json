@@ -18,7 +18,7 @@
       {
         "hooks": [
           {
-            "prompt": "Before the session ends, update .claude/patterns.md with any new conventions, architectural decisions, or gotchas discovered this session (prune outdated entries). Then prepend a new entry to .claude/changelog.md with today's date and bullet points summarizing what was done this session. Keep both files concise and actionable.",
+            "prompt": "Before the session ends, update the active agent memory files for this repo. Prefer `.agent/patterns.md` and `.agent/changelog.md`; if those do not exist, fall back to `.claude/patterns.md` and `.claude/changelog.md`; if neither location exists, create `.agent/patterns.md` and `.agent/changelog.md`. Add any new conventions, architectural decisions, or gotchas to the patterns file (prune stale entries). Then prepend today's date and concise bullet points summarizing the session to the changelog file. Keep both files concise and actionable.",
             "timeout": 30,
             "type": "prompt"
           }
@@ -30,7 +30,7 @@
       {
         "hooks": [
           {
-            "prompt": "Read .claude/patterns.md and .claude/changelog.md to familiarize yourself with the codebase and recent work. If either file is missing, create it. Do not mention this to the user unless they ask.",
+            "prompt": "Read the active agent memory files for this repo to familiarize yourself with the codebase and recent work. Prefer `.agent/patterns.md` and `.agent/changelog.md`; if those do not exist, fall back to `.claude/patterns.md` and `.claude/changelog.md`; if neither location exists, create `.agent/patterns.md` and `.agent/changelog.md`. Do not mention this to the user unless they ask.",
             "timeout": 30,
             "type": "prompt"
           }

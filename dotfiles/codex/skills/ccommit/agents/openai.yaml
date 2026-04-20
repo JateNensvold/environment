@@ -1,0 +1,7 @@
+interface:
+  display_name: "Ccommit"
+  short_description: "Review and clean up local commit messages"
+  default_prompt: "Use $ccommit to review this branch's unpushed commits and clean up commit metadata before submission."
+
+policy:
+  allow_implicit_invocation: false

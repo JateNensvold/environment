@@ -4,6 +4,6 @@
 # Build artifacts
 result
 
-# cluade
-.claude
+# agents
 .codex
+.agents

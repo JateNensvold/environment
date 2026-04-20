@@ -18,34 +18,49 @@ WORKSPACE="$(pwd)"
 CODEX_ARGS=()
 
 while [[ $# -gt 0 ]]; do
-    case "$1" in
-        --workspace) WORKSPACE="$2"; shift 2 ;;
-        *)           CODEX_ARGS+=("$1"); shift ;;
-    esac
+	case "$1" in
+	--workspace)
+		WORKSPACE="$2"
+		shift 2
+		;;
+	*)
+		CODEX_ARGS+=("$1")
+		shift
+		;;
+	esac
 done
 
 WORKSPACE="$(realpath "$WORKSPACE")"
-[[ -d "$WORKSPACE" ]] || { echo "ERROR: Workspace '$WORKSPACE' not found" >&2; exit 1; }
+[[ -d "$WORKSPACE" ]] || {
+	echo "ERROR: Workspace '$WORKSPACE' not found" >&2
+	exit 1
+}
 
 resolve_bin() {
-    local path
-    path="$(command -v "$1" 2>/dev/null)" || { echo "ERROR: '$1' not found" >&2; exit 1; }
-    readlink -f "$path"
+	local path
+	path="$(command -v "$1" 2>/dev/null)" || {
+		echo "ERROR: '$1' not found" >&2
+		exit 1
+	}
+	readlink -f "$path"
 }
 
 add_path_dir() {
-    local dir="$1"
-    [[ -d "$dir" ]] || return 0
+	local dir="$1"
+	[[ -d "$dir" ]] || return 0
 
-    if [[ -z "${SEEN[$dir]:-}" ]]; then
-        SEEN[$dir]=1
-        SANDBOX_PATH="${SANDBOX_PATH:+$SANDBOX_PATH:}$dir"
-    fi
+	if [[ -z "${SEEN[$dir]:-}" ]]; then
+		SEEN[$dir]=1
+		SANDBOX_PATH="${SANDBOX_PATH:+$SANDBOX_PATH:}$dir"
+	fi
 }
 
 resolve_current_bash() {
-    [[ -n "${BASH:-}" ]] || { echo "ERROR: BASH is not set" >&2; exit 1; }
-    readlink -f "$BASH"
+	[[ -n "${BASH:-}" ]] || {
+		echo "ERROR: BASH is not set" >&2
+		exit 1
+	}
+	readlink -f "$BASH"
 }
 
 BWRAP="$(resolve_bin bwrap)"
@@ -62,7 +77,10 @@ SH_BIN="$BASH_BIN"
 # symlinks into /nix/store (which is already ro-mounted), so a single PATH
 # entry gives the sandbox access to everything installed via nix/home-manager.
 NIX_PROFILE_BIN="$(readlink -f "$HOME/.nix-profile/bin")"
-[[ -d "$NIX_PROFILE_BIN" ]] || { echo "ERROR: nix profile bin not found at $NIX_PROFILE_BIN" >&2; exit 1; }
+[[ -d "$NIX_PROFILE_BIN" ]] || {
+	echo "ERROR: nix profile bin not found at $NIX_PROFILE_BIN" >&2
+	exit 1
+}
 
 # Build deduplicated PATH from hard dependencies, host PATH entries that resolve
 # into /nix/store, and the nix profile bin.
@@ -70,18 +88,18 @@ declare -A SEEN
 SANDBOX_PATH=""
 
 for entry in "$CODEX" "$NODE" "$SANDBOX_SHELL" "$CAT" "$ENV_BIN" "$BASH_BIN" "$SH_BIN"; do
-    add_path_dir "$(dirname "$entry")"
+	add_path_dir "$(dirname "$entry")"
 done
 
-IFS=':' read -r -a HOST_PATH_ENTRIES <<< "${PATH:-}"
+IFS=':' read -r -a HOST_PATH_ENTRIES <<<"${PATH:-}"
 for entry in "${HOST_PATH_ENTRIES[@]}"; do
-    [[ -n "$entry" && -d "$entry" ]] || continue
-    resolved="$(readlink -f "$entry" 2>/dev/null || true)"
-    [[ -d "$resolved" ]] || continue
+	[[ -n "$entry" && -d "$entry" ]] || continue
+	resolved="$(readlink -f "$entry" 2>/dev/null || true)"
+	[[ -d "$resolved" ]] || continue
 
-    case "$resolved" in
-        /nix/store/*) add_path_dir "$resolved" ;;
-    esac
+	case "$resolved" in
+	/nix/store/*) add_path_dir "$resolved" ;;
+	esac
 done
 
 add_path_dir "$NIX_PROFILE_BIN"
@@ -92,7 +110,7 @@ RESOLV="$(readlink -f /etc/resolv.conf)"
 # Pass through API keys if set
 ENV_ARGS=()
 for var in OPENAI_API_KEY GITHUB_TOKEN; do
-    [[ -n "${!var:-}" ]] && ENV_ARGS+=(--setenv "$var" "${!var}")
+	[[ -n "${!var:-}" ]] && ENV_ARGS+=(--setenv "$var" "${!var}")
 done
 
 # Ensure ~/.codex exists for bind mount
@@ -102,43 +120,42 @@ echo "[sandbox] workspace: $WORKSPACE"
 echo "[sandbox] starting codex..."
 
 exec "$BWRAP" \
-    --unshare-user \
-    --unshare-pid \
-    --unshare-ipc \
-    --unshare-uts \
-    --hostname codex-sandbox \
-    --ro-bind /nix/store /nix/store \
-    --proc /proc \
-    --dev /dev \
-    --tmpfs /tmp \
-    --tmpfs /run \
-    --tmpfs "/home/$USER" \
-    --dir "/home/$USER/.nix-profile" \
-    --dir /usr \
-    --dir /usr/bin \
-    --dir /bin \
-    --ro-bind "$NIX_PROFILE_BIN" "/home/$USER/.nix-profile/bin" \
-    --ro-bind "$SANDBOX_SHELL" "/home/$USER/.nix-profile/bin/$SANDBOX_SHELL_NAME" \
-    --ro-bind "$ENV_BIN" /usr/bin/env \
-    --ro-bind "$BASH_BIN" /bin/bash \
-    --ro-bind "$SH_BIN" /bin/sh \
-    --ro-bind "$SANDBOX_SHELL" "/bin/$SANDBOX_SHELL_NAME" \
-    --bind "$WORKSPACE" "$WORKSPACE" \
-    --bind "$HOME/.codex" "/home/$USER/.codex" \
-    --ro-bind "$RESOLV" /etc/resolv.conf \
-    --ro-bind /etc/ssl /etc/ssl \
-    --ro-bind /etc/passwd /etc/passwd \
-    --ro-bind /etc/group /etc/group \
-    --chdir "$WORKSPACE" \
-    --setenv HOME "/home/$USER" \
-    --setenv SHELL "/home/$USER/.nix-profile/bin/$SANDBOX_SHELL_NAME" \
-    --setenv TERM "${TERM:-xterm-256color}" \
-    --setenv PATH "/home/$USER/.nix-profile/bin:$SANDBOX_PATH" \
-    --setenv LANG "${LANG:-en_US.UTF-8}" \
-    --setenv NIX_SSL_CERT_FILE /etc/ssl/certs/ca-certificates.crt \
-    "${ENV_ARGS[@]}" \
-    -- "$CODEX" "${CODEX_ARGS[@]}"
-    # -- "zsh" "-c" "ls"
-    # -- "ls" "-la" "$SHELL"
-     # -- "cat" "../.codex/auth.json"
-    # -- "ls" "-la" "../.codex"
+	--unshare-user \
+	--unshare-pid \
+	--unshare-ipc \
+	--unshare-uts \
+	--hostname codex-sandbox \
+	--ro-bind /nix/store /nix/store \
+	--proc /proc \
+	--dev /dev \
+	--tmpfs /tmp \
+	--tmpfs /run \
+	--tmpfs "/home/$USER" \
+	--dir "/home/$USER/.nix-profile" \
+	--dir /usr \
+	--dir /usr/bin \
+	--dir /bin \
+	--ro-bind "$NIX_PROFILE_BIN" "/home/$USER/.nix-profile/bin" \
+	--ro-bind "$ENV_BIN" /usr/bin/env \
+	--ro-bind "$BASH_BIN" /bin/bash \
+	--ro-bind "$SH_BIN" /bin/sh \
+	--ro-bind "$SANDBOX_SHELL" "/bin/$SANDBOX_SHELL_NAME" \
+	--bind "$WORKSPACE" "$WORKSPACE" \
+	--bind "$HOME/.codex" "/home/$USER/.codex" \
+	--ro-bind "$RESOLV" /etc/resolv.conf \
+	--ro-bind /etc/ssl /etc/ssl \
+	--ro-bind /etc/passwd /etc/passwd \
+	--ro-bind /etc/group /etc/group \
+	--chdir "$WORKSPACE" \
+	--setenv HOME "/home/$USER" \
+	--setenv SHELL "/home/$USER/.nix-profile/bin/$SANDBOX_SHELL_NAME" \
+	--setenv TERM "${TERM:-xterm-256color}" \
+	--setenv PATH "/home/$USER/.nix-profile/bin:$SANDBOX_PATH" \
+	--setenv LANG "${LANG:-en_US.UTF-8}" \
+	--setenv NIX_SSL_CERT_FILE /etc/ssl/certs/ca-certificates.crt \
+	"${ENV_ARGS[@]}" \
+	-- "$CODEX" "${CODEX_ARGS[@]}"
+# -- "zsh" "-c" "ls"
+# -- "ls" "-la" "$SHELL"
+# -- "cat" "../.codex/auth.json"
+# -- "ls" "-la" "../.codex"

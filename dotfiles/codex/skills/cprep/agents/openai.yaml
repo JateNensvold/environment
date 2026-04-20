@@ -1,0 +1,5 @@
+model: GPT-5
+model_tool_configs:
+  - display_name: "Cprep"
+    max_tokens: 8000
+    default_prompt: "Use $cprep to run the full pre-submit pipeline locally without pushing, then summarize what is ready for inspection before submission."

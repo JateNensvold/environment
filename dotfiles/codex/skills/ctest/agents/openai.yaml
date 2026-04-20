@@ -1,0 +1,7 @@
+interface:
+  display_name: "Ctest"
+  short_description: "Run formatter, lint, and tests"
+  default_prompt: "Use $ctest to run the relevant formatting, lint, and test checks for the current branch."
+
+policy:
+  allow_implicit_invocation: false

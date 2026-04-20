@@ -1,9 +1,4 @@
-Full pre-submission pipeline: review, test, commit metadata, and push. Run these steps in order:
+# Csubmit
 
-1. **Review** — Run /creview. If any critical issues are found, fix them before proceeding. Amend fixes into the appropriate commits.
-
-2. **Test** — Run /ctest. If tests or lint fail, fix the issues, amend into the appropriate commits, and re-run until clean.
-
-3. **Commit metadata** — Run /ccommit. Ensure every unpushed commit on this branch has a complete, accurate commit message.
-
-4. **Push** — Push the branch to origin with `CSUBMIT=1 git push -u origin HEAD`. Ask the user for confirmation before pushing. The `CSUBMIT=1` prefix is required to bypass the PreToolUse hook that blocks direct git push.
+Read `~/.agents/workflows/csubmit.md` and use it as the source of truth for this workflow.
+Run each stage in order, returning to analysis between stages, and ask before any push.
