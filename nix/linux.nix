@@ -6,8 +6,6 @@ in {
 
   xdg.configFile."nix/nix.conf".text = ''
     experimental-features = nix-command flakes
-    # Avoid "download buffer is full" warnings for large downloads.
-    download-buffer-size = 524288000
   '';
 
   imports = [
