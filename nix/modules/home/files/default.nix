@@ -1,4 +1,8 @@
-{ dotfiles, ... }:
+{ dotfiles, config, ... }:
+let
+  link = config.lib.file.mkOutOfStoreSymlink;
+  dotfilePath = "${config.home.homeDirectory}/environment/dotfiles";
+in
 {
 
   # Static files
@@ -14,7 +18,7 @@
   home.file.".claude/CLAUDE.md".source = "${dotfiles}/agents/claude/CLAUDE.md";
   home.file.".claude/commands".source = "${dotfiles}/agents/claude/commands";
   home.file.".agents/workflows".source = "${dotfiles}/agents/workflows";
-  home.file.".codex/AGENTS.md".source = "${dotfiles}/agents/codex/AGENTS.md";
+  home.file.".codex/AGENTS.md".source = link "${dotfilePath}/agents/codex/AGENTS.md";
   home.file.".codex/hooks/agent_memory_common.py".source =
     "${dotfiles}/agents/codex/hooks/agent_memory_common.py";
   home.file.".codex/hooks/session_start_context.py".source =
