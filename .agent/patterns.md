@@ -3,8 +3,6 @@
 ## Agent memory
 
 - `.agent/` is the canonical repo memory location; `.claude/` is a legacy fallback
-- `.agents/` was a mistaken migration artifact; keep repo-local agent memory and local agent
-  settings under `.agent/` only
 - Treat memory files as curated notes, not append-only logs; merge same-day updates into the
   existing date section and prune duplicate stop-hook noise
 
@@ -46,3 +44,6 @@
 - `ccommit` should prefer repo-local grouping guidance from `.agent/ccommit-groups.md` when the
   repo provides it, and otherwise split commits by actual functionality rather than path
   prefixes alone
+- When pending work spans multiple functional areas, `ccommit` should create multiple commits
+  by default rather than treating a clean branch state as a reason to collapse everything into
+  one commit

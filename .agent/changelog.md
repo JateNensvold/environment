@@ -22,6 +22,9 @@
   `~/.agents/workflows`, which now act as the source of truth for both Codex and Claude
 - Recorded in `.agent/patterns.md` that `ccommit` should prefer repo-local
   `.agent/ccommit-groups.md` guidance when the repo provides it
+- Tightened the shared `ccommit` workflow and `ctest` validation notes so multiple functional
+  areas now default to multiple commits, including cases where all current changes are still
+  uncommitted
 
 ## 2026-04-19
 
