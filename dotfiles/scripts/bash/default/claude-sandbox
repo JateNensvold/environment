@@ -7,6 +7,7 @@
 # Visible inside sandbox:
 #   /nix/store       — read-only
 #   $WORKSPACE       — read-write (original path preserved)
+#   /home/$USER/.agents — read-only (shared workflow definitions)
 #   /home/$USER/.claude — read-write (persistent global config)
 #   /proc /dev /tmp /run — essentials
 #   /etc/{resolv.conf,ssl,passwd,group} — networking & identity
@@ -117,6 +118,11 @@ done
 mkdir -p "$HOME/.claude"
 touch "$HOME/.claude.json"
 
+AGENTS_BIND_ARGS=(--dir "/home/$USER/.agents")
+if [[ -e "$HOME/.agents" ]]; then
+	AGENTS_BIND_ARGS=(--ro-bind "$HOME/.agents" "/home/$USER/.agents")
+fi
+
 echo "[sandbox] workspace: $WORKSPACE"
 echo "[sandbox] starting claude..."
 
@@ -142,6 +148,7 @@ exec "$BWRAP" \
 	--ro-bind "$SH_BIN" /bin/sh \
 	--ro-bind "$SANDBOX_SHELL" "/bin/$SANDBOX_SHELL_NAME" \
 	--bind "$WORKSPACE" "$WORKSPACE" \
+	"${AGENTS_BIND_ARGS[@]}" \
 	--bind "$HOME/.claude" "/home/$USER/.claude" \
 	--bind "$HOME/.claude.json" "/home/$USER/.claude.json" \
 	--ro-bind "$RESOLV" /etc/resolv.conf \

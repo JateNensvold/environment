@@ -7,6 +7,7 @@
 # Visible inside sandbox:
 #   /nix/store       — read-only
 #   $WORKSPACE       — read-write (original path preserved)
+#   /home/$USER/.agents — read-only (shared workflow definitions)
 #   /home/$USER/.codex — read-write (persistent global config)
 #   /proc /dev /tmp /run — essentials
 #   /etc/{resolv.conf,ssl,passwd,group} — networking & identity
@@ -116,6 +117,11 @@ done
 # Ensure ~/.codex exists for bind mount
 mkdir -p "$HOME/.codex"
 
+AGENTS_BIND_ARGS=(--dir "/home/$USER/.agents")
+if [[ -e "$HOME/.agents" ]]; then
+	AGENTS_BIND_ARGS=(--ro-bind "$HOME/.agents" "/home/$USER/.agents")
+fi
+
 echo "[sandbox] workspace: $WORKSPACE"
 echo "[sandbox] starting codex..."
 
@@ -141,6 +147,7 @@ exec "$BWRAP" \
 	--ro-bind "$SH_BIN" /bin/sh \
 	--ro-bind "$SANDBOX_SHELL" "/bin/$SANDBOX_SHELL_NAME" \
 	--bind "$WORKSPACE" "$WORKSPACE" \
+	"${AGENTS_BIND_ARGS[@]}" \
 	--bind "$HOME/.codex" "/home/$USER/.codex" \
 	--ro-bind "$RESOLV" /etc/resolv.conf \
 	--ro-bind /etc/ssl /etc/ssl \
