@@ -9,10 +9,13 @@ in
   home.file.".config/cheat/conf.yml".source = "${dotfiles}/cheat/conf.yml";
   home.file.".inputrc".source = "${dotfiles}/dotfile_settings/.inputrc";
 
-  # Install from the flake source (in-store) to avoid "outside $HOME" errors during build.
+  # Install most shared trees from the flake source (in-store) to avoid
+  # "outside $HOME" errors during build.
   home.file.".config/nvim".source = "${dotfiles}/nvim/default";
   home.file.".config/tmux".source = "${dotfiles}/tmux";
-  home.file.".local/bin".source = "${dotfiles}/scripts/bash/default";
+  # Keep local scripts live from the repo so sandbox wrapper edits are
+  # immediately visible without waiting for a reload.
+  home.file.".local/bin".source = link "${dotfilePath}/scripts/bash/default";
   home.file.".zfuncs".source = "${dotfiles}/scripts/zsh/default";
   home.file.".config/oh-my-posh".source = "${dotfiles}/oh-my-posh";
   home.file.".claude/CLAUDE.md".source = "${dotfiles}/agents/claude/CLAUDE.md";
@@ -23,6 +26,7 @@ in
     "${dotfiles}/agents/codex/hooks/agent_memory_common.py";
   home.file.".codex/hooks/session_start_context.py".source =
     "${dotfiles}/agents/codex/hooks/session_start_context.py";
+  home.file.".codex/skills/cdocument".source = "${dotfiles}/agents/codex/skills/cdocument";
   home.file.".codex/skills/ccommit".source = "${dotfiles}/agents/codex/skills/ccommit";
   home.file.".codex/skills/cprep".source = "${dotfiles}/agents/codex/skills/cprep";
   home.file.".codex/skills/cexplore".source = "${dotfiles}/agents/codex/skills/cexplore";
