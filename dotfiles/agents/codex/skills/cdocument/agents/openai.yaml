@@ -1,0 +1,7 @@
+interface:
+  display_name: "Cdocument"
+  short_description: "Update repo memory before commit preparation"
+  default_prompt: "Use $cdocument to refresh the repo memory files for this branch and report the resulting documentation updates."
+
+policy:
+  allow_implicit_invocation: false

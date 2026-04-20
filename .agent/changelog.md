@@ -2,6 +2,16 @@
 
 ## 2026-04-20
 
+- Split the repo-memory stage out of `cprep` and `csubmit` into a standalone shared
+  `cdocument` workflow
+- Added matching Claude and Codex `cdocument` entry points and wired the Codex skill into Home
+  Manager
+- Updated the shared workflow and global guidance docs so `cprep` and `csubmit` now refer to
+  `~/.agents/workflows/cdocument.md` for the documentation stage
+- Switched `~/.local/bin` to an out-of-store link to `dotfiles/scripts/bash/default` so local
+  sandbox-wrapper edits are visible without waiting for a reload
+- Added a `--dns-debug` mode to `codex-sandbox` that runs basic network and resolver
+  diagnostics inside the sandbox instead of launching Codex
 - Merged the stray `.agents/` directory into `.agent/`, moving the repo-local settings file to
   `.agent/settings.local.json` and removing the duplicate directory
 - Removed the Codex `Stop` hook after confirming it runs at the end of each prompt rather than
