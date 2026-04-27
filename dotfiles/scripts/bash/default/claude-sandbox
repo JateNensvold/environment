@@ -9,6 +9,7 @@
 #   $WORKSPACE       — read-write (original path preserved)
 #   /home/$USER/.agents — read-only (shared workflow definitions)
 #   /home/$USER/.claude — read-write (persistent global config)
+#   /home/$USER/.cache/nix, .config/nix, .local/{share,state}/nix — persistent Nix state
 #   /proc /dev /tmp /run — essentials
 #   /etc/{resolv.conf,ssl,passwd,group} — networking & identity
 # Everything else (home, usr, etc, other projects, docker socket) — gone
@@ -114,14 +115,35 @@ for var in ANTHROPIC_API_KEY CLAUDE_API_KEY GITHUB_TOKEN; do
 	[[ -n "${!var:-}" ]] && ENV_ARGS+=(--setenv "$var" "${!var}")
 done
 
-# Ensure ~/.claude and ~/.claude.json exist for bind mounts
-mkdir -p "$HOME/.claude"
+# Ensure persistent host-backed directories exist for bind mounts
+mkdir -p \
+	"$HOME/.claude" \
+	"$HOME/.cache/nix" \
+	"$HOME/.config/nix" \
+	"$HOME/.local/share/nix" \
+	"$HOME/.local/state/nix"
 touch "$HOME/.claude.json"
 
 AGENTS_BIND_ARGS=(--dir "/home/$USER/.agents")
 if [[ -e "$HOME/.agents" ]]; then
 	AGENTS_BIND_ARGS=(--ro-bind "$HOME/.agents" "/home/$USER/.agents")
 fi
+
+HOME_DIR_ARGS=(
+	--dir "/home/$USER/.nix-profile"
+	--dir "/home/$USER/.cache"
+	--dir "/home/$USER/.config"
+	--dir "/home/$USER/.local"
+	--dir "/home/$USER/.local/share"
+	--dir "/home/$USER/.local/state"
+)
+
+NIX_BIND_ARGS=(
+	--bind "$HOME/.cache/nix" "/home/$USER/.cache/nix"
+	--bind "$HOME/.config/nix" "/home/$USER/.config/nix"
+	--bind "$HOME/.local/share/nix" "/home/$USER/.local/share/nix"
+	--bind "$HOME/.local/state/nix" "/home/$USER/.local/state/nix"
+)
 
 echo "[sandbox] workspace: $WORKSPACE"
 echo "[sandbox] starting claude..."
@@ -138,7 +160,7 @@ exec "$BWRAP" \
 	--tmpfs /tmp \
 	--tmpfs /run \
 	--tmpfs "/home/$USER" \
-	--dir "/home/$USER/.nix-profile" \
+	"${HOME_DIR_ARGS[@]}" \
 	--dir /usr \
 	--dir /usr/bin \
 	--dir /bin \
@@ -151,6 +173,7 @@ exec "$BWRAP" \
 	"${AGENTS_BIND_ARGS[@]}" \
 	--bind "$HOME/.claude" "/home/$USER/.claude" \
 	--bind "$HOME/.claude.json" "/home/$USER/.claude.json" \
+	"${NIX_BIND_ARGS[@]}" \
 	--ro-bind "$RESOLV" /etc/resolv.conf \
 	--ro-bind /etc/ssl /etc/ssl \
 	--ro-bind /etc/passwd /etc/passwd \

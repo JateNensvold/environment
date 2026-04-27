@@ -9,8 +9,11 @@
 #   $WORKSPACE       — read-write (original path preserved)
 #   /home/$USER/.agents — read-only (shared workflow definitions)
 #   /home/$USER/.codex — read-write (persistent global config)
+#   /home/$USER/.cache/nix, .config/nix, .local/{share,state}/nix — persistent Nix state
 #   /proc /dev /tmp /run — essentials
 #   /etc/{resolv.conf,ssl,passwd,group} — networking & identity
+#   Optional: a temporary ssh-agent socket plus ~/.ssh/{config,known_hosts} when
+#   launched with --ssh-key /path/to/key
 # Everything else (home, usr, etc, other projects, docker socket) — gone
 
 set -euo pipefail
@@ -18,6 +21,45 @@ set -euo pipefail
 WORKSPACE="$(pwd)"
 CODEX_ARGS=()
 DNS_DEBUG=0
+SSH_KEY_PATH=""
+SSH_AGENT_BIN=""
+SSH_ADD_BIN=""
+SSH_AGENT_DIR=""
+SSH_AGENT_PID_VALUE=""
+SSH_AGENT_SOCKET_HOST=""
+SSH_AGENT_SOCKET_SANDBOX=""
+
+cleanup_ssh_agent() {
+	[[ -n "${SSH_AGENT_PID_VALUE:-}" ]] || return 0
+
+	SSH_AGENT_PID="$SSH_AGENT_PID_VALUE" \
+	SSH_AUTH_SOCK="$SSH_AGENT_SOCKET_HOST" \
+	"$SSH_AGENT_BIN" -k >/dev/null 2>&1 || true
+	rm -rf "$SSH_AGENT_DIR"
+}
+
+setup_ssh_agent() {
+	local key_path="$1"
+	local ssh_agent_output
+
+	SSH_AGENT_BIN="$(resolve_bin ssh-agent)"
+	SSH_ADD_BIN="$(resolve_bin ssh-add)"
+
+	SSH_AGENT_DIR="$(mktemp -d "${TMPDIR:-/tmp}/codex-sandbox-ssh.XXXXXX")"
+	SSH_AGENT_SOCKET_HOST="$SSH_AGENT_DIR/agent.sock"
+	SSH_AGENT_SOCKET_SANDBOX="/tmp/codex-sandbox-ssh/agent.sock"
+
+	ssh_agent_output="$("$SSH_AGENT_BIN" -s -a "$SSH_AGENT_SOCKET_HOST")"
+	eval "$ssh_agent_output" >/dev/null
+	SSH_AGENT_PID_VALUE="${SSH_AGENT_PID:-}"
+	[[ -n "$SSH_AGENT_PID_VALUE" && -S "$SSH_AGENT_SOCKET_HOST" ]] || {
+		echo "ERROR: failed to start temporary ssh-agent" >&2
+		exit 1
+	}
+
+	trap cleanup_ssh_agent EXIT
+	"$SSH_ADD_BIN" "$key_path"
+}
 
 while [[ $# -gt 0 ]]; do
 	case "$1" in
@@ -28,6 +70,10 @@ while [[ $# -gt 0 ]]; do
 	--dns-debug)
 		DNS_DEBUG=1
 		shift
+		;;
+	--ssh-key)
+		SSH_KEY_PATH="$2"
+		shift 2
 		;;
 	*)
 		CODEX_ARGS+=("$1")
@@ -41,6 +87,14 @@ WORKSPACE="$(realpath "$WORKSPACE")"
 	echo "ERROR: Workspace '$WORKSPACE' not found" >&2
 	exit 1
 }
+
+if [[ -n "$SSH_KEY_PATH" ]]; then
+	SSH_KEY_PATH="$(realpath "$SSH_KEY_PATH")"
+	[[ -f "$SSH_KEY_PATH" ]] || {
+		echo "ERROR: SSH key '$SSH_KEY_PATH' not found" >&2
+		exit 1
+	}
+fi
 
 resolve_bin() {
 	local path
@@ -119,12 +173,54 @@ for var in OPENAI_API_KEY GITHUB_TOKEN; do
 	[[ -n "${!var:-}" ]] && ENV_ARGS+=(--setenv "$var" "${!var}")
 done
 
-# Ensure ~/.codex exists for bind mount
-mkdir -p "$HOME/.codex"
+# Ensure persistent host-backed directories exist for bind mounts
+mkdir -p \
+	"$HOME/.codex" \
+	"$HOME/.cache/nix" \
+	"$HOME/.config/nix" \
+	"$HOME/.local/share/nix" \
+	"$HOME/.local/state/nix"
 
 AGENTS_BIND_ARGS=(--dir "/home/$USER/.agents")
 if [[ -e "$HOME/.agents" ]]; then
 	AGENTS_BIND_ARGS=(--ro-bind "$HOME/.agents" "/home/$USER/.agents")
+fi
+
+HOME_DIR_ARGS=(
+	--dir "/home/$USER/.nix-profile"
+	--dir "/home/$USER/.cache"
+	--dir "/home/$USER/.config"
+	--dir "/home/$USER/.local"
+	--dir "/home/$USER/.local/share"
+	--dir "/home/$USER/.local/state"
+)
+
+NIX_BIND_ARGS=(
+	--bind "$HOME/.cache/nix" "/home/$USER/.cache/nix"
+	--bind "$HOME/.config/nix" "/home/$USER/.config/nix"
+	--bind "$HOME/.local/share/nix" "/home/$USER/.local/share/nix"
+	--bind "$HOME/.local/state/nix" "/home/$USER/.local/state/nix"
+)
+
+SSH_HOME_DIR_ARGS=()
+SSH_BIND_ARGS=()
+SSH_ENV_ARGS=()
+if [[ -n "$SSH_KEY_PATH" ]]; then
+	setup_ssh_agent "$SSH_KEY_PATH"
+	SSH_HOME_DIR_ARGS=(--dir "/home/$USER/.ssh")
+	SSH_BIND_ARGS=(
+		--dir /tmp/codex-sandbox-ssh
+		--bind "$SSH_AGENT_SOCKET_HOST" "$SSH_AGENT_SOCKET_SANDBOX"
+	)
+	SSH_ENV_ARGS=(--setenv SSH_AUTH_SOCK "$SSH_AGENT_SOCKET_SANDBOX")
+
+	if [[ -f "$HOME/.ssh/known_hosts" ]]; then
+		SSH_BIND_ARGS+=(--ro-bind "$HOME/.ssh/known_hosts" "/home/$USER/.ssh/known_hosts")
+	fi
+
+	if [[ -f "$HOME/.ssh/config" ]]; then
+		SSH_BIND_ARGS+=(--ro-bind "$HOME/.ssh/config" "/home/$USER/.ssh/config")
+	fi
 fi
 
 echo "[sandbox] workspace: $WORKSPACE"
@@ -149,7 +245,11 @@ else
 	echo "[sandbox] starting codex..."
 fi
 
-exec "$BWRAP" \
+if [[ -n "$SSH_KEY_PATH" ]]; then
+	echo "[sandbox] ssh: temporary agent enabled for key $SSH_KEY_PATH"
+fi
+
+"$BWRAP" \
 	--unshare-user \
 	--unshare-pid \
 	--unshare-ipc \
@@ -161,7 +261,8 @@ exec "$BWRAP" \
 	--tmpfs /tmp \
 	--tmpfs /run \
 	--tmpfs "/home/$USER" \
-	--dir "/home/$USER/.nix-profile" \
+	"${HOME_DIR_ARGS[@]}" \
+	"${SSH_HOME_DIR_ARGS[@]}" \
 	--dir /usr \
 	--dir /usr/bin \
 	--dir /bin \
@@ -173,6 +274,8 @@ exec "$BWRAP" \
 	--bind "$WORKSPACE" "$WORKSPACE" \
 	"${AGENTS_BIND_ARGS[@]}" \
 	--bind "$HOME/.codex" "/home/$USER/.codex" \
+	"${NIX_BIND_ARGS[@]}" \
+	"${SSH_BIND_ARGS[@]}" \
 	--ro-bind "$RESOLV" /etc/resolv.conf \
 	--ro-bind /etc/ssl /etc/ssl \
 	--ro-bind /etc/passwd /etc/passwd \
@@ -185,6 +288,7 @@ exec "$BWRAP" \
 	--setenv LANG "${LANG:-en_US.UTF-8}" \
 	--setenv NIX_SSL_CERT_FILE /etc/ssl/certs/ca-certificates.crt \
 	"${ENV_ARGS[@]}" \
+	"${SSH_ENV_ARGS[@]}" \
 	-- "${SANDBOX_CMD[@]}"
 # -- "zsh" "-c" "ls"
 # -- "ls" "-la" "$SHELL"
