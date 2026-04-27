@@ -1,5 +1,34 @@
 # Changelog
 
+## 2026-04-27
+
+- Ignored `dotfiles/agents/codex/skills/.system` because linking the full `~/.codex/skills`
+  tree into the repo also exposes Codex's built-in system-skill subtree there as untracked
+  non-repo content
+- Switched `~/.claude/commands`, `~/.agents/workflows`, and `~/.codex/skills` to
+  out-of-store Home Manager links so repo edits to shared commands, workflows, and Codex
+  skills become live after the next `reload` without another rebuild
+- Updated the repo Codex skill metadata so each skill description starts by naming the other
+  repo skills it calls, and aligned the UI-facing `agents/openai.yaml` blurbs with that
+  workflow-composition summary
+- Tightened the Codex skill descriptions again so standalone skills keep their short summaries,
+  while only composite workflow skills list called subskills before the summary
+- Switched the Home Manager wiring for `~/.codex/skills` to one out-of-store repo link and
+  ignored the mirrored `.system` subtree that now appears under the repo path
+- Extended `claude-sandbox` and `codex-sandbox` to bind persistent host Nix state directories
+  so Nix commands inside the sandbox can reuse normal caches and config
+- Added `codex-sandbox --ssh-key /path/to/key`, which starts a temporary ssh-agent and binds
+  only the agent socket plus optional SSH client config files into the sandbox
+- Tightened the shared `ccommit` workflow so it must build an explicit commit plan, split
+  independently reviewable uncommitted work into multiple commits, and order those commits by
+  prerequisite versus dependent changes
+- Updated `.agent/ccommit-groups.md` with repo-local guidance to preserve dependency ordering
+  and split same-file hunks by functionality when the resulting commits stay coherent
+- Recorded in `.agent/patterns.md` that `ccommit` should plan ordered commit groups before
+  editing history
+- Validated the changed Markdown, shell scripts, and Home Manager module during a local
+  `cprep` run
+
 ## 2026-04-20
 
 - Split the repo-memory stage out of `cprep` and `csubmit` into a standalone shared

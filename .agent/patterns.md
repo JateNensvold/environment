@@ -14,6 +14,18 @@
 - `dotfiles/scripts/bash/default/` is linked live into `~/.local/bin`, so sandbox-wrapper
   edits there are visible immediately, but shared workflows and most agent definitions still
   follow the normal reload path
+- `~/.claude/commands`, `~/.agents/workflows`, and `~/.codex/skills` can be installed as
+  out-of-store symlinks so edits to those repo trees become live after the next `reload`
+  without another Home Manager rebuild
+- When `~/.codex/skills` points at the repo tree, Codex's built-in `~/.codex/skills/.system`
+  subtree can appear inside `dotfiles/agents/codex/skills/`; keep that repo path ignored
+  rather than treating it as repo-managed content
+- Sandbox wrappers can bind persistent host Nix state under `~/.cache/nix`, `~/.config/nix`,
+  and `~/.local/{share,state}/nix` so Nix tooling inside the bubblewrap environment can reuse
+  normal host state instead of failing against ephemeral paths
+- `codex-sandbox` can expose SSH access through `--ssh-key /path/to/key`, which starts a
+  temporary agent, binds only the agent socket plus optional `~/.ssh/config` and
+  `known_hosts`, and cleans the agent up on exit
 - Global Codex instructions are managed in `dotfiles/agents/codex/AGENTS.md` and installed
   to `~/.codex/AGENTS.md`, parallel to the global Claude file at
   `dotfiles/agents/claude/CLAUDE.md`
@@ -34,6 +46,9 @@
 
 - Repo Markdown files are checked against `dotfiles/markdownlint/markdownlint.yaml`; keep
   headings spaced correctly and wrap prose to 100 columns
+- Repo Codex composite workflow skills should start by naming the other repo skills they call,
+  followed by a short summary; standalone skills should keep a concise description without a
+  "calls no other skills" prefix
 - `cprep` and `csubmit` should leave the branch with a real local commit stack; if the branch
   only has staged or working-tree changes, `ccommit` should create the commit before
   summarizing readiness
@@ -59,3 +74,6 @@
 - When pending work spans multiple functional areas, `ccommit` should create multiple commits
   by default rather than treating a clean branch state as a reason to collapse everything into
   one commit
+- `ccommit` should build an explicit ordered commit plan first: put prerequisite changes before
+  dependent behavior, and use partial staging when same-file hunks belong to different
+  functional groups
