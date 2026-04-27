@@ -66,6 +66,15 @@
 - `cprep`, `creviewcommit`, and `csubmit` enforce stage order, but each stage should return
   control to the agent for context-heavy reasoning before the next stage runs
 
+## Nix workflows
+
+- Use `cnix` when a repo already uses Nix or a task should stay repo-scoped; prefer
+  `flakify` for new flake-based setup and reserve `nixify` for explicit legacy
+  `shell.nix`/`default.nix` requests
+- `codex-sandbox` can preload repo-scoped Nix tooling for Bash commands by setting
+  `BASH_ENV` to a helper that runs `direnv export bash` when `.envrc` contains `use flake`;
+  `--no-nix-env` disables that preload
+
 ## Commit grouping
 
 - `ccommit` should prefer repo-local grouping guidance from `.agent/ccommit-groups.md` when the

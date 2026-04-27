@@ -26,6 +26,12 @@
   and split same-file hunks by functionality when the resulting commits stay coherent
 - Recorded in `.agent/patterns.md` that `ccommit` should plan ordered commit groups before
   editing history
+- Added a shared `cnix` command and Codex skill for repo-scoped Nix setup, and recorded the
+  matching cross-repo guidance in the global Codex instructions
+- Reworked `flakify` to write a commented starter `flake.nix`, while clarifying `nixify` as
+  the legacy non-flake bootstrap path
+- Extended `codex-sandbox` to preload `direnv export bash` for Bash commands when a repo
+  `.envrc` uses `use flake`, with `--no-nix-env` available as an opt-out
 - Validated the changed Markdown, shell scripts, and Home Manager module during a local
   `cprep` run
 
