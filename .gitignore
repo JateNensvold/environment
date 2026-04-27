@@ -7,3 +7,4 @@ result
 # agents
 .codex
 .agents
+dotfiles/agents/codex/skills/.system
