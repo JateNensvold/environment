@@ -3,8 +3,35 @@
 
 flakify() {
 	if [ ! -e flake.nix ]; then
-		nix flake new -t github:nix-community/nix-direnv .
-	elif [ ! -e .envrc ]; then
+		cat >flake.nix <<'EOF'
+{
+  description = "Development shell";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+  };
+
+  outputs = { nixpkgs, flake-utils, ... }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = import nixpkgs { inherit system; };
+      in {
+        devShells.default = pkgs.mkShell {
+          packages = with pkgs; [
+            # bashInteractive: provide an interactive shell inside `nix develop`.
+            bashInteractive
+
+            # Add each extra tool with a short comment explaining why the repo needs it.
+            # shellcheck: lint shell scripts in this repo.
+            # shellcheck
+          ];
+        };
+      });
+}
+EOF
+	fi
+	if [ ! -e .envrc ]; then
 		echo "use flake" >.envrc
 		direnv allow
 	fi

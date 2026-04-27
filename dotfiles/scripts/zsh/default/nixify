@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 # shellcheck disable=SC1071
+# Legacy non-flake Nix bootstrap. Prefer `flakify` unless the user explicitly
+# asks for `shell.nix` or `default.nix`.
 
 if [ ! -e ./.envrc ]; then
 	echo "use nix" >.envrc

@@ -14,6 +14,8 @@
 #   /etc/{resolv.conf,ssl,passwd,group} — networking & identity
 #   Optional: a temporary ssh-agent socket plus ~/.ssh/{config,known_hosts} when
 #   launched with --ssh-key /path/to/key
+#   If the workspace uses `direnv` with `use flake`, Bash commands source
+#   `direnv export bash`, which reuses the repo-local `.direnv/` cache
 # Everything else (home, usr, etc, other projects, docker socket) — gone
 
 set -euo pipefail
@@ -21,6 +23,7 @@ set -euo pipefail
 WORKSPACE="$(pwd)"
 CODEX_ARGS=()
 DNS_DEBUG=0
+NIX_ENV_MODE=""
 SSH_KEY_PATH=""
 SSH_AGENT_BIN=""
 SSH_ADD_BIN=""
@@ -28,6 +31,9 @@ SSH_AGENT_DIR=""
 SSH_AGENT_PID_VALUE=""
 SSH_AGENT_SOCKET_HOST=""
 SSH_AGENT_SOCKET_SANDBOX=""
+NIX_BASH_ENV_HOST=""
+NIX_BASH_ENV_SANDBOX="/home/$USER/.codex/direnv/bashenv.sh"
+NIX_ENV_ARGS=()
 
 cleanup_ssh_agent() {
 	[[ -n "${SSH_AGENT_PID_VALUE:-}" ]] || return 0
@@ -66,6 +72,10 @@ while [[ $# -gt 0 ]]; do
 	--workspace)
 		WORKSPACE="$2"
 		shift 2
+		;;
+	--no-nix-env)
+		NIX_ENV_MODE="disabled"
+		shift
 		;;
 	--dns-debug)
 		DNS_DEBUG=1
@@ -121,6 +131,52 @@ resolve_current_bash() {
 		exit 1
 	}
 	readlink -f "$BASH"
+}
+
+workspace_uses_flake_env() {
+	local envrc_path="$WORKSPACE/.envrc"
+	local line
+
+	[[ -f "$envrc_path" ]] || return 1
+
+	while IFS= read -r line; do
+		case "$line" in
+		*use\ flake*) return 0 ;;
+		esac
+	done <"$envrc_path"
+
+	return 1
+}
+
+setup_nix_bash_env() {
+	local helper_dir_host
+
+	helper_dir_host="$HOME/.codex/direnv"
+
+	mkdir -p "$helper_dir_host"
+
+	NIX_BASH_ENV_HOST="$helper_dir_host/bashenv.sh"
+
+	cat >"$NIX_BASH_ENV_HOST" <<'EOF'
+#!/usr/bin/env bash
+
+__codex_nix_workspace="${CODEX_SANDBOX_WORKSPACE:-}"
+
+if [[ -n "$__codex_nix_workspace" ]]; then
+	__codex_nix_export="$(
+		cd "$__codex_nix_workspace" &&
+			direnv export bash
+	)" || return 0
+
+	if [[ -n "$__codex_nix_export" ]]; then
+		eval "$__codex_nix_export"
+	fi
+fi
+
+unset __codex_nix_export __codex_nix_workspace
+EOF
+
+	chmod 700 "$NIX_BASH_ENV_HOST"
 }
 
 BWRAP="$(resolve_bin bwrap)"
@@ -223,7 +279,24 @@ if [[ -n "$SSH_KEY_PATH" ]]; then
 	fi
 fi
 
+if [[ "$NIX_ENV_MODE" != "disabled" ]]; then
+	if workspace_uses_flake_env; then
+		NIX_ENV_MODE="direnv"
+	fi
+
+	if [[ -n "$NIX_ENV_MODE" ]]; then
+		setup_nix_bash_env
+		NIX_ENV_ARGS=(
+			--setenv CODEX_SANDBOX_WORKSPACE "$WORKSPACE"
+			--setenv BASH_ENV "$NIX_BASH_ENV_SANDBOX"
+		)
+	fi
+fi
+
 echo "[sandbox] workspace: $WORKSPACE"
+if [[ -n "$NIX_ENV_MODE" ]]; then
+	echo "[sandbox] nix env: $NIX_ENV_MODE preload enabled"
+fi
 
 SANDBOX_CMD=("$CODEX" "${CODEX_ARGS[@]}")
 if [[ "$DNS_DEBUG" -eq 1 ]]; then
@@ -287,6 +360,7 @@ fi
 	--setenv PATH "/home/$USER/.nix-profile/bin:$SANDBOX_PATH" \
 	--setenv LANG "${LANG:-en_US.UTF-8}" \
 	--setenv NIX_SSL_CERT_FILE /etc/ssl/certs/ca-certificates.crt \
+	"${NIX_ENV_ARGS[@]}" \
 	"${ENV_ARGS[@]}" \
 	"${SSH_ENV_ARGS[@]}" \
 	-- "${SANDBOX_CMD[@]}"
