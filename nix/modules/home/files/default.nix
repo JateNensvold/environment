@@ -19,16 +19,16 @@ in
   home.file.".zfuncs".source = "${dotfiles}/scripts/zsh/default";
   home.file.".config/oh-my-posh".source = "${dotfiles}/oh-my-posh";
   home.file.".claude/CLAUDE.md".source = "${dotfiles}/agents/claude/CLAUDE.md";
-  # Keep shared agent command and workflow trees live from the repo so edits
-  # are visible after the next reload without another Home Manager rebuild.
-  home.file.".claude/commands".source = link "${dotfilePath}/agents/claude/commands";
-  home.file.".agents/workflows".source = link "${dotfilePath}/agents/workflows";
-  home.file.".codex/AGENTS.md".source = link "${dotfilePath}/agents/codex/AGENTS.md";
+  # Install shared agent trees from the flake source so sandboxed sessions can
+  # resolve them without depending on extra bind mounts back into this repo.
+  home.file.".claude/commands".source = "${dotfiles}/agents/claude/commands";
+  home.file.".agents/workflows".source = "${dotfiles}/agents/workflows";
+  home.file.".codex/AGENTS.md".source = "${dotfiles}/agents/codex/AGENTS.md";
   home.file.".codex/hooks/agent_memory_common.py".source =
     "${dotfiles}/agents/codex/hooks/agent_memory_common.py";
   home.file.".codex/hooks/session_start_context.py".source =
     "${dotfiles}/agents/codex/hooks/session_start_context.py";
-  home.file.".codex/skills".source = link "${dotfilePath}/agents/codex/skills";
+  home.file.".codex/skills".source = "${dotfiles}/agents/codex/skills";
 
   home.file.".config/.cspell".source = "${dotfiles}/cspell";
 
