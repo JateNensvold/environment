@@ -1,6 +1,6 @@
 ---
 name: creview
-description: Review pending code changes before submission by checking the working tree, the local commit stack, and the detailed diffs for bugs, regressions, and missing tests. Use when the user asks to run creview, review a branch before push, or audit the current patch set.
+description: Pre-submit review of current branch changes.
 ---
 
 # Creview

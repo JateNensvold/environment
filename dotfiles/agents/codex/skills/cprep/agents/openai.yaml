@@ -1,3 +1,8 @@
+interface:
+  display_name: "Cprep"
+  short_description: "Calls $creview, $ctest, $cdocument, $ccommit. Local pre-submit pipeline without pushing"
+  default_prompt: "Use $cprep to run the full pre-submit pipeline locally without pushing, then summarize what is ready for inspection before submission."
+
 model: GPT-5
 model_tool_configs:
   - display_name: "Cprep"

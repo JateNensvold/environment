@@ -1,6 +1,6 @@
 ---
 name: cexplore
-description: Perform a thorough code review of an existing area of the codebase by mapping structure, reading conventions, and identifying bugs, risks, and missing tests. Use when the user asks to run cexplore, deeply review a subsystem, or understand an unfamiliar part of the repository before making changes.
+description: Deep review of a codebase area.
 ---
 
 # Cexplore

@@ -1,6 +1,6 @@
 interface:
   display_name: "Csubmit"
-  short_description: "Run the full pre-submit branch workflow"
+  short_description: "Calls $creview, $ctest, $cdocument, $ccommit. Full pre-submit workflow with push readiness"
   default_prompt: "Use $csubmit to review, test, verify commit metadata, and prepare this branch for push."
 
 policy:

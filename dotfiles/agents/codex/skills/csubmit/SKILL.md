@@ -1,6 +1,7 @@
 ---
 name: csubmit
-description: Run a full pre-submission workflow by reviewing the current branch, running formatting or lint or tests, checking commit metadata, and confirming push readiness. Use when the user asks to run csubmit, do a final pre-push pass, or prepare a branch for submission.
+description: Calls $creview, $ctest, $cdocument, and $ccommit. Run the full
+  pre-submit workflow and confirm push readiness.
 ---
 
 # Csubmit

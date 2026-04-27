@@ -1,8 +1,8 @@
 ---
 name: creviewcommit
 description: >-
-  Run a review-and-commit workflow without validation or pushing. Use when the
-  user wants a quick pre-submit pass that only covers creview and ccommit.
+  Calls $creview and $ccommit. Review the branch and prepare local commits
+  without validation or pushing.
 ---
 
 # Creviewcommit

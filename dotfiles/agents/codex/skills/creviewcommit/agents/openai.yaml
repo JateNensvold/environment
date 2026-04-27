@@ -1,6 +1,6 @@
 interface:
   display_name: "Creviewcommit"
-  short_description: "Run the review-and-commit branch workflow"
+  short_description: "Calls $creview and $ccommit. Review and prepare local commits"
   default_prompt: "Use $creviewcommit to review the current branch and prepare the local commit stack without running tests or pushing."
 
 policy:
