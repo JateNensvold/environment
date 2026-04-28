@@ -9,7 +9,8 @@
 #   $WORKSPACE       — read-write (original path preserved)
 #   /home/$USER/.agents — read-only (shared workflow definitions)
 #   /home/$USER/.codex — read-write (persistent global config)
-#   /home/$USER/.cache/nix, .config/nix, .local/{share,state}/nix — persistent Nix state
+#   /home/$USER/.cache/nix, .config/{direnv,nix}, .local/{share,state}/nix — persistent
+#   Nix state plus direnv config/state
 #   /proc /dev /tmp /run — essentials
 #   /etc/{resolv.conf,ssl,passwd,group} — networking & identity
 #   Optional: a temporary ssh-agent socket plus ~/.ssh/{config,known_hosts} when
@@ -35,12 +36,20 @@ NIX_BASH_ENV_HOST=""
 NIX_BASH_ENV_SANDBOX="/home/$USER/.codex/direnv/bashenv.sh"
 NIX_ENV_ARGS=()
 
+log_sandbox_header() {
+	printf '[sandbox]\n' >&2
+}
+
+log_sandbox_detail() {
+	printf '  %s\n' "$1" >&2
+}
+
 cleanup_ssh_agent() {
 	[[ -n "${SSH_AGENT_PID_VALUE:-}" ]] || return 0
 
 	SSH_AGENT_PID="$SSH_AGENT_PID_VALUE" \
-	SSH_AUTH_SOCK="$SSH_AGENT_SOCKET_HOST" \
-	"$SSH_AGENT_BIN" -k >/dev/null 2>&1 || true
+		SSH_AUTH_SOCK="$SSH_AGENT_SOCKET_HOST" \
+		"$SSH_AGENT_BIN" -k >/dev/null 2>&1 || true
 	rm -rf "$SSH_AGENT_DIR"
 }
 
@@ -162,15 +171,22 @@ setup_nix_bash_env() {
 
 __codex_nix_workspace="${CODEX_SANDBOX_WORKSPACE:-}"
 
-if [[ -n "$__codex_nix_workspace" ]]; then
+if [[ -n "$__codex_nix_workspace" && -z "${CODEX_SANDBOX_DIRENV_LOADING:-}" ]]; then
+	export CODEX_SANDBOX_DIRENV_LOADING=1
 	__codex_nix_export="$(
+		unset BASH_ENV
 		cd "$__codex_nix_workspace" &&
 			direnv export bash
-	)" || return 0
+	)" || {
+		unset CODEX_SANDBOX_DIRENV_LOADING
+		return 0
+	}
 
 	if [[ -n "$__codex_nix_export" ]]; then
 		eval "$__codex_nix_export"
 	fi
+
+	unset CODEX_SANDBOX_DIRENV_LOADING
 fi
 
 unset __codex_nix_export __codex_nix_workspace
@@ -233,7 +249,9 @@ done
 mkdir -p \
 	"$HOME/.codex" \
 	"$HOME/.cache/nix" \
+	"$HOME/.config/direnv" \
 	"$HOME/.config/nix" \
+	"$HOME/.local/share/direnv" \
 	"$HOME/.local/share/nix" \
 	"$HOME/.local/state/nix"
 
@@ -253,7 +271,9 @@ HOME_DIR_ARGS=(
 
 NIX_BIND_ARGS=(
 	--bind "$HOME/.cache/nix" "/home/$USER/.cache/nix"
+	--bind "$HOME/.config/direnv" "/home/$USER/.config/direnv"
 	--bind "$HOME/.config/nix" "/home/$USER/.config/nix"
+	--bind "$HOME/.local/share/direnv" "/home/$USER/.local/share/direnv"
 	--bind "$HOME/.local/share/nix" "/home/$USER/.local/share/nix"
 	--bind "$HOME/.local/state/nix" "/home/$USER/.local/state/nix"
 )
@@ -293,14 +313,15 @@ if [[ "$NIX_ENV_MODE" != "disabled" ]]; then
 	fi
 fi
 
-echo "[sandbox] workspace: $WORKSPACE"
+log_sandbox_header
+log_sandbox_detail "workspace: $WORKSPACE"
 if [[ -n "$NIX_ENV_MODE" ]]; then
-	echo "[sandbox] nix env: $NIX_ENV_MODE preload enabled"
+	log_sandbox_detail "nix env: $NIX_ENV_MODE preload enabled"
 fi
 
 SANDBOX_CMD=("$CODEX" "${CODEX_ARGS[@]}")
 if [[ "$DNS_DEBUG" -eq 1 ]]; then
-	echo "[sandbox] running DNS diagnostics..."
+	log_sandbox_detail "running DNS diagnostics..."
 	SANDBOX_CMD=(/bin/bash -lc '
 			echo "== curl -I https://1.1.1.1 =="
 			curl -I --max-time 10 https://1.1.1.1 || true
@@ -315,11 +336,11 @@ if [[ "$DNS_DEBUG" -eq 1 ]]; then
 			ls -la /run /run/systemd /run/systemd/resolve 2>/dev/null || true
 		')
 else
-	echo "[sandbox] starting codex..."
+	log_sandbox_detail "starting codex..."
 fi
 
 if [[ -n "$SSH_KEY_PATH" ]]; then
-	echo "[sandbox] ssh: temporary agent enabled for key $SSH_KEY_PATH"
+	log_sandbox_detail "ssh: temporary agent enabled for key $SSH_KEY_PATH"
 fi
 
 "$BWRAP" \

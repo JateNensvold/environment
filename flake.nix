@@ -15,7 +15,9 @@
     };
     hardware.url = "github:NixOS/nixos-hardware";
     flake-utils.url = "github:numtide/flake-utils";
-    nix-homebrew = { url = "github:zhaofengli-wip/nix-homebrew"; };
+    nix-homebrew = {
+      url = "github:zhaofengli-wip/nix-homebrew";
+    };
     homebrew-bundle = {
       url = "github:homebrew/homebrew-bundle";
       flake = false;
@@ -30,8 +32,16 @@
     };
   };
 
-  outputs = flakeInputs@{ self, nixpkgs, nixpkgsStable, home-manager, nix-darwin
-    , flake-utils, ... }:
+  outputs =
+    flakeInputs@{
+      self,
+      nixpkgs,
+      nixpkgsStable,
+      home-manager,
+      nix-darwin,
+      flake-utils,
+      ...
+    }:
     let
       dotfiles = ./dotfiles;
 
@@ -81,38 +91,65 @@
 
       commonInherits = {
         inherit (nixpkgs) lib;
-        inherit flakeInputs nixpkgs nixpkgsStable home-manager nix-darwin;
-        inherit users hosts dotfiles hardwares hostSystems;
+        inherit
+          flakeInputs
+          nixpkgs
+          nixpkgsStable
+          home-manager
+          nix-darwin
+          ;
+        inherit
+          users
+          hosts
+          dotfiles
+          hardwares
+          hostSystems
+          ;
       };
 
-    in {
+    in
+    {
 
-      homeConfigurations = import ./nix/default.nix (commonInherits // {
-        isNixOS = false;
-        isMacOS = false;
-        isIso = false;
-        isHardware = false;
-      });
+      homeConfigurations = import ./nix/default.nix (
+        commonInherits
+        // {
+          isNixOS = false;
+          isMacOS = false;
+          isIso = false;
+          isHardware = false;
+        }
+      );
 
-      darwinConfigurations = import ./nix/default.nix (commonInherits // {
-        isNixOS = false;
-        isMacOS = true;
-        isIso = false;
-        isHardware = true;
-      });
+      darwinConfigurations = import ./nix/default.nix (
+        commonInherits
+        // {
+          isNixOS = false;
+          isMacOS = true;
+          isIso = false;
+          isHardware = true;
+        }
+      );
 
       tests = flakeInputs.nixtest.run ./.;
 
-    } // flake-utils.lib.eachDefaultSystem (system:
-      let shellPkgs = import nixpkgs { inherit system; };
-      in {
+    }
+    // flake-utils.lib.eachDefaultSystem (
+      system:
+      let
+        shellPkgs = import nixpkgs { inherit system; };
+      in
+      {
         devShell = shellPkgs.mkShell {
-          packages = with shellPkgs;
+          packages =
+            with shellPkgs;
             [
               # dev packages
-            ] ++
-            # darwin specific tools
-            lib.optional shellPkgs.stdenv.isDarwin dockutil;
+              hello # probe: verify flake-installed commands reach codex-sandbox Bash via direnv.
+            ]
+            ++
+              # darwin specific tools
+              lib.optional shellPkgs.stdenv.isDarwin dockutil;
         };
-      });
+      }
+    );
 }
