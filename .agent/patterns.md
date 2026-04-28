@@ -26,6 +26,8 @@
 - `codex-sandbox` can expose SSH access through `--ssh-key /path/to/key`, which starts a
   temporary agent, binds only the agent socket plus optional `~/.ssh/config` and
   `known_hosts`, and cleans the agent up on exit
+- When `codex-sandbox` relies on an `EXIT` trap for temporary ssh-agent cleanup, do not
+  `exec` the final `bwrap` process or the trap will never run
 - Global Codex instructions are managed in `dotfiles/agents/codex/AGENTS.md` and installed
   to `~/.codex/AGENTS.md`, parallel to the global Claude file at
   `dotfiles/agents/claude/CLAUDE.md`
@@ -74,6 +76,9 @@
 - `codex-sandbox` can preload repo-scoped Nix tooling for Bash commands by setting
   `BASH_ENV` to a helper that runs `direnv export bash` when `.envrc` contains `use flake`;
   `--no-nix-env` disables that preload
+- Bind both `~/.config/direnv` and `~/.local/share/direnv` into sandbox wrappers when they
+  rely on `direnv export bash`, so whitelist config and allow-state survive inside the
+  sandbox
 
 ## Commit grouping
 

@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-04-28
+
+- Added repo-managed `dotfiles/direnv/direnv.toml` plus Home Manager wiring for
+  `~/.config/direnv/direnv.toml` so direnv whitelist settings can live in the repo
+- Extended `codex-sandbox` to bind direnv config/state into the sandbox, guard against
+  recursive `BASH_ENV` loading while running `direnv export bash`, and keep `--ssh-key`
+  cleanup working by avoiding `exec` on the final `bwrap` launch
+- Added a `hello` probe to the flake dev shell to verify flake-installed commands reach Bash
+  commands through the sandbox direnv preload path
+
 ## 2026-04-27
 
 - Ignored `dotfiles/agents/codex/skills/.system` because linking the full `~/.codex/skills`
