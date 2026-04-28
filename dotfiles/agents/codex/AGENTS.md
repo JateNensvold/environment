@@ -24,12 +24,15 @@
   Nix-backed `.envrc`) or the user asks to initialize or install Nix-based tooling
 - Prefer the repo `flakify` command to bootstrap a new flake and `.envrc`; use `nixify` only
   when the user explicitly wants legacy non-flake Nix files
-- In sandboxes, prefer repo-scoped tooling through `nix develop` instead of ad hoc host
-  installs, and avoid temporary `HOME` workarounds when the sandbox already exposes persistent
-  Nix state
+- In sandboxes, prefer direct invocation of repo-scoped tools when the wrapper has already
+  exposed them on `PATH`, and fall back to `nix develop -c ...` only when a tool is not yet
+  available; avoid ad hoc host installs and temporary `HOME` workarounds when the sandbox
+  already exposes persistent Nix state
 - `codex-sandbox` only preloads repo-scoped tools for Bash tool calls when the repo uses
   `direnv` with `use flake`; it delegates to `direnv export bash` and relies on the repo-local
-  `.direnv/` cache instead of maintaining a separate Codex-managed env cache
+  `.direnv/` cache instead of maintaining a separate Codex-managed env cache, so newly added
+  flake tools should become directly invokable on the next Bash command once they resolve on
+  `PATH`
 - If `nix-command` or `flakes` are disabled, add
   `--extra-experimental-features 'nix-command flakes'` to the `nix` invocation instead of
   changing the repo

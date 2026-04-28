@@ -21,9 +21,14 @@ tooling path.
 Use the repo `flakify` command to initialize a new `flake.nix` plus `.envrc`.
 Use `nixify` only if the user explicitly asks for legacy non-flake Nix setup.
 
-3. Prefer repo-scoped tools through Nix.
-When the repo already uses Nix, run formatter, lint, and test tools through `nix develop`
-unless those tools are already on `PATH` inside the current environment.
+3. Prefer direct invocation for repo-scoped Nix tools.
+When the repo already uses Nix, invoke formatter, lint, and test tools directly when they are
+already on `PATH` inside the current environment.
+In `codex-sandbox`, Bash tool calls should pick up flake-provided tools through the wrapper's
+`direnv export bash` preload, including tools added mid-session after the next command run.
+After changing a flake, verify availability with `command -v <tool>` when needed.
+Use `nix develop -c ...` only as a fallback when the repo-scoped tool is not yet available on
+`PATH`.
 Do not install those tools globally just to satisfy a single repo task.
 
 4. Keep sandbox behavior aligned with the wrapper.
@@ -31,7 +36,7 @@ Inside Codex or Claude sandboxes, do not switch to an ad hoc temporary `HOME` ju
 Nix work unless a human explicitly asks for that workaround.
 Prefer the sandbox's persistent Nix state, and if the command fails because `nix-command` or
 `flakes` are disabled, rerun it as:
-`nix --extra-experimental-features 'nix-command flakes' develop ...`
+`nix --extra-experimental-features 'nix-command flakes' ...`
 When running inside `codex-sandbox`, expect Bash tool calls to delegate to
 `direnv export bash` and reuse the repo-local `.direnv/` cache when the repo uses `direnv`
 with `use flake`.

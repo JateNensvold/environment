@@ -1,10 +1,11 @@
 interface:
   display_name: "Cnix"
-  short_description: "Initialize Nix flakes and use `nix develop` in repo-scoped workflows"
+  short_description: "Initialize Nix flakes and use flake-provided tools directly on `PATH`"
   default_prompt: >-
-    Use $cnix to bootstrap or extend a repo's Nix setup, prefer `nix develop`
-    for repo-local tooling, and keep each dev-shell package annotated with why
-    it exists.
+    Use $cnix to bootstrap or extend a repo's Nix setup, prefer direct
+    invocation for flake-provided tools that are already on PATH, fall back to
+    `nix develop -c ...` only when needed, and keep each dev-shell package
+    annotated with why it exists.
 
 policy:
   allow_implicit_invocation: true
