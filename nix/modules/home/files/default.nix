@@ -18,6 +18,7 @@ in
   home.file.".local/bin".source = link "${dotfilePath}/scripts/bash/default";
   home.file.".zfuncs".source = "${dotfiles}/scripts/zsh/default";
   home.file.".config/oh-my-posh".source = "${dotfiles}/oh-my-posh";
+  home.file.".config/direnv/direnv.toml".source = link "${dotfilePath}/direnv/direnv.toml";
   home.file.".claude/CLAUDE.md".source = "${dotfiles}/agents/claude/CLAUDE.md";
   # Install shared agent trees from the flake source so sandboxed sessions can
   # resolve them without depending on extra bind mounts back into this repo.
