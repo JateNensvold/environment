@@ -160,6 +160,7 @@ return {
         end, { desc = "Open Quickfix (Telescope)" })
 
         -- misc telescope commands
+        vim.keymap.set("n", "<leader>vk", builtin.keymaps, { desc = "Show keymaps" })
         vim.keymap.set("n", "<leader>vh", builtin.help_tags, { desc = "Open vim help" })
     end,
 }

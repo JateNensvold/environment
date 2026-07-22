@@ -128,11 +128,24 @@ return {
             -- setup_server("htmx")
             -- lua
             setup_server("lua_ls", {
+                cmd = { "lua-language-server" },
                 capabilities = capabilities,
+                filetypes = { "lua" },
+                root_markers = { ".luarc.json", ".luarc.jsonc", ".git" },
                 settings = {
                     Lua = {
+                        completion = {
+                            callSnippet = "Replace",
+                        },
                         diagnostics = {
                             globals = { "vim", "it", "describe", "before_each", "after_each" },
+                        },
+                        telemetry = {
+                            enable = false,
+                        },
+                        workspace = {
+                            checkThirdParty = false,
+                            library = vim.api.nvim_get_runtime_file("", true),
                         },
                     },
                 },
