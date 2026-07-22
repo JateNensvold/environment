@@ -103,11 +103,11 @@
         }
       ];
 
-      # zsh sessionVariables allow for more variables types than home.sessionVariables which are restricted to only strings/integers
+      # Home Manager validates program session variables as scalars before Zsh
+      # sees them, so serialize the sessionizer entries the same way the Bash
+      # helper already expects to read them back.
       sessionVariables = {
-        # set list of strings to be parsed by tmux-sessionizer
-        TMUX_SESSIONIZER_PATHS = [
-          # mapping between path and path depth
+        TMUX_SESSIONIZER_PATHS = lib.concatStringsSep " " [
           "~:1"
           "~/projects:1"
           "~/workspace:2"
