@@ -1,93 +1,40 @@
 # Patterns & Conventions
 
-## Agent memory
+## Memory
 
-- `.agent/` is the canonical repo memory location; `.claude/` is a legacy fallback
-- Treat memory files as curated notes, not append-only logs; merge same-day updates into the
-  existing date section and prune duplicate stop-hook noise
+- `.agent/` is the canonical repo memory location; `.claude/` is a legacy fallback.
+- Startup context should inject `patterns.md` only; `changelog.md` is on-demand history.
+- Keep `patterns.md` to durable repo-specific rules and gotchas; target about 12 short bullets
+  or <= 600 tokens.
+- Prune stale or duplicate notes; do not copy changelog history, temporary task notes, or
+  global guidance into this file unless the repo has a local exception.
 
-## Activation gotcha
+## Activation gotchas
 
-- Claude commands and Codex skills in this repo are installed from flake-managed files, so new
-  command or skill definitions in the repo are not live until a human runs the normal
-  `reload`
-- `dotfiles/scripts/bash/default/` is linked live into `~/.local/bin`, so sandbox-wrapper
-  edits there are visible immediately, but shared workflows and most agent definitions still
-  follow the normal reload path
-- `~/.claude/commands`, `~/.agents/workflows`, and `~/.codex/skills` can be installed as
-  out-of-store symlinks so edits to those repo trees become live after the next `reload`
-  without another Home Manager rebuild
-- When `~/.codex/skills` points at the repo tree, Codex's built-in `~/.codex/skills/.system`
-  subtree can appear inside `dotfiles/agents/codex/skills/`; keep that repo path ignored
-  rather than treating it as repo-managed content
-- Sandbox wrappers can bind persistent host Nix state under `~/.cache/nix`, `~/.config/nix`,
-  and `~/.local/{share,state}/nix` so Nix tooling inside the bubblewrap environment can reuse
-  normal host state instead of failing against ephemeral paths
-- `codex-sandbox` can expose SSH access through `--ssh-key /path/to/key`, which starts a
-  temporary agent, binds only the agent socket plus optional `~/.ssh/config` and
-  `known_hosts`, and cleans the agent up on exit
-- When `codex-sandbox` relies on an `EXIT` trap for temporary ssh-agent cleanup, do not
-  `exec` the final `bwrap` process or the trap will never run
-- Global Codex instructions are managed in `dotfiles/agents/codex/AGENTS.md` and installed
-  to `~/.codex/AGENTS.md`, parallel to the global Claude file at
-  `dotfiles/agents/claude/CLAUDE.md`
-- Put cross-repo Codex workflow policy such as `cprep` and `csubmit` guidance in the global
-  `dotfiles/agents/codex/AGENTS.md`; keep `.agent/` focused on repo-local memory
-- Local Codex command execution depends on the configured `PreToolUse` hook path existing; if
-  `~/.codex/hooks/pre_tool_use_guard.py` is missing, even basic repo inspection commands fail
-  before execution
-- Shell heredoc terminators inside `home.activation` snippets must start at column 0 in the
-  generated shell script, or Home Manager activation will fail to parse them
+- Repo-managed Claude/Codex commands and skills usually need a human `reload`; edits under
+  `dotfiles/scripts/bash/default/` are live immediately through `~/.local/bin`.
+- If `~/.codex/skills` points at the repo tree, ignore the mirrored
+  `dotfiles/agents/codex/skills/.system` subtree.
+- Local Codex shell commands fail before execution if `~/.codex/hooks/pre_tool_use_guard.py`
+  is missing.
+- Shell heredoc terminators inside `home.activation` snippets must start at column 0.
+- `codex-sandbox` must not `exec` the final `bwrap` process when an `EXIT` trap is responsible
+  for cleanup such as temporary `ssh-agent` teardown.
 
-## Codex hooks
+## Workflow
 
-- Do not use the Codex `Stop` hook for end-of-session memory updates in this repo; it fires at
-  the end of each prompt, so the repo now relies on explicit memory updates instead
+- Shared `~/.agents/workflows/*.md` files are the source of truth for `creview`, `ctest`,
+  `cdocument`, `ccommit`, `cprep`, `creviewcommit`, and `csubmit`.
+- `cdocument` is the standalone repo-memory stage and should run before `ccommit` so memory
+  edits land in the intended commit group.
+- `ccommit` should prefer `.agent/ccommit-groups.md`, build an ordered commit plan first, and
+  split same-file hunks by functionality when needed.
 
-## Documentation
+## Nix and sandboxing
 
-- Repo Markdown files are checked against `dotfiles/markdownlint/markdownlint.yaml`; keep
-  headings spaced correctly and wrap prose to 100 columns
-- Repo Codex composite workflow skills should start by naming the other repo skills they call,
-  followed by a short summary; standalone skills should keep a concise description without a
-  "calls no other skills" prefix
-- `cprep` and `csubmit` should leave the branch with a real local commit stack; if the branch
-  only has staged or working-tree changes, `ccommit` should create the commit before
-  summarizing readiness
-- The shared `~/.agents/workflows/*.md` files are the source of truth for `creview`, `ctest`,
-  `cdocument`, `ccommit`, `cprep`, `creviewcommit`, and `csubmit`; the Codex and Claude
-  command text should read those workflow files first instead of encoding the workflow
-  separately
-- `cdocument` is the standalone repo-memory stage; `cprep` and `csubmit` should call it before
-  `ccommit` so memory-file edits can land in the intended commit group and be reflected in the
-  commit message
-- `creviewcommit` is the quick branch-prep workflow: it runs `creview` and `ccommit`, returns
-  control between stages, and intentionally skips validation and memory-update stages
-- Sandbox wrappers that launch Codex or Claude should expose `~/.agents` read-only so the
-  shared workflow markdown remains available inside sandboxed sessions
-- `cprep`, `creviewcommit`, and `csubmit` enforce stage order, but each stage should return
-  control to the agent for context-heavy reasoning before the next stage runs
-
-## Nix workflows
-
-- Use `cnix` when a repo already uses Nix or a task should stay repo-scoped; prefer
-  `flakify` for new flake-based setup and reserve `nixify` for explicit legacy
-  `shell.nix`/`default.nix` requests
-- `codex-sandbox` can preload repo-scoped Nix tooling for Bash commands by setting
-  `BASH_ENV` to a helper that runs `direnv export bash` when `.envrc` contains `use flake`;
-  `--no-nix-env` disables that preload
-- Bind both `~/.config/direnv` and `~/.local/share/direnv` into sandbox wrappers when they
-  rely on `direnv export bash`, so whitelist config and allow-state survive inside the
-  sandbox
-
-## Commit grouping
-
-- `ccommit` should prefer repo-local grouping guidance from `.agent/ccommit-groups.md` when the
-  repo provides it, and otherwise split commits by actual functionality rather than path
-  prefixes alone
-- When pending work spans multiple functional areas, `ccommit` should create multiple commits
-  by default rather than treating a clean branch state as a reason to collapse everything into
-  one commit
-- `ccommit` should build an explicit ordered commit plan first: put prerequisite changes before
-  dependent behavior, and use partial staging when same-file hunks belong to different
-  functional groups
+- Use `cnix` when repo work should stay Nix-scoped; prefer `flakify` over `nixify` unless the
+  user explicitly wants legacy non-flake files.
+- When `.envrc` uses `use flake`, `codex-sandbox` can preload `direnv export bash`; bind
+  direnv config and state so allowlists survive inside the sandbox.
+- Sandbox wrappers can bind persistent host Nix state and optionally expose SSH via
+  `--ssh-key`.

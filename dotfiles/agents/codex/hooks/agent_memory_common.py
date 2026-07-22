@@ -7,9 +7,18 @@ import os
 import subprocess
 from pathlib import Path
 
-DEFAULT_PATTERNS = "# Patterns & Conventions\n"
+DEFAULT_PATTERNS = """# Patterns & Conventions
+
+## Scope
+
+- Keep this file short and repo-specific.
+- Target about 12 short bullets or <= 600 tokens.
+- Record durable conventions, gotchas, and workflow rules that are hard to rediscover.
+- Do not copy changelog history, temporary task notes, or global guidance unless the repo has
+  a local exception.
+"""
 DEFAULT_CHANGELOG = "# Changelog\n"
-MAX_CONTEXT_CHARS = 12_000
+MAX_PATTERNS_CONTEXT_CHARS = 4_000
 
 
 def load_hook_input() -> dict:
@@ -80,11 +89,7 @@ def read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def global_agents_path() -> Path:
-    return Path.home() / ".codex" / "AGENTS.md"
-
-
-def truncate_text(text: str, limit: int = MAX_CONTEXT_CHARS) -> str:
+def truncate_text(text: str, limit: int = MAX_PATTERNS_CONTEXT_CHARS) -> str:
     if len(text) <= limit:
         return text
     return text[:limit].rstrip() + "\n... [truncated]\n"
@@ -95,23 +100,14 @@ def build_context_text(memory: dict) -> str:
     canonical_hint = (
         "Canonical location is `.agent/`; `.claude/` remains a legacy fallback."
     )
-    global_agents = ""
-    agents_path = global_agents_path()
-    if agents_path.exists():
-        agents = truncate_text(read_text(agents_path))
-        global_agents = (
-            "Global agent instructions are stored in `~/.codex/AGENTS.md`.\n\n"
-            f"Contents of `~/.codex/AGENTS.md`:\n{agents}\n\n"
-        )
     patterns = truncate_text(read_text(memory["patterns_path"]))
-    changelog = truncate_text(read_text(memory["changelog_path"]))
 
     return (
-        f"{global_agents}"
         f"Agent memory is stored in `{memory_dir.relative_to(memory['repo_root'])}/`. "
         f"{canonical_hint}\n\n"
         f"Contents of `{memory['patterns_path'].relative_to(memory['repo_root'])}`:\n"
         f"{patterns}\n\n"
-        f"Contents of `{memory['changelog_path'].relative_to(memory['repo_root'])}`:\n"
-        f"{changelog}"
+        f"Recent change history is kept in "
+        f"`{memory['changelog_path'].relative_to(memory['repo_root'])}` and is not injected at "
+        f"startup. Read it only when needed."
     )

@@ -14,9 +14,10 @@
 - `cprep`, `creviewcommit`, and `csubmit` orchestrate stage order, but control should return
   to the agent between stages so each stage can use full repo context
 - The `cdocument` stage should prefer `.agent/patterns.md` and `.agent/changelog.md`, fall
-  back to `.claude/` only if needed, prune stale `patterns.md` entries, and merge same-day
-  `changelog.md` notes into the existing date section instead of appending duplicate date
-  blocks so those updates can be included in the intended local commit messages
+  back to `.claude/` only if needed, keep `patterns.md` to durable repo-specific notes with a
+  small startup footprint, and merge same-day `changelog.md` notes into the existing date
+  section instead of appending duplicate date blocks so those updates can be included in the
+  intended local commit messages
 
 ## Nix workflows
 

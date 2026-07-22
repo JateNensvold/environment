@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-07-22
+
+- Removed `changelog.md` from Codex startup injection, leaving a short pointer to on-demand
+  history instead
+- Compressed `.agent/patterns.md` into a small startup summary and updated shared memory
+  maintenance guidance to keep it within a short token budget
+
 ## 2026-04-28
 
 - Added repo-managed `dotfiles/direnv/direnv.toml` plus Home Manager wiring for
