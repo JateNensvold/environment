@@ -116,6 +116,15 @@
 
       initContent = ''
 
+        oh_my_posh_cmd="$HOME/.nix-profile/bin/oh-my-posh"
+        export OMP_CACHE_DIR="$HOME/.cache/oh-my-posh"
+        mkdir -p "$OMP_CACHE_DIR"
+        # oh-my-posh emits its resolved store path here; normalize it to the
+        # profile symlink so cached init survives profile churn and GC.
+        stabilize_oh_my_posh_init() {
+          sed "s|^_omp_executable=.*$|_omp_executable='$oh_my_posh_cmd'|"
+        }
+
         # oh-my-posh blocks zsh startup for ~1s on every call on darwin, the following code
         # caches prompts for each hm generation so it only blocks the first time the prompt is generated
         if [[ $(uname) == "Darwin" ]]; then
@@ -125,16 +134,17 @@
           oh_my_posh_dir="''${oh_my_posh_dir/#\~/$HOME}"
           oh_my_posh_cache="''${oh_my_posh_dir}/.zsh-cache-''${home_manager_generation}"
           if [[ -f $oh_my_posh_cache ]]; then
-            oh_my_posh_config=$(<"$oh_my_posh_cache")
+            oh_my_posh_config=$(stabilize_oh_my_posh_init <"$oh_my_posh_cache")
+            echo "$oh_my_posh_config" >"$oh_my_posh_cache"
             eval "$oh_my_posh_config"
           else
             mkdir -p $oh_my_posh_dir
-            oh_my_posh_config=$(${pkgs.oh-my-posh}/bin/oh-my-posh init zsh --config ~/.config/oh-my-posh/prompt.toml)
+            oh_my_posh_config=$($oh_my_posh_cmd init zsh --print --config ~/.config/oh-my-posh/prompt.toml | stabilize_oh_my_posh_init)
             echo "$oh_my_posh_config" >"$oh_my_posh_cache"
             eval "$oh_my_posh_config"
           fi
         else
-          eval "$(${pkgs.oh-my-posh}/bin/oh-my-posh init zsh --config ~/.config/oh-my-posh/prompt.toml)"
+          eval "$($oh_my_posh_cmd init zsh --print --config ~/.config/oh-my-posh/prompt.toml | stabilize_oh_my_posh_init)"
         fi
 
         # Updates to ZSH function paths
