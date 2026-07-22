@@ -31,7 +31,7 @@ in
     "${dotfiles}/agents/codex/hooks/session_start_context.py";
   home.file.".codex/skills".source = "${dotfiles}/agents/codex/skills";
 
-  home.file.".config/.cspell".source = "${dotfiles}/cspell";
+  home.file.".config/.cspell".source = link "${dotfilePath}/cspell";
 
   home.file.".config/cheat/cheatsheets/community".source = builtins.fetchGit {
     url = "https://github.com/cheat/cheatsheets";
