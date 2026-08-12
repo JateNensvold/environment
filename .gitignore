@@ -6,5 +6,6 @@ result
 
 # agents
 .codex
+.claude
 .agents
 dotfiles/agents/codex/skills/.system
