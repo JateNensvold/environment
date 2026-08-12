@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-08-12
+
+- Added command-based Claude startup context using the shared Codex memory helper, including a
+  first-run local Git decision that preserves tracked memory or excludes new untracked memory
+- Expanded tmux window, pane, session, and help bindings and linked the tmux config live from
+  the repo
+- Added a Meta laptop Claude model alias, removed its Nix-managed Spotify package, and removed
+  the corresponding Aerospace workspace rule
+- Resolved the restored-stash conflicts against recent memory changes and validated the agent
+  hooks, staged tmux config, TOML, JSON, Nix formatting, and active Home Manager evaluation
+
 ## 2026-07-22
 
 - Removed `changelog.md` from Codex startup injection, leaving a short pointer to on-demand

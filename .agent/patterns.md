@@ -2,7 +2,8 @@
 
 ## Memory
 
-- `.agent/` is the canonical repo memory location; `.claude/` is a legacy fallback.
+- `.agent/` is the canonical repo memory location; `.claude/` is a legacy fallback. Startup
+  hooks preserve tracked memory directories and locally exclude newly created untracked ones.
 - Startup context should inject `patterns.md` only; `changelog.md` is on-demand history.
 - Keep `patterns.md` to durable repo-specific rules and gotchas; target about 12 short bullets
   or <= 600 tokens.
@@ -11,8 +12,8 @@
 
 ## Activation gotchas
 
-- Repo-managed Claude/Codex commands and skills usually need a human `reload`; edits under
-  `dotfiles/scripts/bash/default/` are live immediately through `~/.local/bin`.
+- Repo-managed Claude/Codex commands, skills, and hooks usually need a human `reload`; tmux
+  config and edits under `dotfiles/scripts/bash/default/` are linked live from the repo.
 - If `~/.codex/skills` points at the repo tree, ignore the mirrored
   `dotfiles/agents/codex/skills/.system` subtree.
 - Local Codex shell commands fail before execution if `~/.codex/hooks/pre_tool_use_guard.py`
