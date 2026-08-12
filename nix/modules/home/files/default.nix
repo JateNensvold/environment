@@ -12,9 +12,9 @@ in
   # Install most shared trees from the flake source (in-store) to avoid
   # "outside $HOME" errors during build.
   home.file.".config/nvim".source = "${dotfiles}/nvim/default";
-  home.file.".config/tmux".source = "${dotfiles}/tmux";
-  # Keep local scripts live from the repo so sandbox wrapper edits are
-  # immediately visible without waiting for a reload.
+  # Keep tmux + local scripts live from the repo so edits are immediately
+  # visible without waiting for a reload.
+  home.file.".config/tmux".source = link "${dotfilePath}/tmux";
   home.file.".local/bin".source = link "${dotfilePath}/scripts/bash/default";
   home.file.".zfuncs".source = "${dotfiles}/scripts/zsh/default";
   home.file.".config/oh-my-posh".source = "${dotfiles}/oh-my-posh";
