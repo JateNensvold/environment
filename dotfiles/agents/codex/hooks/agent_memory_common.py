@@ -65,8 +65,78 @@ def choose_memory_dir(repo_root: Path) -> Path:
     return legacy_dir
 
 
+MEMORY_IGNORE_CONFIG_KEY = "agent.memoryIgnore"
+
+
+def _git_config(repo_root: Path, *args: str) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        ["git", "-C", str(repo_root), "config", "--local", *args],
+        capture_output=True,
+        text=True,
+    )
+
+
+def _resolve_git_dir(repo_root: Path) -> Path | None:
+    try:
+        proc = subprocess.run(
+            ["git", "-C", str(repo_root), "rev-parse", "--git-dir"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        return None
+    git_dir = Path(proc.stdout.strip())
+    if not git_dir.is_absolute():
+        git_dir = (repo_root / git_dir).resolve()
+    return git_dir
+
+
+def _memory_dir_is_tracked(repo_root: Path, memory_dir: Path) -> bool:
+    rel = memory_dir.relative_to(repo_root)
+    proc = subprocess.run(
+        ["git", "-C", str(repo_root), "ls-files", "--", str(rel)],
+        capture_output=True,
+        text=True,
+    )
+    return proc.returncode == 0 and bool(proc.stdout.strip())
+
+
+def _append_exclude_line(exclude_path: Path, line: str) -> None:
+    exclude_path.parent.mkdir(parents=True, exist_ok=True)
+    existing = exclude_path.read_text(encoding="utf-8") if exclude_path.exists() else ""
+    if line in existing.splitlines():
+        return
+    prefix = "" if not existing or existing.endswith("\n") else "\n"
+    exclude_path.write_text(existing + prefix + line + "\n", encoding="utf-8")
+
+
+def apply_memory_ignore_decision(repo_root: Path, memory_dir: Path) -> None:
+    # First-run only. Decision is persisted in `git config --local
+    # agent.memoryIgnore`; to re-evaluate, user runs
+    # `git config --local --unset agent.memoryIgnore`.
+    if not (repo_root / ".git").exists():
+        return
+    if _git_config(repo_root, "--get", MEMORY_IGNORE_CONFIG_KEY).returncode == 0:
+        return
+
+    git_dir = _resolve_git_dir(repo_root)
+    if git_dir is None:
+        return
+
+    if _memory_dir_is_tracked(repo_root, memory_dir):
+        decision = "tracked"
+    else:
+        rel = memory_dir.relative_to(repo_root)
+        _append_exclude_line(git_dir / "info" / "exclude", f"/{rel}/")
+        decision = "excluded"
+
+    _git_config(repo_root, MEMORY_IGNORE_CONFIG_KEY, decision)
+
+
 def ensure_memory_files(repo_root: Path) -> dict:
     memory_dir = choose_memory_dir(repo_root)
+    apply_memory_ignore_decision(repo_root, memory_dir)
     memory_dir.mkdir(parents=True, exist_ok=True)
 
     patterns_path = memory_dir / "patterns.md"

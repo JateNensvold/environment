@@ -23,6 +23,10 @@ in
   # Install shared agent trees from the flake source so sandboxed sessions can
   # resolve them without depending on extra bind mounts back into this repo.
   home.file.".claude/commands".source = "${dotfiles}/agents/claude/commands";
+  home.file.".claude/hooks/session_start_context.py".source =
+    "${dotfiles}/agents/claude/hooks/session_start_context.py";
+  home.file.".claude/hooks/agent_memory_common.py".source =
+    "${dotfiles}/agents/codex/hooks/agent_memory_common.py";
   home.file.".agents/workflows".source = "${dotfiles}/agents/workflows";
   home.file.".codex/AGENTS.md".source = "${dotfiles}/agents/codex/AGENTS.md";
   home.file.".codex/hooks/agent_memory_common.py".source =

@@ -30,9 +30,9 @@
       {
         "hooks": [
           {
-            "prompt": "Read the active agent memory files for this repo to familiarize yourself with the codebase and recent work. Prefer `.agent/patterns.md`; use `.agent/changelog.md` only when recent history is needed. Fall back to `.claude/` only if `.agent/` does not exist yet; if neither location exists, create `.agent/patterns.md` and `.agent/changelog.md`. Do not mention this to the user unless they ask.",
-            "timeout": 30,
-            "type": "prompt"
+            "type": "command",
+            "command": "python3 \"$HOME/.claude/hooks/session_start_context.py\"",
+            "timeout": 30
           }
         ],
         "matcher": ""
