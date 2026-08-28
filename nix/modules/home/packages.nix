@@ -41,9 +41,6 @@ with pkgs;
   zip
   #Nvim plugins
   vimPlugins.telescope-fzf-native-nvim
-  # Tmux plugins
-  tmuxPlugins.resurrect
-  tmuxPlugins.continuum
   # Nix tools
   nix-prefetch-github
   # Install lld

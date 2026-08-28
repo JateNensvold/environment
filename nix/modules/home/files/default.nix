@@ -1,4 +1,9 @@
-{ dotfiles, config, ... }:
+{
+  dotfiles,
+  config,
+  pkgs,
+  ...
+}:
 let
   link = config.lib.file.mkOutOfStoreSymlink;
   dotfilePath = "${config.home.homeDirectory}/environment/dotfiles";
@@ -15,6 +20,12 @@ in
   # Keep tmux + local scripts live from the repo so edits are immediately
   # visible without waiting for a reload.
   home.file.".config/tmux".source = link "${dotfilePath}/tmux";
+  home.file.".config/tmux-plugins.conf".text = ''
+    set -g @continuum-restore 'on'
+    set -g @continuum-save-interval '15'
+    run-shell ${pkgs.tmuxPlugins.resurrect.rtp}
+    run-shell ${pkgs.tmuxPlugins.continuum.rtp}
+  '';
   home.file.".local/bin".source = link "${dotfilePath}/scripts/bash/default";
   home.file.".zfuncs".source = "${dotfiles}/scripts/zsh/default";
   home.file.".config/oh-my-posh".source = "${dotfiles}/oh-my-posh";
