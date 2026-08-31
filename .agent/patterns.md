@@ -39,6 +39,7 @@
 
 - Use `cnix` when repo work should stay Nix-scoped; prefer `flakify` over `nixify` unless the
   user explicitly wants legacy non-flake files.
+- Run `nix eval .#tests` after changing Nix files; the suite covers helpers under `nix/lib`.
 - When `.envrc` uses `use flake`, `codex-sandbox` can preload `direnv export bash`; bind
   direnv config and state so allowlists survive inside the sandbox.
 - Sandbox wrappers can bind persistent host Nix state and optionally expose SSH via

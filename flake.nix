@@ -15,6 +15,7 @@
     };
     hardware.url = "github:NixOS/nixos-hardware";
     flake-utils.url = "github:numtide/flake-utils";
+    nixtest.url = "github:jetify-com/nixtest";
     nix-homebrew = {
       url = "github:zhaofengli-wip/nix-homebrew";
     };
@@ -130,7 +131,7 @@
         }
       );
 
-      tests = flakeInputs.nixtest.run ./.;
+      tests = flakeInputs.nixtest.run ./nix/tests;
 
     }
     // flake-utils.lib.eachDefaultSystem (

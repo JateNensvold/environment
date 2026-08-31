@@ -53,7 +53,8 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; iex (iwr https://raw.githubuse
 
 ### Linux configuration
 
-Modify the below values to the desired Host configuration. See [flake.nix](./flake.nix) for supported values
+Modify the below values to the desired Host configuration. See [flake.nix](./flake.nix) for
+supported values.
 
 ```zsh
 # Example nix home-manager setup
@@ -98,6 +99,14 @@ or
 ```zsh
 cd ~/environment/
 darwin-rebuild switch --flake ~/environment/.#$USER-$NIX_HOST-$HARDWARE-$ARCH -b hm-backup
+```
+
+## Testing
+
+Run the Nix unit tests after changing any Nix files:
+
+```zsh
+nix eval .#tests
 ```
 
 ## Current Functionality

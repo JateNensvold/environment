@@ -8,9 +8,11 @@
   Nix-resolved executable on Darwin and Linux
 - Pointed the Meta laptop Dock at stable Home Manager application copies so rebuilds do not
   create duplicate icons for running applications
+- Restored the `nixtest` flake input and added unit coverage for attribute and recursive module
+  helpers; all 12 tests pass via `nix eval .#tests`, with repository and shared workflow
+  guidance requiring that command after Nix edits
 - Validated formatting, shell lint and syntax, Codex TOML, Oh My Posh generated Zsh, tmux
-  session deduplication, and Darwin/Linux Nix evaluation; the repo-wide flake check remains
-  blocked by its pre-existing undeclared `nixtest` input
+  session deduplication, and Darwin/Linux Nix evaluation
 
 ## 2026-08-12
 

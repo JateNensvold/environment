@@ -1,0 +1,1 @@
+This file verifies that module discovery ignores non-Nix files.
