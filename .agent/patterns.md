@@ -21,6 +21,10 @@
 - Shell heredoc terminators inside `home.activation` snippets must start at column 0.
 - `codex-sandbox` must not `exec` the final `bwrap` process when an `EXIT` trap is responsible
   for cleanup such as temporary `ssh-agent` teardown.
+- Point macOS Dock entries at `~/Applications/Nix Trampolines`, not versioned Nix store app
+  paths, so rebuilds do not split running and pinned app icons.
+- Generate Oh My Posh shell initialization per shell via the Nix-resolved executable; its
+  generated code contains version- and session-specific state and must not be persisted.
 
 ## Workflow
 

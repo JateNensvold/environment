@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-08-31
+
+- Made tmux session creation atomic outside tmux and preserved the actual command exit status
+- Made Codex TOML activation updates table-aware and enabled Vim mode by default
+- Replaced cached Oh My Posh initialization with per-shell generation through the
+  Nix-resolved executable on Darwin and Linux
+- Pointed the Meta laptop Dock at stable Home Manager application copies so rebuilds do not
+  create duplicate icons for running applications
+- Validated formatting, shell lint and syntax, Codex TOML, Oh My Posh generated Zsh, tmux
+  session deduplication, and Darwin/Linux Nix evaluation; the repo-wide flake check remains
+  blocked by its pre-existing undeclared `nixtest` input
+
 ## 2026-08-12
 
 - Added command-based Claude startup context using the shared Codex memory helper, including a
