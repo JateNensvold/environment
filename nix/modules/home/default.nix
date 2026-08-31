@@ -91,16 +91,34 @@ in
     path = Path(sys.argv[1])
     text = path.read_text(encoding="utf-8") if path.exists() else ""
 
-    if re.search(r"(?m)^codex_hooks\s*=", text):
-        text = re.sub(r"(?m)^codex_hooks\s*=.*$", "codex_hooks = true", text)
-    elif re.search(r"(?m)^\[features\]\s*$", text):
-        text = re.sub(r"(?m)^(\[features\]\s*$)", r"\1\ncodex_hooks = true", text, count=1)
-    else:
+    def set_table_value(text, table, key, value):
+        header = re.search(rf"(?m)^\[{re.escape(table)}\][ \t]*$", text)
+        assignment = rf"(?m)^{re.escape(key)}[ \t]*=.*$"
+
+        if header:
+            body_start = header.end()
+            next_header = re.search(r"(?m)^\[", text[body_start:])
+            body_end = body_start + next_header.start() if next_header else len(text)
+            body = text[body_start:body_end]
+            if re.search(assignment, body):
+                body = re.sub(assignment, f"{key} = {value}", body, count=1)
+            else:
+                body = f"\n{key} = {value}" + body
+            return text[:body_start] + body + text[body_end:]
+
+        block = f"[{table}]\n{key} = {value}\n\n"
+        child_header = re.search(rf"(?m)^\[{re.escape(table)}\.", text)
+        if child_header:
+            return text[: child_header.start()] + block + text[child_header.start() :]
+
         if text and not text.endswith("\n"):
             text += "\n"
         if text:
             text += "\n"
-        text += "[features]\ncodex_hooks = true\n"
+        return text + block.rstrip("\n") + "\n"
+
+    text = set_table_value(text, "features", "codex_hooks", "true")
+    text = set_table_value(text, "tui", "vim_mode_default", "true")
 
     path.write_text(text, encoding="utf-8")
     PY
