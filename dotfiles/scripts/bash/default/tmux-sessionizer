@@ -42,24 +42,17 @@ fi
 
 selected_name=$(basename "$selected" | tr . _)
 
-tmux_running=$(pgrep tmux)
-
-# create TMUX session if its not running
-if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
-	tmux new-session -s "$selected_name" -c "$selected" -e TMUX_SESSION_PATH="$selected"
-	exit 1
+# Atomically create or attach when invoked outside tmux. This avoids racing a
+# separate process/session check when two clients select the same directory.
+if [[ -z $TMUX ]]; then
+	tmux new-session -A -s "$selected_name" -c "$selected" -e TMUX_SESSION_PATH="$selected"
+	exit $?
 fi
 
-# create new background session if tmux is already running
+# Create a new background session when invoked inside tmux.
 if ! tmux has-session -t="$selected_name" 2>/dev/null; then
 	tmux new-session -ds "$selected_name" -c "$selected" -e TMUX_SESSION_PATH="$selected"
 fi
 
-if [[ -z $TMUX ]]; then
-	# Not in tmux, attach to session
-	tmux attach -t "$selected_name"
-	exit 1
-else
-	# In tmux, switch to other session
-	tmux switch-client -t "$selected_name"
-fi
+# In tmux, switch to the selected session.
+tmux switch-client -t "$selected_name"
