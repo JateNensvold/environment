@@ -1,0 +1,291 @@
+#!/usr/bin/env bash
+# Private namespace owner for codex-sandbox.  This process is started through
+# unshare(1); it owns one rootless OverlayFS view and one Nix daemon for all
+# active codex-sandbox sessions belonging to this user.
+
+set -euo pipefail
+
+ROOT=""
+CONTROL=""
+NIX_BIN=""
+FLOCK_BIN=""
+MOUNT_BIN=""
+UMOUNT_BIN=""
+DAEMON_PID=""
+DAEMON_SOCKET=""
+LOCK_FD=""
+MOUNT_TARGETS=()
+WORK_DIRECTORIES=()
+
+usage() {
+	echo "usage: codex-sandbox-broker --root PATH --control PATH --nix PATH --flock PATH --mount PATH --umount PATH" >&2
+	exit 2
+}
+
+while [[ $# -gt 0 ]]; do
+	case "$1" in
+	--root)
+		ROOT="$2"
+		shift 2
+		;;
+	--control)
+		CONTROL="$2"
+		shift 2
+		;;
+	--nix)
+		NIX_BIN="$2"
+		shift 2
+		;;
+	--flock)
+		FLOCK_BIN="$2"
+		shift 2
+		;;
+	--mount)
+		MOUNT_BIN="$2"
+		shift 2
+		;;
+	--umount)
+		UMOUNT_BIN="$2"
+		shift 2
+		;;
+	*)
+		usage
+		;;
+	esac
+done
+
+[[ -n "$ROOT" && -n "$CONTROL" && -n "$NIX_BIN" && -n "$FLOCK_BIN" && -n "$MOUNT_BIN" && -n "$UMOUNT_BIN" ]] || usage
+
+process_start_time() {
+	local pid="$1"
+
+	[[ "$pid" =~ ^[0-9]+$ && -r "/proc/$pid/stat" ]] || return 1
+	awk '{ print $22 }' "/proc/$pid/stat"
+}
+
+ensure_owned_directory() {
+	local directory="$1"
+
+	[[ ! -L "$directory" ]] || {
+		echo "ERROR: broker directory '$directory' must not be a symlink" >&2
+		exit 1
+	}
+	mkdir -p "$directory"
+	[[ -d "$directory" && -O "$directory" ]] || {
+		echo "ERROR: broker directory '$directory' must be owned by the current user" >&2
+		exit 1
+	}
+	chmod 700 "$directory"
+}
+
+lease_is_live() {
+	local lease="$1"
+	local pid
+	local start_time
+	local current_start_time
+
+	[[ -r "$lease" ]] || return 1
+	read -r pid start_time <"$lease" || return 1
+	[[ "$pid" =~ ^[0-9]+$ && "$start_time" =~ ^[0-9]+$ ]] || return 1
+	kill -0 "$pid" 2>/dev/null || return 1
+	current_start_time="$(process_start_time "$pid")" || return 1
+	[[ "$current_start_time" == "$start_time" ]]
+}
+
+reap_stale_leases() {
+	local lease
+
+	shopt -s nullglob
+	for lease in "$CONTROL/leases"/lease.*; do
+		lease_is_live "$lease" || unlink "$lease" 2>/dev/null || true
+	done
+	shopt -u nullglob
+}
+
+has_active_leases() {
+	local lease
+
+	shopt -s nullglob
+	for lease in "$CONTROL/leases"/lease.*; do
+		shopt -u nullglob
+		return 0
+	done
+	shopt -u nullglob
+	return 1
+}
+
+new_work_directory() {
+	local name="$1"
+	local work_directory
+
+	work_directory="$(mktemp -d "$ROOT/work/$name.XXXXXX")"
+	printf '%s\n' "$work_directory"
+}
+
+mount_overlay() {
+	local lower="$1"
+	local upper="$2"
+	local target="$3"
+	local name="$4"
+	local work_directory
+
+	work_directory="$(new_work_directory "$name")"
+	WORK_DIRECTORIES+=("$work_directory")
+	if ! "$MOUNT_BIN" -t overlay overlay \
+		-o "lowerdir=$lower,upperdir=$upper,workdir=$work_directory,userxattr" \
+		"$target"; then
+		echo "ERROR: cannot mount the rootless OverlayFS layer '$name' over '$lower'" >&2
+		return 1
+	fi
+	MOUNT_TARGETS+=("$target")
+}
+
+mount_lower_nix() {
+	local target="$ROOT/mount/lower/nix"
+
+	# Keep an immutable reference to the host Nix tree before the broker mounts
+	# its COW view at /nix.  local-overlay must read its lower store through this
+	# reference, rather than through the merged store mount it owns.
+	if ! "$MOUNT_BIN" --rbind /nix "$target"; then
+		echo "ERROR: cannot bind the host Nix tree for the sandbox broker" >&2
+		return 1
+	fi
+	MOUNT_TARGETS+=("$target")
+}
+
+mount_bind() {
+	local source="$1"
+	local target="$2"
+
+	if ! "$MOUNT_BIN" --bind "$source" "$target"; then
+		echo "ERROR: cannot bind '$source' at '$target' in the sandbox broker" >&2
+		return 1
+	fi
+	MOUNT_TARGETS+=("$target")
+}
+
+unmount_all() {
+	local index
+	local target
+
+	for ((index = ${#MOUNT_TARGETS[@]} - 1; index >= 0; index--)); do
+		target="${MOUNT_TARGETS[$index]}"
+		"$UMOUNT_BIN" -R "$target" 2>/dev/null || "$UMOUNT_BIN" "$target" 2>/dev/null || "$UMOUNT_BIN" -l "$target" 2>/dev/null || true
+	done
+}
+
+cleanup() {
+	local work_directory
+
+	trap - EXIT INT TERM
+	if [[ -n "$DAEMON_PID" ]]; then
+		kill "$DAEMON_PID" 2>/dev/null || true
+		wait "$DAEMON_PID" 2>/dev/null || true
+	fi
+
+	unmount_all
+	for work_directory in "${WORK_DIRECTORIES[@]}"; do
+		rmdir "$work_directory/work" "$work_directory" 2>/dev/null || true
+	done
+
+	[[ -n "$DAEMON_SOCKET" ]] && unlink "$DAEMON_SOCKET" 2>/dev/null || true
+	unlink "$CONTROL/ready" 2>/dev/null || true
+}
+
+start_daemon() {
+	local daemon_config
+
+	DAEMON_SOCKET="$ROOT/daemon-socket/socket"
+	daemon_config="${NIX_CONFIG:+$NIX_CONFIG$'\n'}extra-experimental-features = local-overlay-store daemon-trust-override read-only-local-store
+build-users-group =
+# The lower store is immutable for the broker's lifetime.  Nix must open it
+# read-only: otherwise LocalStore tries to chmod its legacy profile directory,
+# which belongs to the host lower tree and cannot be changed in this user ns.
+store = local-overlay://?lower-store=local%3Froot=$ROOT/mount/lower%26read-only=true&upper-layer=$ROOT/store-upper&state=$ROOT/state&log=$ROOT/log"
+
+	NIX_CONFIG="$daemon_config" \
+		NIX_DAEMON_SOCKET_PATH="/nix/var/nix/daemon-socket/socket" \
+		NIX_PROFILES="/nix/var/nix/profiles/default" \
+		"$NIX_BIN" --extra-experimental-features 'local-overlay-store daemon-trust-override read-only-local-store' \
+		--option build-users-group '' \
+		daemon --force-trusted \
+		>>"$CONTROL/daemon.log" 2>&1 &
+	DAEMON_PID="$!"
+
+	for _ in {1..100}; do
+		[[ -S "$DAEMON_SOCKET" ]] && return 0
+		kill -0 "$DAEMON_PID" 2>/dev/null || {
+			echo "ERROR: sandbox Nix daemon exited before creating its socket; see $CONTROL/daemon.log" >&2
+			return 1
+		}
+		sleep 0.05
+	done
+
+	echo "ERROR: timed out waiting for the sandbox Nix daemon socket; see $CONTROL/daemon.log" >&2
+	return 1
+}
+
+setup_mounts() {
+	local home_mount_root="$ROOT/mount/home"
+
+	mount_lower_nix
+	mount_overlay "$ROOT/mount/lower/nix" "$ROOT/upper" /nix nix
+	mount_overlay "$ROOT/mount/lower/nix/store" "$ROOT/store-upper" /nix/store store
+	mkdir -p /nix/var/nix/daemon-socket
+	mount_bind "$ROOT/daemon-socket" /nix/var/nix/daemon-socket
+
+	mount_overlay "$HOME/.cache/nix" "$ROOT/cache-upper" "$home_mount_root/cache-nix" cache
+	mount_overlay "$HOME/.config/nix" "$ROOT/config-upper" "$home_mount_root/config-nix" config
+	mount_overlay "$HOME/.local/share/nix" "$ROOT/share-upper" "$home_mount_root/share-nix" share
+	mount_overlay "$HOME/.local/state/nix" "$ROOT/state-upper" "$home_mount_root/state-nix" state
+}
+
+monitor_leases() {
+	while true; do
+		"$FLOCK_BIN" -x "$LOCK_FD"
+		reap_stale_leases
+		if ! has_active_leases; then
+			: >"$CONTROL/stopping"
+			"$FLOCK_BIN" -u "$LOCK_FD"
+			return 0
+		fi
+		"$FLOCK_BIN" -u "$LOCK_FD"
+		sleep 0.25
+	done
+}
+
+trap cleanup EXIT
+trap 'exit 0' INT TERM
+
+for directory in \
+	"$ROOT" \
+	"$ROOT/upper" \
+	"$ROOT/store-upper" \
+	"$ROOT/cache-upper" \
+	"$ROOT/config-upper" \
+	"$ROOT/share-upper" \
+	"$ROOT/state-upper" \
+	"$ROOT/state" \
+	"$ROOT/state/profiles" \
+	"$ROOT/log" \
+	"$ROOT/work" \
+	"$ROOT/mount" \
+	"$ROOT/mount/lower/nix" \
+	"$ROOT/mount/home" \
+	"$ROOT/mount/home/cache-nix" \
+	"$ROOT/mount/home/config-nix" \
+	"$ROOT/mount/home/share-nix" \
+	"$ROOT/mount/home/state-nix" \
+	"$ROOT/daemon-socket" \
+	"$CONTROL" \
+	"$CONTROL/leases"; do
+	ensure_owned_directory "$directory"
+done
+
+setup_mounts
+start_daemon
+
+printf '%s %s\n' "$$" "$(process_start_time "$$")" >"$CONTROL/broker"
+: >"$CONTROL/ready"
+exec {LOCK_FD}>"$CONTROL/lock"
+monitor_leases

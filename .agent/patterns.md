@@ -42,5 +42,9 @@
 - Run `nix eval .#tests` after changing Nix files; the suite covers helpers under `nix/lib`.
 - When `.envrc` uses `use flake`, `codex-sandbox` can preload `direnv export bash`; bind
   direnv config and state so allowlists survive inside the sandbox.
+- `codex-sandbox` uses one lazy per-user broker for shared Nix overlays: wrappers serialize
+  startup with `control/lock`, hold PID-identity leases, join the broker namespace with
+  `nsenter`, and stop the broker only after the final lease. Never mount one OverlayFS upper
+  directory independently in concurrent Bubblewrap sessions.
 - Sandbox wrappers can bind persistent host Nix state and optionally expose SSH via
   `--ssh-key`.

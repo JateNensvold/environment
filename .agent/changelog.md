@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-10-03
+
+- Replaced per-session `codex-sandbox` Nix overlays with a lazy, per-user rootless broker that
+  owns one shared mount namespace, nested `/nix` and `/nix/store` OverlayFS mounts, and one
+  `local-overlay` Nix daemon; PID-identity leases serialize startup, support concurrent
+  sessions, and tear the broker down after the last session while retaining the temporary
+  upper layers for later remounts
+- Confirmed two concurrent sandbox launches on the host; full mutation, persistence, and
+  last-session teardown verification remains pending. Removed the temporary verification
+  instruction file during commit preparation.
+
 ## 2026-08-31
 
 - Made tmux session creation atomic outside tmux and preserved the actual command exit status
