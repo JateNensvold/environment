@@ -91,34 +91,85 @@ in
     path = Path(sys.argv[1])
     text = path.read_text(encoding="utf-8") if path.exists() else ""
 
+    def set_top_level_value(text, key, value):
+        first_table = re.search(r"(?m)^\[", text)
+        root_end = first_table.start() if first_table else len(text)
+        root = text[:root_end]
+        remainder = text[root_end:]
+        pattern = rf"(?m)^{re.escape(key)}\s*=.*$"
+
+        if re.search(pattern, root):
+            root = re.sub(pattern, f"{key} = {value}", root)
+        else:
+            if root and not root.endswith("\n"):
+                root += "\n"
+            root += f"{key} = {value}\n"
+
+        return root + remainder
+
+
+    def remove_top_level_value(text, key):
+        first_table = re.search(r"(?m)^\[", text)
+        root_end = first_table.start() if first_table else len(text)
+        root = text[:root_end]
+        remainder = text[root_end:]
+        pattern = rf"(?m)^{re.escape(key)}\s*=.*(?:\n|$)"
+
+        return re.sub(pattern, "", root) + remainder
+
+
     def set_table_value(text, table, key, value):
-        header = re.search(rf"(?m)^\[{re.escape(table)}\][ \t]*$", text)
-        assignment = rf"(?m)^{re.escape(key)}[ \t]*=.*$"
+        header = re.compile(rf"(?m)^\[{re.escape(table)}\]\s*$")
+        match = header.search(text)
 
-        if header:
-            body_start = header.end()
-            next_header = re.search(r"(?m)^\[", text[body_start:])
-            body_end = body_start + next_header.start() if next_header else len(text)
-            body = text[body_start:body_end]
-            if re.search(assignment, body):
-                body = re.sub(assignment, f"{key} = {value}", body, count=1)
-            else:
-                body = f"\n{key} = {value}" + body
-            return text[:body_start] + body + text[body_end:]
+        if match is None:
+            if text and not text.endswith("\n"):
+                text += "\n"
+            if text:
+                text += "\n"
+            return text + f"[{table}]\n{key} = {value}\n"
 
-        block = f"[{table}]\n{key} = {value}\n\n"
-        child_header = re.search(rf"(?m)^\[{re.escape(table)}\.", text)
-        if child_header:
-            return text[: child_header.start()] + block + text[child_header.start() :]
+        next_header = re.search(r"(?m)^\[", text[match.end():])
+        section_end = match.end() + next_header.start() if next_header else len(text)
+        section = text[match.start():section_end]
+        pattern = rf"(?m)^{re.escape(key)}\s*=.*$"
 
+        if re.search(pattern, section):
+            section = re.sub(pattern, f"{key} = {value}", section)
+        else:
+            if not section.endswith("\n"):
+                section += "\n"
+            section += f"{key} = {value}\n"
+
+        return text[:match.start()] + section + text[section_end:]
+
+
+    text = remove_top_level_value(text, "sandbox_mode")
+    text = set_top_level_value(text, "approval_policy", '"never"')
+    text = set_top_level_value(text, "default_permissions", '"workspace-with-git"')
+    text = set_table_value(text, "permissions.workspace-with-git", "extends", '":workspace"')
+    text = set_table_value(text, "permissions.workspace-with-git.network", "enabled", "true")
+    text = set_table_value(
+        text,
+        'permissions.workspace-with-git.filesystem.":workspace_roots"',
+        '".git"',
+        '"write"',
+    )
+    text = set_table_value(text, "tui", "vim_mode_default", "true")
+
+    if re.search(r"(?m)^hooks\s*=", text):
+        text = re.sub(r"(?m)^hooks\s*=.*$", "hooks = true", text)
+        text = re.sub(r"(?m)^codex_hooks\s*=.*(?:\n|$)", "", text)
+    elif re.search(r"(?m)^codex_hooks\s*=", text):
+        text = re.sub(r"(?m)^codex_hooks\s*=.*$", "hooks = true", text)
+    elif re.search(r"(?m)^\[features\]\s*$", text):
+        text = re.sub(r"(?m)^(\[features\]\s*$)", r"\1\nhooks = true", text, count=1)
+    else:
         if text and not text.endswith("\n"):
             text += "\n"
         if text:
             text += "\n"
-        return text + block.rstrip("\n") + "\n"
-
-    text = set_table_value(text, "features", "codex_hooks", "true")
-    text = set_table_value(text, "tui", "vim_mode_default", "true")
+        text += "[features]\nhooks = true\n"
 
     path.write_text(text, encoding="utf-8")
     PY
