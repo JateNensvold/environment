@@ -19,6 +19,20 @@
   section instead of appending duplicate date blocks so those updates can be included in the
   intended local commit messages
 
+## Copy-paste payloads
+
+- When providing text intended for the user to copy into an unformatted text field or another
+  agent session, output only the raw payload. Do not use Markdown markers, blockquotes, code
+  fences, headings, or surrounding quotation marks.
+
+## Displayed URLs
+
+- Do not use Markdown link syntax for URLs shown to the user.
+- Render every displayed URL with a space inside surrounding parentheses, for example
+  `( https://github.com/NixOS/nix/issues/created_by/10991 )`. Never place a closing parenthesis
+  or other punctuation directly after a URL; this keeps the clickable URL free of trailing
+  punctuation in plain-text renderers.
+
 ## Nix workflows
 
 - Use `cnix` when a repo already uses Nix (`flake.nix`, `shell.nix`, `default.nix`, or a
