@@ -96,7 +96,7 @@
         #   src = "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/sudo";
         # }
       ]
-      ++ lib.optionals (!pkgs.stdenv.isDarwin) [
+      ++ lib.optionals (!pkgs.stdenv.hostPlatform.isDarwin) [
         {
           name = "autojump";
           src = "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/autojump";

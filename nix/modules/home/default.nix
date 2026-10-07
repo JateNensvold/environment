@@ -21,7 +21,7 @@ let
   reloadHomeManagerSuffix =
     if isOther then _reloadHomeManagerSuffix + " -b hm-backup" else _reloadHomeManagerSuffix;
 
-  reloadHomeManagerPrefix = if pkgs.stdenv.isDarwin then "sudo darwin-rebuild" else "home-manager";
+  reloadHomeManagerPrefix = if pkgs.stdenv.hostPlatform.isDarwin then "sudo darwin-rebuild" else "home-manager";
 in
 {
 

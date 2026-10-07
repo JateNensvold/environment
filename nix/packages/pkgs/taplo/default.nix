@@ -11,6 +11,6 @@ rustPlatform.buildRustPackage {
   };
   cargoHash = "sha256-dzG+fzlaxOI+sxQJ2OH0AXSW1JhGumNIc4gTa4+4JO8=";
   buildFeatures = [ "lsp" ];
-  buildInputs = [ pkgs.openssl ] ++ pkgs.lib.optionals (pkgs.stdenv.isDarwin)
+  buildInputs = [ pkgs.openssl ] ++ pkgs.lib.optionals (pkgs.stdenv.hostPlatform.isDarwin)
     [ pkgs.darwin.apple_sdk.frameworks.SystemConfiguration ];
 }

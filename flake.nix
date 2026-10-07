@@ -149,7 +149,7 @@
             ]
             ++
               # darwin specific tools
-              lib.optional shellPkgs.stdenv.isDarwin dockutil;
+              lib.optional shellPkgs.stdenv.hostPlatform.isDarwin dockutil;
         };
       }
     );

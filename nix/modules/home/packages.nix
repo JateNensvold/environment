@@ -82,7 +82,7 @@ with pkgs;
   # Linters
   ansible-lint
 ]
-++ lib.optionals stdenv.isLinux [
+++ lib.optionals stdenv.hostPlatform.isLinux [
   bubblewrap
   slirp4netns
   util-linux
