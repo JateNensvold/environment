@@ -32,3 +32,4 @@ truenas
 setuptools
 dockutil
 clangd
+bubblewrap
