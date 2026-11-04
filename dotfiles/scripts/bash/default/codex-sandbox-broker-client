@@ -1,0 +1,212 @@
+#!/usr/bin/env bash
+# Shared Nix broker client for codex-sandbox. The caller supplies the resolved
+# tool paths and broker directories; this file owns only acquisition/release.
+
+NIX_BROKER_PID="${NIX_BROKER_PID:-}"
+NIX_BROKER_LOCK_FD="${NIX_BROKER_LOCK_FD:-}"
+NIX_LEASE="${NIX_LEASE:-}"
+
+broker_error() {
+	printf 'ERROR: %s\n' "$1" >&2
+}
+
+ensure_owned_directory() {
+	local directory="$1"
+
+	[[ ! -L "$directory" ]] || {
+		broker_error "Nix overlay path '$directory' must not be a symlink"
+		return 1
+	}
+	if [[ ! -e "$directory" ]]; then
+		mkdir -m 700 "$directory" 2>/dev/null || true
+	fi
+	[[ -d "$directory" && ! -L "$directory" && -O "$directory" ]] || {
+		broker_error "Nix overlay path '$directory' must be a directory owned by the current user"
+		return 1
+	}
+	chmod 700 "$directory"
+}
+
+process_start_time() {
+	local pid="$1"
+
+	[[ "$pid" =~ ^[0-9]+$ && -r "/proc/$pid/stat" ]] || return 1
+	awk '{ print $22 }' "/proc/$pid/stat"
+}
+
+identity_file_is_live() {
+	local identity_file="$1"
+	local require_namespaces="${2:-0}"
+	local pid start_time current_start_time
+
+	[[ -r "$identity_file" ]] || return 1
+	read -r pid start_time <"$identity_file" || return 1
+	[[ "$pid" =~ ^[0-9]+$ && "$start_time" =~ ^[0-9]+$ ]] || return 1
+	kill -0 "$pid" 2>/dev/null || return 1
+	current_start_time="$(process_start_time "$pid")" || return 1
+	[[ "$current_start_time" == "$start_time" ]] || return 1
+	if [[ "$require_namespaces" -eq 1 ]]; then
+		[[ -e "/proc/$pid/ns/user" && -e "/proc/$pid/ns/mnt" ]] || return 1
+	fi
+	IDENTITY_PID="$pid"
+}
+
+broker_is_live() {
+	identity_file_is_live "$NIX_CONTROL_DIR/broker" 1 || return 1
+	NIX_BROKER_PID="$IDENTITY_PID"
+}
+
+reap_stale_leases() {
+	local lease
+
+	shopt -s nullglob
+	for lease in "$NIX_CONTROL_DIR/leases"/lease.*; do
+		identity_file_is_live "$lease" || unlink "$lease" 2>/dev/null || true
+	done
+	shopt -u nullglob
+}
+
+has_active_leases() {
+	local -a leases
+
+	shopt -s nullglob
+	leases=("$NIX_CONTROL_DIR/leases"/lease.*)
+	shopt -u nullglob
+	((${#leases[@]} > 0))
+}
+
+broker_lock() {
+	exec {NIX_BROKER_LOCK_FD}>"$NIX_CONTROL_DIR/lock"
+	"$FLOCK" -x "$NIX_BROKER_LOCK_FD"
+}
+
+broker_unlock() {
+	[[ -n "${NIX_BROKER_LOCK_FD:-}" ]] || return 0
+	"$FLOCK" -u "$NIX_BROKER_LOCK_FD" || true
+	exec {NIX_BROKER_LOCK_FD}>&-
+	NIX_BROKER_LOCK_FD=""
+}
+
+wait_for_broker_exit() {
+	local _
+
+	if broker_is_live; then
+		kill -TERM "$NIX_BROKER_PID" 2>/dev/null || true
+	fi
+	for _ in {1..100}; do
+		broker_is_live || break
+		sleep 0.05
+	done
+	if broker_is_live; then
+		kill -KILL "$NIX_BROKER_PID" 2>/dev/null || true
+		for _ in {1..20}; do
+			broker_is_live || break
+			sleep 0.05
+		done
+	fi
+	if broker_is_live; then
+		broker_error "sandbox Nix broker did not exit; refusing to start another broker"
+		return 1
+	fi
+}
+
+stop_broker_locked() {
+	: >"$NIX_CONTROL_DIR/stopping"
+	wait_for_broker_exit || return 1
+	unlink "$NIX_CONTROL_DIR/ready" "$NIX_CONTROL_DIR/broker" "$NIX_CONTROL_DIR/stopping" 2>/dev/null || true
+	NIX_BROKER_PID=""
+}
+
+print_broker_logs() {
+	local log line
+
+	for log in broker daemon; do
+		[[ -s "$NIX_CONTROL_DIR/$log.log" ]] || continue
+		printf '%s\n' "--- $log log ---" >&2
+		while IFS= read -r line; do
+			printf '%s\n' "$line" >&2
+		done <"$NIX_CONTROL_DIR/$log.log"
+	done
+}
+
+wait_for_broker_ready() {
+	local _
+
+	for _ in {1..100}; do
+		[[ -e "$NIX_CONTROL_DIR/ready" ]] && broker_is_live && return 0
+		[[ -s "$NIX_CONTROL_DIR/broker.log" ]] && ! broker_is_live && break
+		sleep 0.05
+	done
+	broker_error "sandbox Nix broker did not become ready; see $NIX_CONTROL_DIR/broker.log"
+	print_broker_logs
+	return 1
+}
+
+start_broker_locked() {
+	unlink "$NIX_CONTROL_DIR/ready" "$NIX_CONTROL_DIR/broker" "$NIX_CONTROL_DIR/stopping" 2>/dev/null || true
+	: >"$NIX_CONTROL_DIR/broker.log"
+	: >"$NIX_CONTROL_DIR/daemon.log"
+	"$UNSHARE" --user --map-root-user --mount --propagation private \
+		"$NIX_BROKER_SCRIPT" \
+		--root "$NIX_FALLBACK_DIR" \
+		--control "$NIX_CONTROL_DIR" \
+		--nix "$NIX_BIN" \
+		--flock "$FLOCK" \
+		--mount "$MOUNT" \
+		--umount "$UMOUNT" \
+		>>"$NIX_CONTROL_DIR/broker.log" 2>&1 &
+	wait_for_broker_ready
+}
+
+create_nix_lease_locked() {
+	local start_time
+
+	start_time="$(process_start_time "$$")" || {
+		broker_error "cannot determine sandbox wrapper process identity"
+		return 1
+	}
+	NIX_LEASE="$(mktemp "$NIX_CONTROL_DIR/leases/lease.XXXXXX")"
+	printf '%s %s\n' "$$" "$start_time" >"$NIX_LEASE"
+}
+
+setup_nix_broker() {
+	local directory status=0
+
+	for directory in "$NIX_FALLBACK_DIR" "$NIX_CONTROL_DIR" "$NIX_CONTROL_DIR/leases"; do
+		ensure_owned_directory "$directory" || return 1
+	done
+	broker_lock
+	reap_stale_leases
+	if [[ -e "$NIX_CONTROL_DIR/stopping" ]]; then
+		stop_broker_locked || status=$?
+	fi
+	if [[ "$status" -eq 0 ]] && { [[ ! -e "$NIX_CONTROL_DIR/ready" ]] || ! broker_is_live; }; then
+		if broker_is_live; then
+			stop_broker_locked || status=$?
+		fi
+		if [[ "$status" -eq 0 ]]; then
+			start_broker_locked || {
+				status=$?
+				stop_broker_locked || true
+			}
+		fi
+	fi
+	[[ "$status" -ne 0 ]] || create_nix_lease_locked || status=$?
+	broker_unlock
+	return "$status"
+}
+
+release_nix_broker() {
+	local status=0
+
+	[[ -n "${NIX_LEASE:-}" ]] || return 0
+	broker_lock
+	unlink "$NIX_LEASE" 2>/dev/null || true
+	NIX_LEASE=""
+	reap_stale_leases
+	if ! has_active_leases; then
+		stop_broker_locked || status=$?
+	fi
+	broker_unlock
+	return "$status"
+}

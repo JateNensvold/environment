@@ -1,0 +1,420 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC1091,SC2016,SC2030,SC2031,SC2034,SC2317,SC2329 # Dynamic sources and test doubles.
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DEFAULT_DIR="$(cd "$SCRIPT_DIR/../default" && pwd)"
+TEST_ROOT="$(mktemp -d "${TMPDIR:-/tmp}/codex-sandbox-test.XXXXXX")"
+export HOME="$TEST_ROOT/home"
+export USER="tester"
+mkdir -p "$HOME/environment" "$HOME/.nix-profile/bin"
+
+# shellcheck source=../default/codex-sandbox
+source "$DEFAULT_DIR/codex-sandbox"
+
+tests=0
+failures=0
+
+cleanup() {
+	rm -rf "$TEST_ROOT"
+}
+trap cleanup EXIT
+
+fail() {
+	printf 'not ok %d - %s: %s\n' "$tests" "$CURRENT_TEST" "$1"
+	failures=$((failures + 1))
+}
+
+assert_eq() {
+	local expected="$1" actual="$2" message="${3:-values differ}"
+	[[ "$actual" == "$expected" ]] || fail "$message (expected '$expected', got '$actual')"
+}
+
+assert_file_contains() {
+	local file="$1" text="$2"
+	grep -Fq -- "$text" "$file" || fail "$file does not contain '$text'"
+}
+
+assert_array_has_sequence() {
+	local array_name="$1"
+	shift
+	local -n values="$array_name"
+	local needle haystack
+	printf -v needle '%s\034' "$@"
+	printf -v haystack '%s\034' "${values[@]}"
+	[[ "$haystack" == *"$needle"* ]] || fail "$array_name lacks sequence: $*"
+}
+
+assert_array_lacks() {
+	local array_name="$1" unwanted="$2" value
+	local -n values="$array_name"
+	for value in "${values[@]}"; do
+		[[ "$value" != "$unwanted" ]] || fail "$array_name unexpectedly contains: $unwanted"
+	done
+}
+
+run_test() {
+	CURRENT_TEST="$1"
+	shift
+	tests=$((tests + 1))
+	if "$@"; then
+		printf 'ok %d - %s\n' "$tests" "$CURRENT_TEST"
+	else
+		fail "test function returned failure"
+	fi
+}
+
+reset_options() {
+	WORKSPACE_HOST="$TEST_ROOT/work space"
+	WORKSPACE_SANDBOX=""
+	CODEX_ARGS=()
+	DNS_DEBUG=0
+	NIX_ENV_MODE=""
+	SSH_KEY_PATH=""
+	mkdir -p "$WORKSPACE_HOST" "$HOME/environment"
+	rm -f "$WORKSPACE_HOST/.envrc"
+}
+
+test_option_parsing() {
+	reset_options
+	parse_options --workspace "$WORKSPACE_HOST" --no-nix-env first "two words" --dns-debug --ssh-key "$TEST_ROOT/key" last
+	assert_eq "$TEST_ROOT/work space" "$WORKSPACE_HOST"
+	assert_eq disabled "$NIX_ENV_MODE"
+	assert_eq 1 "$DNS_DEBUG"
+	assert_eq "$TEST_ROOT/key" "$SSH_KEY_PATH"
+	assert_eq 3 "${#CODEX_ARGS[@]}"
+	assert_eq first "${CODEX_ARGS[0]}"
+	assert_eq "two words" "${CODEX_ARGS[1]}"
+	assert_eq last "${CODEX_ARGS[2]}"
+
+	reset_options
+	parse_options alpha "two words"
+	CODEX=/codex
+	build_sandbox_command
+	assert_eq /codex "${SANDBOX_CMD[0]}"
+	assert_eq "two words" "${SANDBOX_CMD[2]}"
+
+	DNS_DEBUG=1
+	build_sandbox_command
+	assert_eq /bin/bash "${SANDBOX_CMD[0]}"
+	assert_array_lacks SANDBOX_CMD /codex
+}
+
+test_each_option_alone() {
+	reset_options
+	parse_options --no-nix-env
+	assert_eq disabled "$NIX_ENV_MODE"
+	reset_options
+	parse_options --dns-debug
+	assert_eq 1 "$DNS_DEBUG"
+	reset_options
+	parse_options --workspace "$TEST_ROOT/other"
+	assert_eq "$TEST_ROOT/other" "$WORKSPACE_HOST"
+	reset_options
+	parse_options --ssh-key "$TEST_ROOT/key"
+	assert_eq "$TEST_ROOT/key" "$SSH_KEY_PATH"
+}
+
+test_workspace_validation() {
+	reset_options
+	validate_inputs
+	assert_eq "$TEST_ROOT/work space" "$WORKSPACE_HOST"
+	assert_eq "/workspace/work space" "$WORKSPACE_SANDBOX"
+
+	if (
+		WORKSPACE_HOST=/
+		validate_inputs
+	) 2>"$TEST_ROOT/root.err"; then
+		fail "filesystem root was accepted"
+	fi
+	assert_file_contains "$TEST_ROOT/root.err" "Refusing to use the filesystem root"
+
+	if (
+		WORKSPACE_HOST="$TEST_ROOT/missing"
+		validate_inputs
+	) 2>"$TEST_ROOT/missing.err"; then
+		fail "missing workspace was accepted"
+	fi
+	assert_file_contains "$TEST_ROOT/missing.err" "Workspace '$TEST_ROOT/missing' not found"
+}
+
+test_environment_and_key_validation() {
+	reset_options
+	mv "$HOME/environment" "$HOME/environment.off"
+	if (validate_inputs) 2>"$TEST_ROOT/environment.err"; then
+		fail "missing environment repo was accepted"
+	fi
+	mv "$HOME/environment.off" "$HOME/environment"
+	assert_file_contains "$TEST_ROOT/environment.err" "Environment repo"
+
+	SSH_KEY_PATH="$TEST_ROOT/missing-key"
+	if (validate_inputs) 2>"$TEST_ROOT/key.err"; then
+		fail "missing SSH key was accepted"
+	fi
+	assert_file_contains "$TEST_ROOT/key.err" "SSH key '$TEST_ROOT/missing-key' not found"
+}
+
+test_envrc_detection_and_mode() {
+	reset_options
+	workspace_uses_flake_env && fail "absent .envrc detected"
+	printf 'export FOO=bar\n' >"$WORKSPACE_HOST/.envrc"
+	workspace_uses_flake_env && fail "non-flake .envrc detected"
+	printf 'use flake\n' >>"$WORKSPACE_HOST/.envrc"
+	workspace_uses_flake_env || fail "use flake was not detected"
+
+	NIX_PROFILE_BIN=/profile/bin DIRENV_BIN=/direnv
+	setup_nix_bash_env() { NIX_BASH_ENV_HOST=generated; }
+	setup_features
+	assert_eq direnv "$NIX_ENV_MODE"
+	assert_eq generated "$NIX_BASH_ENV_HOST"
+	assert_array_has_sequence NIX_ENV_ARGS --setenv BASH_ENV "$NIX_BASH_ENV_SANDBOX"
+
+	NIX_ENV_MODE=disabled
+	setup_features
+	assert_eq 0 "${#NIX_ENV_ARGS[@]}"
+	CODEX=/codex CODEX_ARGS=()
+	build_sandbox_command
+	assert_eq "" "${SANDBOX_CMD[9]}" "--no-nix-env restored BASH_ENV"
+}
+
+write_fake_command() {
+	local path="$1"
+	shift
+	{
+		printf '%s\n' '#!/usr/bin/env bash'
+		printf '%s\n' "$@"
+	} >"$path"
+	chmod 700 "$path"
+}
+
+test_envrc_approval_and_delayed_bash_env() {
+	reset_options
+	validate_inputs
+	printf 'use flake\n' >"$WORKSPACE_HOST/.envrc"
+	DIRENV_BIN="$TEST_ROOT/direnv"
+	CODEX="$TEST_ROOT/codex"
+	NIX_ENV_MODE=direnv
+	NIX_BASH_ENV_SANDBOX="$TEST_ROOT/bashenv"
+	: >"$NIX_BASH_ENV_SANDBOX"
+	write_fake_command "$DIRENV_BIN" '[[ -z "${BASH_ENV:-}" ]] || exit 90' 'printf "%s" "$2" >"$APPROVAL_RECORD"'
+	write_fake_command "$CODEX" 'printf "%s\n" "${BASH_ENV:-}" "$@" >"$COMMAND_RECORD"'
+	export APPROVAL_RECORD="$TEST_ROOT/approval" COMMAND_RECORD="$TEST_ROOT/command"
+	CODEX_ARGS=(first "two words")
+	build_sandbox_command
+	"${SANDBOX_CMD[@]}"
+	assert_eq "/workspace/work space" "$(cat "$APPROVAL_RECORD")"
+	assert_file_contains "$COMMAND_RECORD" "$NIX_BASH_ENV_SANDBOX"
+	assert_file_contains "$COMMAND_RECORD" "two words"
+
+	write_fake_command "$DIRENV_BIN" 'exit 7'
+	if "${SANDBOX_CMD[@]}" 2>"$TEST_ROOT/approval.err"; then
+		fail "failed direnv approval launched the command"
+	fi
+	assert_file_contains "$TEST_ROOT/approval.err" "failed to approve /workspace/work space/.envrc"
+}
+
+test_path_and_mount_assembly() {
+	local store_bin saved_path="$PATH"
+	store_bin="$(dirname "$(command -v cat)")"
+	CODEX="$store_bin/codex" NODE="$store_bin/node" SANDBOX_SHELL="$store_bin/zsh"
+	CAT="$store_bin/cat" ENV_BIN="$store_bin/env" BASH_BIN="$store_bin/bash" SH_BIN="$store_bin/bash"
+	DIRENV_BIN="$store_bin/direnv" NIX_PROFILE_BIN="$HOME/.nix-profile/bin"
+	PATH="$store_bin:$store_bin"
+	build_sandbox_path
+	assert_eq "$store_bin:$NIX_PROFILE_BIN" "$SANDBOX_PATH"
+	PATH="$saved_path"
+
+	reset_options
+	validate_inputs
+	SANDBOX_SHELL_NAME=zsh RESOLV=/etc/resolv.conf
+	NIX_MOUNT_ROOT="$TEST_ROOT/nix mount" NIX_FALLBACK_DIR="$TEST_ROOT/fallback"
+	SSH_HOME_DIR_ARGS=() SSH_BIND_ARGS=() SSH_ENV_ARGS=() NIX_ENV_ARGS=() ENV_ARGS=()
+	mkdir -p "$HOME/.agents"
+	assemble_mount_args
+	assemble_bwrap_args
+	assert_array_has_sequence BWRAP_ARGS --ro-bind "$ENVIRONMENT_REPO" "$ENVIRONMENT_REPO"
+	assert_array_has_sequence BWRAP_ARGS --bind "$WORKSPACE_HOST" "/workspace/work space"
+	assert_array_has_sequence BWRAP_ARGS --ro-bind "$HOME/.agents" "/home/$USER/.agents"
+	assert_array_has_sequence BWRAP_ARGS --bind "$HOME/.codex" "/home/$USER/.codex"
+	assert_array_has_sequence BWRAP_ARGS --unshare-user --unshare-pid --unshare-ipc --unshare-uts
+	assert_array_has_sequence BWRAP_ARGS --hostname codex-sandbox
+	assert_array_lacks BWRAP_ARGS --unshare-net
+	assert_array_has_sequence BWRAP_ARGS --ro-bind "$NIX_MOUNT_ROOT/lower/nix" /nix-lower
+	assert_array_has_sequence BWRAP_ARGS --bind "$NIX_FALLBACK_DIR/daemon-socket" /nix/var/nix/daemon-socket
+	assert_array_has_sequence BWRAP_ARGS --ro-bind "$ENV_BIN" /usr/bin/env
+	assert_array_has_sequence BWRAP_ARGS --ro-bind "$BASH_BIN" /bin/bash
+	assert_array_has_sequence BWRAP_ARGS --ro-bind "$RESOLV" /etc/resolv.conf
+	assert_array_has_sequence BWRAP_ARGS --ro-bind /etc/ssl /etc/ssl
+	assert_array_has_sequence BWRAP_ARGS --ro-bind /etc/passwd /etc/passwd
+	assert_array_has_sequence BWRAP_ARGS --ro-bind /etc/group /etc/group
+	assert_array_has_sequence BWRAP_ARGS --setenv NIX_REMOTE daemon
+	assert_array_has_sequence BWRAP_ARGS --setenv NIX_DAEMON_SOCKET_PATH /nix/var/nix/daemon-socket/socket
+	assert_array_has_sequence BWRAP_ARGS --setenv NIX_SSL_CERT_FILE /etc/ssl/certs/ca-certificates.crt
+	assert_array_has_sequence BWRAP_ARGS --setenv CODEX_SANDBOX_NIX_OVERLAY_MODE shared
+	for value in cache-nix config-nix share-nix state-nix; do
+		assert_array_has_sequence BWRAP_ARGS --bind "$NIX_MOUNT_ROOT/home/$value"
+	done
+}
+
+test_tokens_and_ssh_bind_modes() {
+	reset_options
+	unset OPENAI_API_KEY GITHUB_TOKEN
+	rm -rf "$HOME/.ssh"
+	NIX_ENV_MODE=disabled SSH_KEY_PATH=""
+	setup_features
+	assert_eq 0 "${#ENV_ARGS[@]}"
+	assert_eq 0 "${#SSH_BIND_ARGS[@]}"
+
+	export OPENAI_API_KEY=openai GITHUB_TOKEN=github
+	SSH_KEY_PATH="$TEST_ROOT/key"
+	setup_ssh_agent() {
+		SSH_AGENT_SOCKET_HOST="$TEST_ROOT/socket"
+		SSH_AGENT_SOCKET_SANDBOX=/tmp/codex-sandbox-ssh/agent.sock
+	}
+	mkdir -p "$HOME/.ssh"
+	: >"$HOME/.ssh/config"
+	: >"$HOME/.ssh/known_hosts"
+	setup_features
+	assert_array_has_sequence ENV_ARGS --setenv OPENAI_API_KEY openai
+	assert_array_has_sequence ENV_ARGS --setenv GITHUB_TOKEN github
+	assert_array_has_sequence SSH_BIND_ARGS --ro-bind "$HOME/.ssh/config" "/home/$USER/.ssh/config"
+	assert_array_has_sequence SSH_BIND_ARGS --ro-bind "$HOME/.ssh/known_hosts" "/home/$USER/.ssh/known_hosts"
+	unset OPENAI_API_KEY GITHUB_TOKEN
+}
+
+test_ssh_cleanup_on_agent_failure() {
+	SSH_AGENT_DIR="$TEST_ROOT/agent-dir"
+	SSH_AGENT_SOCKET_HOST="$SSH_AGENT_DIR/socket"
+	SSH_AGENT_PID_VALUE=123
+	SSH_AGENT_BIN="$TEST_ROOT/failing-agent"
+	mkdir -p "$SSH_AGENT_DIR"
+	write_fake_command "$SSH_AGENT_BIN" 'exit 1'
+	cleanup_ssh_agent
+	[[ ! -e "$SSH_AGENT_DIR" ]] || fail "SSH agent directory survived cleanup"
+}
+
+broker_fixture() {
+	NIX_FALLBACK_DIR="$TEST_ROOT/broker-$RANDOM"
+	NIX_CONTROL_DIR="$NIX_FALLBACK_DIR/control"
+	mkdir -p "$NIX_CONTROL_DIR/leases"
+	FLOCK="$(command -v flock)"
+	# shellcheck source=../default/codex-sandbox-broker-client
+	source "$DEFAULT_DIR/codex-sandbox-broker-client"
+}
+
+test_broker_identities_and_stale_leases() {
+	broker_fixture
+	local start
+	start="$(process_start_time "$$")"
+	printf '%s %s\n' "$$" "$start" >"$NIX_CONTROL_DIR/broker"
+	broker_is_live || fail "live broker identity rejected"
+	printf '%s %s\n' "$$" "$((start + 1))" >"$NIX_CONTROL_DIR/broker"
+	broker_is_live && fail "stale broker identity accepted"
+	printf '999999 1\n' >"$NIX_CONTROL_DIR/leases/lease.stale"
+	printf '%s %s\n' "$$" "$start" >"$NIX_CONTROL_DIR/leases/lease.live"
+	reap_stale_leases
+	[[ ! -e "$NIX_CONTROL_DIR/leases/lease.stale" ]] || fail "stale lease was not reaped"
+	[[ -e "$NIX_CONTROL_DIR/leases/lease.live" ]] || fail "live lease was reaped"
+}
+
+test_broker_release_final_and_nonfinal() {
+	broker_fixture
+	local start stop_count=0
+	start="$(process_start_time "$$")"
+	stop_broker_locked() { stop_count=$((stop_count + 1)); }
+	printf '%s %s\n' "$$" "$start" >"$NIX_CONTROL_DIR/leases/lease.other"
+	NIX_LEASE="$NIX_CONTROL_DIR/leases/lease.mine"
+	printf '%s %s\n' "$$" "$start" >"$NIX_LEASE"
+	release_nix_broker
+	assert_eq 0 "$stop_count" "non-final release stopped broker"
+	NIX_LEASE="$NIX_CONTROL_DIR/leases/lease.last"
+	printf '%s %s\n' "$$" "$start" >"$NIX_LEASE"
+	unlink "$NIX_CONTROL_DIR/leases/lease.other"
+	release_nix_broker
+	assert_eq 1 "$stop_count" "final release did not stop broker"
+}
+
+test_broker_readiness_and_term_kill() {
+	broker_fixture
+	: >"$NIX_CONTROL_DIR/broker.log"
+	printf 'broker failed\n' >"$NIX_CONTROL_DIR/daemon.log"
+	broker_is_live() { return 1; }
+	sleep() { :; }
+	if wait_for_broker_ready 2>"$TEST_ROOT/readiness.err"; then
+		fail "failed broker readiness was accepted"
+	fi
+	assert_file_contains "$TEST_ROOT/readiness.err" "did not become ready"
+	assert_file_contains "$TEST_ROOT/readiness.err" "broker failed"
+
+	local checks=0 kill_log="$TEST_ROOT/kills"
+	broker_is_live() {
+		checks=$((checks + 1))
+		NIX_BROKER_PID=4242
+		((checks <= 103))
+	}
+	kill() { printf '%s\n' "$*" >>"$kill_log"; }
+	wait_for_broker_exit
+	assert_file_contains "$kill_log" "-TERM 4242"
+	assert_file_contains "$kill_log" "-KILL 4242"
+	unset -f kill sleep broker_is_live
+}
+
+test_broker_start_failure_unlocks() {
+	broker_fixture
+	broker_is_live() { return 1; }
+	start_broker_locked() { return 7; }
+	stop_broker_locked() { :; }
+	if setup_nix_broker; then
+		fail "failed broker startup was accepted"
+	fi
+	assert_eq "" "$NIX_BROKER_LOCK_FD" "failed startup left the control lock open"
+}
+
+test_concurrent_broker_acquisition() {
+	broker_fixture
+	local start log="$TEST_ROOT/concurrent"
+	local -a pids=() ids=(one two)
+	start="$(process_start_time "$$")"
+	printf '%s %s\n' "$$" "$start" >"$NIX_CONTROL_DIR/broker"
+	: >"$NIX_CONTROL_DIR/ready"
+	for id in "${ids[@]}"; do
+		(
+			stop_broker_locked() { :; }
+			setup_nix_broker
+			printf '%s acquired\n' "$id" >>"$log"
+			sleep 0.1
+			release_nix_broker
+			printf '%s released\n' "$id" >>"$log"
+		) >"$TEST_ROOT/$id.out" 2>&1 &
+		pids+=("$!")
+	done
+	for id in 0 1; do
+		if ! wait "${pids[id]}"; then
+			fail "concurrent worker failed: $(cat "$TEST_ROOT/${ids[id]}.out" 2>/dev/null || true)"
+		fi
+	done
+	assert_file_contains "$log" "one acquired"
+	assert_file_contains "$log" "two acquired"
+	[[ -z "$(find "$NIX_CONTROL_DIR/leases" -type f -name 'lease.*' -print -quit)" ]] || fail "concurrent acquisition left a lease"
+}
+
+run_test "ordered option parsing and combinations" test_option_parsing
+run_test "each option alone" test_each_option_alone
+run_test "workspace validation and mapping" test_workspace_validation
+run_test "environment and SSH key validation" test_environment_and_key_validation
+run_test ".envrc detection and no-nix mode" test_envrc_detection_and_mode
+run_test ".envrc approval and delayed BASH_ENV" test_envrc_approval_and_delayed_bash_env
+run_test "PATH de-duplication and mount policy" test_path_and_mount_assembly
+run_test "token omission/pass-through and SSH binds" test_tokens_and_ssh_bind_modes
+run_test "SSH cleanup after agent failure" test_ssh_cleanup_on_agent_failure
+run_test "broker PID identity and stale leases" test_broker_identities_and_stale_leases
+run_test "final and non-final broker release" test_broker_release_final_and_nonfinal
+run_test "broker readiness and TERM/KILL fallback" test_broker_readiness_and_term_kill
+run_test "broker startup failure unlocks" test_broker_start_failure_unlocks
+run_test "concurrent broker acquisition" test_concurrent_broker_acquisition
+
+if [[ "$failures" -gt 0 ]]; then
+	printf '%d of %d tests failed\n' "$failures" "$tests" >&2
+	exit 1
+fi
+printf 'all %d tests passed\n' "$tests"
