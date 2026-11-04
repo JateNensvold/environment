@@ -208,6 +208,7 @@ store = local-overlay://?lower-store=local%3Froot=$ROOT/mount/lower%26read-only=
 		NIX_PROFILES="/nix/var/nix/profiles/default" \
 		"$NIX_BIN" --extra-experimental-features 'local-overlay-store daemon-trust-override read-only-local-store' \
 		--option build-users-group '' \
+		--option auto-optimise-store false \
 		daemon --force-trusted \
 		>>"$CONTROL/daemon.log" 2>&1 &
 	DAEMON_PID="$!"
