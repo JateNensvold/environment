@@ -109,6 +109,8 @@ resolve_dependencies() {
 	SANDBOX_SHELL_NAME="$(basename "$SANDBOX_SHELL")"
 	CODEX="$(resolve_bin codex)"
 	NODE="$(resolve_bin node)"
+	GIT="$(resolve_bin git)"
+	PYTHON3="$(resolve_bin python3)"
 	CAT="$(resolve_bin cat)"
 	ENV_BIN="$(resolve_bin env)"
 	BASH_BIN="$(resolve_current_bash)"
@@ -139,7 +141,7 @@ build_sandbox_path() {
 
 	declare -gA SEEN=()
 	SANDBOX_PATH=""
-	for entry in "$CODEX" "$NODE" "$SANDBOX_SHELL" "$CAT" "$ENV_BIN" "$BASH_BIN" "$SH_BIN" "$DIRENV_BIN"; do
+	for entry in "$CODEX" "$NODE" "$GIT" "$PYTHON3" "$SANDBOX_SHELL" "$CAT" "$ENV_BIN" "$BASH_BIN" "$SH_BIN" "$DIRENV_BIN"; do
 		add_path_dir "$(dirname "$entry")"
 	done
 	IFS=':' read -r -a host_path_entries <<<"${PATH:-}"
@@ -175,9 +177,11 @@ setup_nix_bash_env() {
 __codex_nix_workspace="${CODEX_SANDBOX_WORKSPACE:-}"
 __codex_nix_profile_bin="${CODEX_SANDBOX_NIX_PROFILE_BIN:-}"
 __codex_direnv_bin="${CODEX_SANDBOX_DIRENV_BIN:-}"
+__codex_sandbox_path="${CODEX_SANDBOX_BASE_PATH:-$PATH}"
 if [[ -n "$__codex_nix_workspace" && -n "$__codex_nix_profile_bin" && -n "$__codex_direnv_bin" && -z "${CODEX_SANDBOX_DIRENV_LOADING:-}" ]]; then
 	export CODEX_SANDBOX_DIRENV_LOADING=1
-	export PATH="$__codex_nix_profile_bin${PATH:+:$PATH}"
+	export PATH="$__codex_nix_profile_bin${__codex_sandbox_path:+:$__codex_sandbox_path}"
+	__codex_sandbox_path="$PATH"
 	__codex_nix_export="$(
 		unset BASH_ENV
 		cd "$__codex_nix_workspace" && "$__codex_direnv_bin" export bash
@@ -186,9 +190,10 @@ if [[ -n "$__codex_nix_workspace" && -n "$__codex_nix_profile_bin" && -n "$__cod
 		return 0
 	}
 	[[ -z "$__codex_nix_export" ]] || eval "$__codex_nix_export"
+	export PATH="$__codex_sandbox_path${PATH:+:$PATH}"
 	unset CODEX_SANDBOX_DIRENV_LOADING
 fi
-unset __codex_nix_export __codex_nix_workspace __codex_nix_profile_bin __codex_direnv_bin
+unset __codex_nix_export __codex_nix_workspace __codex_nix_profile_bin __codex_direnv_bin __codex_sandbox_path
 EOF
 	chmod 700 "$NIX_BASH_ENV_HOST"
 }
@@ -265,6 +270,7 @@ setup_features() {
 			--setenv CODEX_SANDBOX_WORKSPACE "$WORKSPACE_SANDBOX"
 			--setenv CODEX_SANDBOX_NIX_PROFILE_BIN "$NIX_PROFILE_BIN"
 			--setenv CODEX_SANDBOX_DIRENV_BIN "$DIRENV_BIN"
+			--setenv CODEX_SANDBOX_BASE_PATH "$SANDBOX_PATH"
 			--setenv BASH_ENV "$NIX_BASH_ENV_SANDBOX"
 		)
 	fi

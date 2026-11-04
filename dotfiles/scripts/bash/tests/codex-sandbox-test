@@ -155,6 +155,8 @@ test_environment_and_key_validation() {
 }
 
 test_envrc_detection_and_mode() {
+	local setup_nix_bash_env_definition
+	setup_nix_bash_env_definition="$(declare -f setup_nix_bash_env)"
 	reset_options
 	workspace_uses_flake_env && fail "absent .envrc detected"
 	printf 'export FOO=bar\n' >"$WORKSPACE_HOST/.envrc"
@@ -162,12 +164,13 @@ test_envrc_detection_and_mode() {
 	printf 'use flake\n' >>"$WORKSPACE_HOST/.envrc"
 	workspace_uses_flake_env || fail "use flake was not detected"
 
-	NIX_PROFILE_BIN=/profile/bin DIRENV_BIN=/direnv
+	NIX_PROFILE_BIN=/profile/bin DIRENV_BIN=/direnv SANDBOX_PATH=/sandbox/bin
 	setup_nix_bash_env() { NIX_BASH_ENV_HOST=generated; }
 	setup_features
 	assert_eq direnv "$NIX_ENV_MODE"
 	assert_eq generated "$NIX_BASH_ENV_HOST"
 	assert_array_has_sequence NIX_ENV_ARGS --setenv BASH_ENV "$NIX_BASH_ENV_SANDBOX"
+	assert_array_has_sequence NIX_ENV_ARGS --setenv CODEX_SANDBOX_BASE_PATH "$SANDBOX_PATH"
 
 	NIX_ENV_MODE=disabled
 	setup_features
@@ -175,6 +178,7 @@ test_envrc_detection_and_mode() {
 	CODEX=/codex CODEX_ARGS=()
 	build_sandbox_command
 	assert_eq "" "${SANDBOX_CMD[9]}" "--no-nix-env restored BASH_ENV"
+	eval "$setup_nix_bash_env_definition"
 }
 
 write_fake_command() {
@@ -213,10 +217,34 @@ test_envrc_approval_and_delayed_bash_env() {
 	assert_file_contains "$TEST_ROOT/approval.err" "failed to approve /workspace/work space/.envrc"
 }
 
+test_direnv_preserves_sandbox_path() {
+	local bash_dir expected original_path="$PATH"
+	bash_dir="$(dirname "$(command -v bash)")"
+	reset_options
+	validate_inputs
+	DIRENV_BIN="$TEST_ROOT/direnv-export"
+	NIX_PROFILE_BIN="$TEST_ROOT/profile/bin"
+	mkdir -p "$NIX_PROFILE_BIN" "$TEST_ROOT/sandbox-bin"
+	write_fake_command "$DIRENV_BIN" 'printf '\''export PATH="/flake/bin"\n'\'''
+	setup_nix_bash_env
+	PATH="$TEST_ROOT/sandbox-bin:$bash_dir"
+	CODEX_SANDBOX_WORKSPACE="$WORKSPACE_HOST"
+	CODEX_SANDBOX_NIX_PROFILE_BIN="$NIX_PROFILE_BIN"
+	CODEX_SANDBOX_DIRENV_BIN="$DIRENV_BIN"
+	CODEX_SANDBOX_BASE_PATH="$TEST_ROOT/sandbox-bin:$bash_dir"
+	# shellcheck source=/dev/null
+	source "$NIX_BASH_ENV_HOST"
+	expected="$NIX_PROFILE_BIN:$TEST_ROOT/sandbox-bin:$bash_dir:/flake/bin"
+	assert_eq "$expected" "$PATH" "direnv export replaced the sandbox tool path"
+	PATH="$original_path"
+	unset CODEX_SANDBOX_WORKSPACE CODEX_SANDBOX_NIX_PROFILE_BIN CODEX_SANDBOX_DIRENV_BIN CODEX_SANDBOX_BASE_PATH
+}
+
 test_path_and_mount_assembly() {
 	local store_bin saved_path="$PATH"
 	store_bin="$(dirname "$(command -v cat)")"
 	CODEX="$store_bin/codex" NODE="$store_bin/node" SANDBOX_SHELL="$store_bin/zsh"
+	GIT="$store_bin/git" PYTHON3="$store_bin/python3"
 	CAT="$store_bin/cat" ENV_BIN="$store_bin/env" BASH_BIN="$store_bin/bash" SH_BIN="$store_bin/bash"
 	DIRENV_BIN="$store_bin/direnv" NIX_PROFILE_BIN="$HOME/.nix-profile/bin"
 	PATH="$store_bin:$store_bin"
@@ -404,6 +432,7 @@ run_test "workspace validation and mapping" test_workspace_validation
 run_test "environment and SSH key validation" test_environment_and_key_validation
 run_test ".envrc detection and no-nix mode" test_envrc_detection_and_mode
 run_test ".envrc approval and delayed BASH_ENV" test_envrc_approval_and_delayed_bash_env
+run_test "direnv preserves the sandbox tool path" test_direnv_preserves_sandbox_path
 run_test "PATH de-duplication and mount policy" test_path_and_mount_assembly
 run_test "token omission/pass-through and SSH binds" test_tokens_and_ssh_bind_modes
 run_test "SSH cleanup after agent failure" test_ssh_cleanup_on_agent_failure
