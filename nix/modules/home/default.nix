@@ -21,7 +21,8 @@ let
   reloadHomeManagerSuffix =
     if isOther then _reloadHomeManagerSuffix + " -b hm-backup" else _reloadHomeManagerSuffix;
 
-  reloadHomeManagerPrefix = if pkgs.stdenv.hostPlatform.isDarwin then "sudo darwin-rebuild" else "home-manager";
+  reloadHomeManagerPrefix =
+    if pkgs.stdenv.hostPlatform.isDarwin then "sudo darwin-rebuild" else "home-manager";
 in
 {
 
@@ -208,11 +209,38 @@ in
         return incoming
 
 
+    def hook_identities(item):
+        if not isinstance(item, dict):
+            return set()
+        return {
+            (hook.get("type"), hook.get("command"))
+            for hook in item.get("hooks", [])
+            if isinstance(hook, dict) and hook.get("command")
+        }
+
+
+    def remove_superseded_managed_hooks(existing, incoming):
+        existing_hooks = existing.get("hooks") if isinstance(existing, dict) else None
+        incoming_hooks = incoming.get("hooks") if isinstance(incoming, dict) else None
+        if not isinstance(existing_hooks, dict) or not isinstance(incoming_hooks, dict):
+            return
+        for event, incoming_entries in incoming_hooks.items():
+            if not isinstance(incoming_entries, list):
+                continue
+            managed = set().union(*(hook_identities(item) for item in incoming_entries))
+            current = existing_hooks.get(event)
+            if managed and isinstance(current, list):
+                existing_hooks[event] = [
+                    item for item in current if hook_identities(item).isdisjoint(managed)
+                ]
+
+
     hooks_path = Path(sys.argv[1])
     dotfile_hooks_path = Path(sys.argv[2])
 
     existing = json.loads(hooks_path.read_text(encoding="utf-8"))
     incoming = json.loads(dotfile_hooks_path.read_text(encoding="utf-8"))
+    remove_superseded_managed_hooks(existing, incoming)
     merged = merge_value(existing, incoming)
 
     hooks_path.write_text(json.dumps(merged, indent=2) + "\n", encoding="utf-8")
