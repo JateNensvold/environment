@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-11-04
+
+- Disabled automatic store optimization in the rootless Nix broker so flake refreshes do not
+  attempt cross-UID hard links against the host-owned lower store
+- Preserved the sandbox baseline across direnv exports and added Python and Git as startup-hook
+  dependencies; verified the cached flake shell exposes the expected tools without fallback
+- Replaced superseded managed hook entries by event and command while preserving unrelated
+  hooks, and archived resolved agent issues outside the active issue list
+- Validated Nix formatting, Bash syntax, ShellCheck, all 15 sandbox tests, all 12 Nix tests,
+  live SessionStart execution, and the post-reload hook registration
+
 ## 2026-10-03
 
 - Replaced per-session `codex-sandbox` Nix overlays with a lazy, per-user rootless broker that

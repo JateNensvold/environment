@@ -32,6 +32,9 @@ concurrent broker lifecycle, cleanup behavior, and all existing CLI modes.
   repository change. Do not log ordinary successful operation, expected negative test results,
   user input errors, or transient failures that were immediately corrected and offer no future
   diagnostic value.
+- Keep `.agent/issues.md` limited to active issues. When an issue is resolved, move its final
+  occurrence count, resolution date, cause, and concise resolution summary to
+  `.agent/issues-resolved.md` so completed work does not distract active investigations.
 - Never delay an urgent user-facing failure report merely to update the record. Make a best
   effort to update it first, then clearly report any inability to do so.
 
