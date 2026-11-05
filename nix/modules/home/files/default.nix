@@ -21,10 +21,23 @@ in
   # visible without waiting for a reload.
   home.file.".config/tmux".source = link "${dotfilePath}/tmux";
   home.file.".config/tmux-plugins.conf".text = ''
+    # Suppress one automatic restore after the final session is deliberately
+    # closed. A crashed server cannot run this hook, so crash recovery remains
+    # automatic. Continuum checks this marker before starting its restore.
+    set-hook -g session-closed {
+      if-shell -F '#{==:#{server_sessions},0}' {
+        run-shell 'touch "$HOME/tmux_no_auto_restore"'
+      }
+    }
+
     set -g @continuum-restore 'on'
     set -g @continuum-save-interval '15'
     run-shell ${pkgs.tmuxPlugins.resurrect.rtp}
     run-shell ${pkgs.tmuxPlugins.continuum.rtp}
+
+    # Make Continuum's permanent halt file a one-shot clean-exit marker. Its
+    # restore check runs immediately; delay removal to avoid racing that check.
+    run-shell -b 'sleep 2; rm -f "$HOME/tmux_no_auto_restore"'
   '';
   home.file.".local/bin".source = link "${dotfilePath}/scripts/bash/default";
   home.file.".zfuncs".source = "${dotfiles}/scripts/zsh/default";
