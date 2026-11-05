@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-11-05
+
+- Added a sandbox-only Codex permission profile that delegates filesystem writes to the outer
+  Bubblewrap boundary, mounted it read-only at the profile path, and made `codex-sandbox` select
+  it on every normal Codex launch
+- Added launcher coverage for profile selection and mount ordering; validated ShellCheck, Bash
+  syntax, the Codex profile, all 15 sandbox tests, and all 12 Nix tests
+- Added a one-shot tmux clean-exit marker so Continuum skips automatic restoration after the
+  final session is deliberately closed while preserving crash recovery
+- Added a non-reproducible issue archive, documented the resolved cache diagnosis, and recorded
+  the newly exposed rootless Nix daemon `auto-allocate-uids` feature-gate failure
+
 ## 2026-11-04
 
 - Disabled automatic store optimization in the rootless Nix broker so flake refreshes do not

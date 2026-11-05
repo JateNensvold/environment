@@ -49,5 +49,8 @@
   startup with `control/lock`, hold PID-identity leases, join the broker namespace with
   `nsenter`, and stop the broker only after the final lease. Never mount one OverlayFS upper
   directory independently in concurrent Bubblewrap sessions.
+- `codex-sandbox` mounts its repo-managed Codex profile read-only inside Bubblewrap and launches
+  Codex with that profile; its `:root = "write"` rule delegates the filesystem boundary to the
+  outer launcher instead of masking writable COW mounts.
 - Sandbox wrappers can bind persistent host Nix state and optionally expose SSH via
   `--ssh-key`.
