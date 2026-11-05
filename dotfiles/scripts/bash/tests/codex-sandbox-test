@@ -7,7 +7,9 @@ DEFAULT_DIR="$(cd "$SCRIPT_DIR/../default" && pwd)"
 TEST_ROOT="$(mktemp -d "${TMPDIR:-/tmp}/codex-sandbox-test.XXXXXX")"
 export HOME="$TEST_ROOT/home"
 export USER="tester"
-mkdir -p "$HOME/environment" "$HOME/.nix-profile/bin"
+mkdir -p "$HOME/environment/dotfiles/agents/codex" "$HOME/.nix-profile/bin"
+printf '%s\n' 'default_permissions = "codex-sandbox"' >\
+	"$HOME/environment/dotfiles/agents/codex/codex-sandbox.config.toml"
 
 # shellcheck source=../default/codex-sandbox
 source "$DEFAULT_DIR/codex-sandbox"
@@ -92,7 +94,9 @@ test_option_parsing() {
 	CODEX=/codex
 	build_sandbox_command
 	assert_eq /codex "${SANDBOX_CMD[0]}"
-	assert_eq "two words" "${SANDBOX_CMD[2]}"
+	assert_eq --profile "${SANDBOX_CMD[1]}"
+	assert_eq codex-sandbox "${SANDBOX_CMD[2]}"
+	assert_eq "two words" "${SANDBOX_CMD[4]}"
 
 	DNS_DEBUG=1
 	build_sandbox_command
@@ -264,6 +268,7 @@ test_path_and_mount_assembly() {
 	assert_array_has_sequence BWRAP_ARGS --bind "$WORKSPACE_HOST" "/workspace/work space"
 	assert_array_has_sequence BWRAP_ARGS --ro-bind "$HOME/.agents" "/home/$USER/.agents"
 	assert_array_has_sequence BWRAP_ARGS --bind "$HOME/.codex" "/home/$USER/.codex"
+	assert_array_has_sequence BWRAP_ARGS --ro-bind "$CODEX_PROFILE_HOST" "$CODEX_PROFILE_SANDBOX"
 	assert_array_has_sequence BWRAP_ARGS --unshare-user --unshare-pid --unshare-ipc --unshare-uts
 	assert_array_has_sequence BWRAP_ARGS --hostname codex-sandbox
 	assert_array_lacks BWRAP_ARGS --unshare-net

@@ -1,0 +1,7 @@
+default_permissions = "codex-sandbox"
+
+[permissions.codex-sandbox.filesystem]
+":root" = "write"
+
+[permissions.codex-sandbox.network]
+enabled = true

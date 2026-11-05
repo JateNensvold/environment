@@ -20,6 +20,9 @@ SSH_AGENT_SOCKET_HOST=""
 SSH_AGENT_SOCKET_SANDBOX=""
 NIX_BASH_ENV_HOST=""
 NIX_BASH_ENV_SANDBOX="/home/$USER/.codex/direnv/bashenv.sh"
+CODEX_PROFILE_NAME="codex-sandbox"
+CODEX_PROFILE_HOST=""
+CODEX_PROFILE_SANDBOX="/home/$USER/.codex/$CODEX_PROFILE_NAME.config.toml"
 NIX_FALLBACK_DIR="/tmp/codex-sandbox-nix-$UID"
 NIX_CONTROL_DIR="$NIX_FALLBACK_DIR/control"
 NIX_MOUNT_ROOT="$NIX_FALLBACK_DIR/mount"
@@ -88,6 +91,9 @@ validate_inputs() {
 
 	ENVIRONMENT_REPO="$(realpath "$HOME/environment")"
 	[[ -d "$ENVIRONMENT_REPO" ]] || die "Environment repo '$ENVIRONMENT_REPO' not found"
+	CODEX_PROFILE_HOST="$ENVIRONMENT_REPO/dotfiles/agents/codex/$CODEX_PROFILE_NAME.config.toml"
+	[[ -f "$CODEX_PROFILE_HOST" ]] || die "Codex sandbox profile '$CODEX_PROFILE_HOST' not found"
+	CODEX_PROFILE_HOST="$(readlink -f "$CODEX_PROFILE_HOST")"
 
 	if [[ -n "$SSH_KEY_PATH" ]]; then
 		SSH_KEY_PATH="$(realpath "$SSH_KEY_PATH")"
@@ -277,7 +283,7 @@ setup_features() {
 }
 
 build_sandbox_command() {
-	SANDBOX_CMD=("$CODEX" "${CODEX_ARGS[@]}")
+	SANDBOX_CMD=("$CODEX" --profile "$CODEX_PROFILE_NAME" "${CODEX_ARGS[@]}")
 	if [[ "$DNS_DEBUG" -eq 1 ]]; then
 		SANDBOX_CMD=(/bin/bash -lc '
 			echo "== curl -I https://1.1.1.1 =="
@@ -346,6 +352,7 @@ assemble_bwrap_args() {
 		--bind "$WORKSPACE_HOST" "$WORKSPACE_SANDBOX"
 		"${AGENTS_BIND_ARGS[@]}"
 		--bind "$HOME/.codex" "/home/$USER/.codex"
+		--ro-bind "$CODEX_PROFILE_HOST" "$CODEX_PROFILE_SANDBOX"
 		"${NIX_BIND_ARGS[@]}" "${SSH_BIND_ARGS[@]}"
 		--ro-bind "$RESOLV" /etc/resolv.conf --ro-bind /etc/ssl /etc/ssl
 		--ro-bind /etc/passwd /etc/passwd --ro-bind /etc/group /etc/group
@@ -364,6 +371,7 @@ report_configuration() {
 	printf '[sandbox]\n' >&2
 	log_sandbox_detail "workspace: $WORKSPACE_HOST -> $WORKSPACE_SANDBOX"
 	log_sandbox_detail "nix overlay: shared broker (pid $NIX_BROKER_PID)"
+	log_sandbox_detail "codex profile: $CODEX_PROFILE_NAME (sandbox-only, read-only)"
 	case "$NIX_ENV_MODE" in
 	direnv) log_sandbox_detail "nix env: direnv preload enabled" ;;
 	disabled) log_sandbox_detail "nix env: disabled" ;;
