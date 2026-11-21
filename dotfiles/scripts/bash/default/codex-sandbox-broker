@@ -56,6 +56,24 @@ done
 
 [[ -n "$ROOT" && -n "$CONTROL" && -n "$NIX_BIN" && -n "$FLOCK_BIN" && -n "$MOUNT_BIN" && -n "$UMOUNT_BIN" ]] || usage
 
+verify_user_namespace_identity() {
+	local broker_uid
+	local broker_groups
+
+	broker_uid="$(awk '/^Uid:/ { print $2 }' /proc/self/status)"
+	broker_groups="$(awk '/^Groups:/ { $1 = ""; sub(/^[[:space:]]+/, ""); print }' /proc/self/status)"
+	[[ "$broker_uid" =~ ^[1-9][0-9]*$ ]] || {
+		echo "ERROR: sandbox broker must run as a non-root namespace user" >&2
+		return 1
+	}
+	[[ -z "$broker_groups" ]] || {
+		echo "ERROR: sandbox broker retained supplementary groups: $broker_groups" >&2
+		return 1
+	}
+}
+
+verify_user_namespace_identity
+
 process_start_time() {
 	local pid="$1"
 
@@ -196,8 +214,11 @@ start_daemon() {
 	local daemon_config
 
 	DAEMON_SOCKET="$ROOT/daemon-socket/socket"
-	daemon_config="${NIX_CONFIG:+$NIX_CONFIG$'\n'}extra-experimental-features = local-overlay-store daemon-trust-override read-only-local-store
+	daemon_config="${NIX_CONFIG:+$NIX_CONFIG$'\n'}extra-experimental-features = local-overlay-store daemon-trust-override read-only-local-store auto-allocate-uids
 build-users-group =
+# The host may enable dynamic build UIDs.  This rootless namespace maps only
+# its owner, so keep builds on the private daemon identity instead.
+auto-allocate-uids = false
 # The lower store is immutable for the broker's lifetime.  Nix must open it
 # read-only: otherwise LocalStore tries to chmod its legacy profile directory,
 # which belongs to the host lower tree and cannot be changed in this user ns.
@@ -206,8 +227,9 @@ store = local-overlay://?lower-store=local%3Froot=$ROOT/mount/lower%26read-only=
 	NIX_CONFIG="$daemon_config" \
 		NIX_DAEMON_SOCKET_PATH="/nix/var/nix/daemon-socket/socket" \
 		NIX_PROFILES="/nix/var/nix/profiles/default" \
-		"$NIX_BIN" --extra-experimental-features 'local-overlay-store daemon-trust-override read-only-local-store' \
+		"$NIX_BIN" --extra-experimental-features 'local-overlay-store daemon-trust-override read-only-local-store auto-allocate-uids' \
 		--option build-users-group '' \
+		--option auto-allocate-uids false \
 		--option auto-optimise-store false \
 		daemon --force-trusted \
 		>>"$CONTROL/daemon.log" 2>&1 &

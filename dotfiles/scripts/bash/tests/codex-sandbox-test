@@ -142,6 +142,36 @@ test_workspace_validation() {
 	assert_file_contains "$TEST_ROOT/missing.err" "Workspace '$TEST_ROOT/missing' not found"
 }
 
+test_resolve_bin_entrypoint_preserves_applet_name() {
+	local applet_dir="$TEST_ROOT/multicall/bin"
+	local original_path="$PATH"
+
+	mkdir -p "$applet_dir"
+	write_fake_command "$applet_dir/coreutils" \
+		'[[ "${0##*/}" == id && "${1:-}" == -u ]] || exit 91' \
+		'printf '\''1000\n'\'''
+	ln -s coreutils "$applet_dir/id"
+	PATH="$applet_dir:$PATH"
+
+	local resolved
+	resolved="$(resolve_bin_entrypoint id)"
+	assert_eq "$applet_dir/id" "$resolved" "id applet symlink was resolved to its multicall binary"
+	assert_eq 1000 "$("$resolved" -u)" "resolved id applet did not retain argv[0] dispatch"
+	PATH="$original_path"
+}
+
+test_resolve_subordinate_gid() {
+	local subgid_file="$TEST_ROOT/subgid"
+	local original_uid="$NIX_BROKER_HOST_UID"
+
+	printf '%s\n' 'someone:200000:65536' 'tester:100000:65536' >"$subgid_file"
+	NIX_SUBGID_FILE="$subgid_file"
+	NIX_BROKER_HOST_UID=1234
+	assert_eq 100000 "$(resolve_subordinate_gid)" "subordinate GID allocation was not resolved"
+	NIX_BROKER_HOST_UID="$original_uid"
+	unset NIX_SUBGID_FILE
+}
+
 test_environment_and_key_validation() {
 	reset_options
 	mv "$HOME/environment" "$HOME/environment.off"
@@ -435,9 +465,40 @@ test_concurrent_broker_acquisition() {
 	[[ -z "$(find "$NIX_CONTROL_DIR/leases" -type f -name 'lease.*' -print -quit)" ]] || fail "concurrent acquisition left a lease"
 }
 
+test_broker_builder_user_policy() {
+	local broker="$DEFAULT_DIR/codex-sandbox-broker"
+	local client="$DEFAULT_DIR/codex-sandbox-broker-client"
+
+	assert_file_contains "$broker" "read-only-local-store auto-allocate-uids"
+	assert_file_contains "$broker" "auto-allocate-uids = false"
+	assert_file_contains "$broker" "verify_user_namespace_identity"
+	assert_file_contains "$broker" "--option build-users-group ''"
+	assert_file_contains "$broker" "--option auto-allocate-uids false"
+	assert_file_contains "$client" '--map-users "$NIX_BROKER_HOST_UID:$NIX_BROKER_HOST_UID:1"'
+	assert_file_contains "$client" '--map-groups "$NIX_BROKER_HOST_GID:$NIX_BROKER_HOST_GID:1"'
+	assert_file_contains "$client" '--map-groups "0:$NIX_BROKER_SUBGID:1"'
+	assert_file_contains "$client" '"$SETPRIV" --clear-groups'
+	if grep -Fq -- "--map-root-user" "$client"; then
+		fail "broker client still maps the host user to namespace root"
+	fi
+}
+
+test_broker_rejects_root_id_maps() {
+	broker_fixture
+	NIX_BROKER_HOST_UID=0
+	NIX_BROKER_HOST_GID=100
+	NIX_BROKER_SUBGID=100000
+	if start_broker_locked 2>"$TEST_ROOT/root-id.err"; then
+		fail "broker accepted a root host UID"
+	fi
+	assert_file_contains "$TEST_ROOT/root-id.err" "non-root numeric host UID"
+}
+
 run_test "ordered option parsing and combinations" test_option_parsing
 run_test "each option alone" test_each_option_alone
 run_test "workspace validation and mapping" test_workspace_validation
+run_test "multicall command entrypoint preservation" test_resolve_bin_entrypoint_preserves_applet_name
+run_test "subordinate GID resolution" test_resolve_subordinate_gid
 run_test "environment and SSH key validation" test_environment_and_key_validation
 run_test ".envrc detection and no-nix mode" test_envrc_detection_and_mode
 run_test ".envrc approval and delayed BASH_ENV" test_envrc_approval_and_delayed_bash_env
@@ -450,6 +511,8 @@ run_test "final and non-final broker release" test_broker_release_final_and_nonf
 run_test "broker readiness and TERM/KILL fallback" test_broker_readiness_and_term_kill
 run_test "broker startup failure unlocks" test_broker_start_failure_unlocks
 run_test "concurrent broker acquisition" test_concurrent_broker_acquisition
+run_test "explicit broker builder-user policy" test_broker_builder_user_policy
+run_test "root broker ID map rejection" test_broker_rejects_root_id_maps
 
 if [[ "$failures" -gt 0 ]]; then
 	printf '%d of %d tests failed\n' "$failures" "$tests" >&2

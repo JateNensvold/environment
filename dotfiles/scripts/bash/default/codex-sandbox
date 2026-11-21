@@ -28,6 +28,9 @@ NIX_CONTROL_DIR="$NIX_FALLBACK_DIR/control"
 NIX_MOUNT_ROOT="$NIX_FALLBACK_DIR/mount"
 NIX_BROKER_SCRIPT=""
 NIX_BROKER_PID=""
+NIX_BROKER_HOST_UID=""
+NIX_BROKER_HOST_GID=""
+NIX_BROKER_SUBGID=""
 NIX_LEASE=""
 
 die() {
@@ -44,6 +47,26 @@ resolve_bin() {
 
 	path="$(command -v "$1" 2>/dev/null)" || die "'$1' not found"
 	readlink -f "$path"
+}
+
+resolve_bin_entrypoint() {
+	local path
+
+	path="$(command -v "$1" 2>/dev/null)" || die "'$1' not found"
+	printf '%s\n' "$path"
+}
+
+resolve_subordinate_gid() {
+	local owner start count
+	local subgid_file="${NIX_SUBGID_FILE:-/etc/subgid}"
+
+	while IFS=: read -r owner start count; do
+		[[ "$owner" == "$USER" || "$owner" == "$NIX_BROKER_HOST_UID" ]] || continue
+		[[ "$start" =~ ^[1-9][0-9]*$ && "$count" =~ ^[1-9][0-9]*$ ]] || continue
+		printf '%s\n' "$start"
+		return 0
+	done <"$subgid_file"
+	return 1
 }
 
 resolve_current_bash() {
@@ -124,10 +147,20 @@ resolve_dependencies() {
 	DIRENV_BIN="$(resolve_bin direnv)"
 	FLOCK="$(resolve_bin flock)"
 	UNSHARE="$(resolve_bin unshare)"
+	SETPRIV="$(resolve_bin setpriv)"
+	# Preserve the applet name: Nix coreutils dispatches from argv[0], and resolving
+	# its `id -> coreutils` symlink would make `coreutils -u` fail.
+	ID_BIN="$(resolve_bin_entrypoint id)"
 	NSENTER="$(resolve_bin nsenter)"
 	MOUNT="$(resolve_bin mount)"
 	UMOUNT="$(resolve_bin umount)"
 	NIX_BIN="$(resolve_bin nix)"
+	NIX_BROKER_HOST_UID="$("$ID_BIN" -u)"
+	NIX_BROKER_HOST_GID="$("$ID_BIN" -g)"
+	[[ "$NIX_BROKER_HOST_UID" -ne 0 ]] || die "codex-sandbox requires a non-root host user"
+	[[ "$NIX_BROKER_HOST_GID" -ne 0 ]] || die "codex-sandbox requires a non-root primary host group"
+	NIX_BROKER_SUBGID="$(resolve_subordinate_gid)" ||
+		die "codex-sandbox requires a subordinate GID allocation in /etc/subgid"
 
 	SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[0]}")"
 	SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"

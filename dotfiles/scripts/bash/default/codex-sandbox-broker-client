@@ -143,10 +143,31 @@ wait_for_broker_ready() {
 }
 
 start_broker_locked() {
+	[[ "$NIX_BROKER_HOST_UID" =~ ^[1-9][0-9]*$ ]] || {
+		broker_error "sandbox Nix broker requires a non-root numeric host UID"
+		return 1
+	}
+	[[ "$NIX_BROKER_HOST_GID" =~ ^[1-9][0-9]*$ ]] || {
+		broker_error "sandbox Nix broker requires a non-root numeric host GID"
+		return 1
+	}
+	[[ "$NIX_BROKER_SUBGID" =~ ^[1-9][0-9]*$ && "$NIX_BROKER_SUBGID" != "$NIX_BROKER_HOST_GID" ]] || {
+		broker_error "sandbox Nix broker requires a distinct numeric subordinate GID"
+		return 1
+	}
+
 	unlink "$NIX_CONTROL_DIR/ready" "$NIX_CONTROL_DIR/broker" "$NIX_CONTROL_DIR/stopping" 2>/dev/null || true
 	: >"$NIX_CONTROL_DIR/broker.log"
 	: >"$NIX_CONTROL_DIR/daemon.log"
-	"$UNSHARE" --user --map-root-user --mount --propagation private \
+	# A self-only GID map makes newgidmap deny setgroups. Add one authorized
+	# subordinate GID so the broker can drop inherited groups and Nix can repeat
+	# the operation when it starts a nested build sandbox.
+	"$UNSHARE" --user \
+		--map-users "$NIX_BROKER_HOST_UID:$NIX_BROKER_HOST_UID:1" \
+		--map-groups "$NIX_BROKER_HOST_GID:$NIX_BROKER_HOST_GID:1" \
+		--map-groups "0:$NIX_BROKER_SUBGID:1" \
+		--keep-caps --mount --propagation private \
+		"$SETPRIV" --clear-groups \
 		"$NIX_BROKER_SCRIPT" \
 		--root "$NIX_FALLBACK_DIR" \
 		--control "$NIX_CONTROL_DIR" \

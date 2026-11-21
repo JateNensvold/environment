@@ -3,6 +3,37 @@
 This archive retains concise resolution records so regressions can be
 recognized without distracting investigations in `.agent/issues.md`.
 
+## ISSUE-20261105-02 — Sandbox Nix daemon lacked its required UID feature gate
+
+- Status: Resolved
+- Component: `codex-sandbox` Nix broker daemon
+- First seen: 2026-11-05
+- Last seen: 2026-11-05
+- Resolved: 2026-11-05
+- Occurrences: 5 agent turns
+- Cause: The broker inherited `auto-allocate-uids = true` from ambient Nix configuration but did
+  not enable that experimental feature; automatic UID allocation was also incompatible with its
+  single-ID rootless user namespace.
+- Resolution: The broker now explicitly enables the feature gate while forcing
+  `auto-allocate-uids = false`. After a full broker restart, a unique derivation advanced past the
+  old feature error. A separate nested build-sandbox failure is tracked as ISSUE-20261105-03.
+
+## ISSUE-20261105-01 — Codex permissions masked the sandbox Nix Git cache read-only
+
+- Status: Resolved
+- Component: `codex-sandbox`, Codex permission profile, Nix cache
+- First seen: 2026-11-05
+- Last seen: 2026-11-05
+- Resolved: 2026-11-05
+- Occurrences: 6 agent turns
+- Cause: Codex's inner command sandbox granted writes only to workspace roots, masking the
+  writable Nix cache OverlayFS exposed by the outer Bubblewrap sandbox.
+- Resolution: The wrapper now mounts a repo-managed `codex-sandbox` profile read-only and selects
+  it on every launch; its `:root = "write"` rule delegates the filesystem boundary to Bubblewrap.
+  In a fresh session, the Git cache was mounted read-write, a direct write probe succeeded, all
+  15 launcher tests and 12 Nix tests passed, and the formerly failing Home Manager build advanced
+  past Git fetching to the separately tracked daemon UID feature gate.
+
 ## ISSUE-20261104-03 — Hook activation retained superseded entries
 
 - Status: Resolved

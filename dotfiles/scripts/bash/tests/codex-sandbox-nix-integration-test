@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC1091,SC2034 # The sourced broker client consumes shared globals.
+# Exercise a real, isolated codex-sandbox Nix broker and local builder.
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DEFAULT_DIR="$(cd "$SCRIPT_DIR/../default" && pwd)"
+
+if [[ "${CODEX_SANDBOX_NIX_OVERLAY_MODE:-}" == "shared" ]]; then
+	printf 'SKIP: run this integration test outside codex-sandbox to avoid nested OverlayFS\n' >&2
+	exit 77
+fi
+if [[ -r /proc/self/setgroups && "$(</proc/self/setgroups)" == deny ]]; then
+	printf 'SKIP: the current user namespace has permanently disabled setgroups\n' >&2
+	exit 77
+fi
+
+TEST_ROOT="$(mktemp -d "${TMPDIR:-/tmp}/codex-sandbox-nix-integration.XXXXXX")"
+NIX_FALLBACK_DIR="$TEST_ROOT/broker"
+NIX_CONTROL_DIR="$NIX_FALLBACK_DIR/control"
+NIX_BROKER_SCRIPT="$DEFAULT_DIR/codex-sandbox-broker"
+NIX_BROKER_PID=""
+NIX_LEASE=""
+NIX_BROKER_LOCK_FD=""
+FLOCK="$(command -v flock)"
+UNSHARE="$(command -v unshare)"
+SETPRIV="$(command -v setpriv)"
+MOUNT="$(command -v mount)"
+UMOUNT="$(command -v umount)"
+NIX_BIN="$(command -v nix)"
+NIX_BROKER_HOST_UID="$(id -u)"
+NIX_BROKER_HOST_GID="$(id -g)"
+while IFS=: read -r owner start count; do
+	[[ "$owner" == "$USER" || "$owner" == "$NIX_BROKER_HOST_UID" ]] || continue
+	[[ "$start" =~ ^[1-9][0-9]*$ && "$count" =~ ^[1-9][0-9]*$ ]] || continue
+	NIX_BROKER_SUBGID="$start"
+	break
+done </etc/subgid
+[[ -n "${NIX_BROKER_SUBGID:-}" ]] || {
+	printf 'SKIP: no subordinate GID allocation is available\n' >&2
+	exit 77
+}
+
+# shellcheck source=../default/codex-sandbox-broker-client
+source "$DEFAULT_DIR/codex-sandbox-broker-client"
+
+cleanup() {
+	local status=$?
+
+	trap - EXIT
+	release_nix_broker || status=$?
+	rm -rf "$TEST_ROOT"
+	exit "$status"
+}
+trap cleanup EXIT
+
+setup_nix_broker
+
+broker_uid="$(awk '/^Uid:/ { print $2 }' "/proc/$NIX_BROKER_PID/status")"
+broker_groups="$(awk '/^Groups:/ { $1 = ""; sub(/^[[:space:]]+/, ""); print }' "/proc/$NIX_BROKER_PID/status")"
+[[ "$broker_uid" == "$NIX_BROKER_HOST_UID" ]]
+[[ -z "$broker_groups" ]]
+
+probe_name="codex-sandbox-nix-integration-$(date +%s)-$$"
+export CODEX_SANDBOX_TEST_BUILDER
+CODEX_SANDBOX_TEST_BUILDER="$(command -v bash)"
+probe_expression="
+  let
+    builder = builtins.storePath (builtins.getEnv \"CODEX_SANDBOX_TEST_BUILDER\");
+  in
+  derivation {
+    name = \"$probe_name\";
+    system = builtins.currentSystem;
+    inherit builder;
+    args = [ \"-c\" \"printf passed > \$out\" ];
+  }
+"
+
+probe_output="$({
+	NIX_REMOTE=daemon \
+	NIX_DAEMON_SOCKET_PATH="$NIX_FALLBACK_DIR/daemon-socket/socket" \
+		"$NIX_BIN" build --impure --expr "$probe_expression" --no-link --print-out-paths
+} | tail -n 1)"
+
+[[ -n "$probe_output" ]]
+NIX_REMOTE=daemon \
+NIX_DAEMON_SOCKET_PATH="$NIX_FALLBACK_DIR/daemon-socket/socket" \
+	"$NIX_BIN" path-info "$probe_output" >/dev/null
+printf 'isolated broker realized %s\n' "$probe_output"
