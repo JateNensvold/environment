@@ -229,7 +229,10 @@ test_direnv_preserves_sandbox_path() {
 	DIRENV_BIN="$TEST_ROOT/direnv-export"
 	NIX_PROFILE_BIN="$TEST_ROOT/profile/bin"
 	mkdir -p "$NIX_PROFILE_BIN" "$TEST_ROOT/sandbox-bin"
-	write_fake_command "$DIRENV_BIN" 'printf '\''export PATH="/flake/bin"\n'\'''
+	write_fake_command "$DIRENV_BIN" \
+		'[[ "${DIRENV_LOG_FORMAT+x}" == x && -z "$DIRENV_LOG_FORMAT" ]] || exit 91' \
+		'printf '\''direnv error remains visible\n'\'' >&2' \
+		'printf '\''export PATH="/flake/bin"\n'\'''
 	setup_nix_bash_env
 	PATH="$TEST_ROOT/sandbox-bin:$bash_dir"
 	CODEX_SANDBOX_WORKSPACE="$WORKSPACE_HOST"
@@ -237,10 +240,11 @@ test_direnv_preserves_sandbox_path() {
 	CODEX_SANDBOX_DIRENV_BIN="$DIRENV_BIN"
 	CODEX_SANDBOX_BASE_PATH="$TEST_ROOT/sandbox-bin:$bash_dir"
 	# shellcheck source=/dev/null
-	source "$NIX_BASH_ENV_HOST"
+	source "$NIX_BASH_ENV_HOST" 2>"$TEST_ROOT/direnv-export.err"
 	expected="$NIX_PROFILE_BIN:$TEST_ROOT/sandbox-bin:$bash_dir:/flake/bin"
 	assert_eq "$expected" "$PATH" "direnv export replaced the sandbox tool path"
 	PATH="$original_path"
+	assert_file_contains "$TEST_ROOT/direnv-export.err" "direnv error remains visible"
 	unset CODEX_SANDBOX_WORKSPACE CODEX_SANDBOX_NIX_PROFILE_BIN CODEX_SANDBOX_DIRENV_BIN CODEX_SANDBOX_BASE_PATH
 }
 

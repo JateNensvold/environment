@@ -190,7 +190,9 @@ if [[ -n "$__codex_nix_workspace" && -n "$__codex_nix_profile_bin" && -n "$__cod
 	__codex_sandbox_path="$PATH"
 	__codex_nix_export="$(
 		unset BASH_ENV
-		cd "$__codex_nix_workspace" && "$__codex_direnv_bin" export bash
+		# Routine status and environment-diff logs overwhelm automated command output.
+		# An empty format keeps direnv errors visible while silencing successful exports.
+		cd "$__codex_nix_workspace" && DIRENV_LOG_FORMAT= "$__codex_direnv_bin" export bash
 	)" || {
 		unset CODEX_SANDBOX_DIRENV_LOADING
 		return 0
